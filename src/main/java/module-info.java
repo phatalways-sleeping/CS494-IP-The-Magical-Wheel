@@ -4,4 +4,7 @@ module com.example.the_magic_wheel {
 
     opens com.example.the_magic_wheel to javafx.fxml;
     exports com.example.the_magic_wheel;
+
+    opens com.example.the_magic_wheel.controllers to javafx.fxml;
+    exports com.example.the_magic_wheel.controllers;
 }

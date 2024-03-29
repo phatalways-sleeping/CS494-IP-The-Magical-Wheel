@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+   prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21"
+   xmlns:fx="http://javafx.com/fxml/1"
+   fx:controller="com.example.the_magic_wheel.controllers.RegisterController"
+>
+   <children>
+      <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0"
+         style="-fx-background-color: rgb(4, 54, 74);" VBox.vgrow="ALWAYS">
+         <children>
+            <Label alignment="CENTER" layoutX="195.0" layoutY="102.0" prefHeight="29.0"
+               prefWidth="510.0" text="The Magical Wheel" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="DejaVu Sans Mono Bold" size="48.0" />
+               </font>
+            </Label>
+            <VBox alignment="TOP_CENTER" layoutX="122.0" layoutY="216.0"
+               style="-fx-padding: 10; -fx-spacing: 25;">
+               <children>
+                  <Label alignment="CENTER" prefHeight="30.0" prefWidth="286.0"
+                     text="What's your name?" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="DejaVu Sans Mono Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <TextField alignment="CENTER" prefHeight="61.0" prefWidth="637.0"
+                     promptText="YourOnlyHero..."
+                     style="-fx-padding: 10; -fx-background-radius: 40;">
+                     <font>
+                        <Font name="DejaVu Sans Mono Bold" size="18.0" />
+                     </font>
+                  </TextField>
+                  <HBox id="hbox_for_err_msg" alignment="CENTER" spacing="30.0" />
+                  <HBox alignment="CENTER" spacing="30.0">
+                     <children>
+                        <Button id="btn_cancel_register" alignment="CENTER" mnemonicParsing="false"
+                           prefHeight="40.0" prefWidth="180.0"
+                           style="-fx-background-radius: 20; -fx-background-color: white;"
+                           text="Cancel" textAlignment="CENTER"
+                           onAction="#switchToHall"
+                        >
+                           <font>
+                              <Font name="DejaVu Sans Mono Bold" size="14.0" />
+                           </font>
+                        </Button>
+                        <Button id="btn_join_game" alignment="CENTER" mnemonicParsing="false"
+                           prefHeight="40.0" prefWidth="180.0"
+                           style="-fx-background-radius: 20; -fx-background-color: DAFFFB;"
+                           text="Join" textAlignment="CENTER"
+                           onAction="#validateAndSwitchToGame"
+                        >
+                           <font>
+                              <Font name="DejaVu Sans Mono Bold" size="14.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <Circle fill="#dafffb" layoutX="793.0" layoutY="102.0" radius="93.0" stroke="#dafffb"
+               strokeType="INSIDE" />
+            <Circle fill="#dafffb" layoutX="107.0" layoutY="493.0" radius="93.0" stroke="#dafffb"
+               strokeType="INSIDE" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>
