@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER" prefHeight="64.0" prefWidth="421.0" style="-fx-background-color: #64CCC5; -fx-border-color: #000000; -fx-background-radius: 20; -fx-border-radius: 20;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ScoreboardItemController">
+   <children>
+      <Label id="Ranking" text="No.1" textAlignment="CENTER">
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+         <font>
+            <Font name="NSimSun" size="21.0" />
+         </font>
+      </Label>
+      <Region prefHeight="62.0" prefWidth="51.0" />
+      <Label id="RankingName" alignment="CENTER" text="Nguyen Van A" textAlignment="CENTER">
+         <font>
+            <Font name="NSimSun" size="21.0" />
+         </font>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </Label>
+      <Region prefHeight="62.0" prefWidth="51.0" />
+      <Label id="RankingScore" alignment="CENTER_RIGHT" text="320" textAlignment="CENTER">
+         <font>
+            <Font name="NSimSun" size="21.0" />
+         </font>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </Label>
+   </children>
+</HBox>
