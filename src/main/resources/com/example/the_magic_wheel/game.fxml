@@ -11,49 +11,74 @@
 <?import javafx.scene.text.Text?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #04364A;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="406.0" prefWidth="370.0" BorderPane.alignment="CENTER">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hint" />
+            <Region minHeight="25.0" prefHeight="28.0" prefWidth="200.0" />
+            <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint" textAlignment="CENTER" wrappingWidth="98.283203125">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
             <Region prefHeight="200.0" prefWidth="200.0" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="This is a hint for the keyword" />
+            <Text fx:id="hintText" fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="This is a hint for the keyword">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
             <Region prefHeight="200.0" prefWidth="200.0" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="* * * * * *" />
+            <Text fx:id="keywordText" fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="* * * * * *">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Text>
             <Region prefHeight="200.0" prefWidth="200.0" />
             <HBox alignment="BASELINE_CENTER" prefHeight="25.0" prefWidth="464.0" styleClass="space">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="guess" />
+                  <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="Guess" />
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <TextField minHeight="25.0" minWidth="150.0" prefHeight="25.0" prefWidth="150.0" />
+                  <TextField fx:id="guessTextField" minHeight="25.0" minWidth="150.0" prefHeight="25.0" prefWidth="150.0" style="-fx-border-radius: 10;" />
                </children>
                <VBox.margin>
                   <Insets />
                </VBox.margin>
             </HBox>
-            <Region prefHeight="200.0" prefWidth="200.0" />
+            <Region minHeight="25.0" prefHeight="25.0" prefWidth="200.0" />
             <HBox alignment="BASELINE_CENTER" prefHeight="25.0" prefWidth="464.0" styleClass="space">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="keyword" />
+                  <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="Keyword" />
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <TextField minHeight="25.0" minWidth="150.0" prefHeight="25.0" prefWidth="150.0" />
+                  <TextField fx:id="keywordTextField" minHeight="25.0" minWidth="150.0" prefHeight="25.0" prefWidth="150.0" style="-fx-border-radius: 10;" />
                </children>
             </HBox>
             <Region prefHeight="200.0" prefWidth="200.0" />
-            <Button mnemonicParsing="false" text="Button" />
+            <Button fx:id="submitButton" mnemonicParsing="false" prefWidth="155.0" style="-fx-background-color: #DAFFFB; -fx-pref-width: 200; -fx-min-height: 50; -fx-border-radius: 15;" text="Submit" textAlignment="CENTER" textFill="#176b87" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
          </children>
       </VBox>
    </center>
    <right>
-      <HBox prefHeight="541.0" prefWidth="86.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="470.0" prefWidth="116.0" BorderPane.alignment="CENTER">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Turn: " />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="3" />
+            <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="Turn: ">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <Text fx:id="turnText" fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="3">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
          </children>
       </HBox>
    </right>
    <top>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: DejaVu;" text="The Magical Wheel" BorderPane.alignment="CENTER">
+      <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: DejaVu;" text="The Magical Wheel" wrappingWidth="369.57421875" BorderPane.alignment="CENTER">
          <font>
             <Font size="44.0" />
          </font>
