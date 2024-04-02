@@ -14,7 +14,7 @@ public class RegisterController {
 
     @FXML
     private void switchToHall() throws IOException {
-        App.setRoot(Configuration.CLIENT_HALL_FXML);
+        App.setRoot(Configuration.CLIENT_GREET_FXML);
     }
 
     @FXML
@@ -25,16 +25,17 @@ public class RegisterController {
         // App.setRoot(Configuration.CLIENT_GAME_FXML);
 
         // 3. If the user input is invalid, show an error message
-        createErrMsgNode();
-        // wait for 2 seconds to delete the error message
-        new Thread(() -> {
-            try {
-                Thread.sleep(2000);
-                deleteErrMsgNode();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
+        // createErrMsgNode();
+        // // wait for 2 seconds to delete the error message
+        // new Thread(() -> {
+        //     try {
+        //         Thread.sleep(2000);
+        //         deleteErrMsgNode();
+        //     } catch (InterruptedException e) {
+        //         e.printStackTrace();
+        //     }
+        // }).start();
+        App.setRoot(Configuration.CLIENT_GAME_FXML);
     }
 
     private void deleteErrMsgNode() {
