@@ -10,95 +10,62 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import com.example.the_magic_wheel.Configuration;
-import com.example.the_magic_wheel.protocols.Request;
-import com.example.the_magic_wheel.protocols.Response;
+import com.example.the_magic_wheel.protocols.request.CloseConnectionRequest;
+import com.example.the_magic_wheel.protocols.request.GuessRequest;
+import com.example.the_magic_wheel.protocols.request.RegisterRequest;
+import com.example.the_magic_wheel.protocols.request.Request;
+import com.example.the_magic_wheel.protocols.response.Response;
 
-public class Client implements AutoCloseable {
-    private final String host;
-    private final int port;
-    private final Thread worker = new Thread(() -> {
+public class Client implements Runnable {
+    public static void main(String[] args) {
+        final BlockingQueue<Request> requests = new ArrayBlockingQueue<>(Configuration.BUFFER_SIZE);
+        final BlockingQueue<Response> responses = new ArrayBlockingQueue<>(Configuration.BUFFER_SIZE);
+        final Client client = new Client("localhost", 8080, requests, responses);
+        final Thread worker = new Thread(client);
+        worker.start();
+        // Register name with the server
         try {
-            runUntilClosed();
+            client.sendRequest(new RegisterRequest("Alice"));
+            // Create input stream from terminal
+            final java.util.Scanner scanner = new java.util.Scanner(System.in);
+            while (worker.isAlive()) {
+                System.out.println("Enter a message: ");
+                final String message = scanner.nextLine();
+                if (message.equals("exit")) {
+                    worker.interrupt();
+                    break;
+                }
+                client.sendRequest(new GuessRequest(message, ""));
+            }
+            scanner.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    });
+    }
+
+    private final String host;
+    private final int port;
     private Selector selector;
     private SocketChannel channel;
 
-    private final BlockingQueue<Request> requests = new LinkedBlockingQueue<>();
-    private final BlockingQueue<Response> responses = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Request> requests;
+    private final BlockingQueue<Response> responses;
 
-    public Client(String host, int port) {
+    public Client(String host, int port, BlockingQueue<Request> requests, BlockingQueue<Response> responses) {
         this.host = host;
         this.port = port;
-    }
-
-    public Thread getWorker() {
-        return worker;
+        this.requests = requests;
+        this.responses = responses;
     }
 
     public void sendRequest(Request request) {
         requests.add(request);
-    }
-
-    public void runUntilClosed() throws Exception {
-        InetAddress address = Inet4Address.getByName(host);
-        InetSocketAddress socketAddress = new InetSocketAddress(address, port);
-        this.selector = Selector.open();
-        this.channel = SocketChannel.open();
-        this.channel.configureBlocking(false);
-        this.channel.connect(socketAddress);
-        int operations = SelectionKey.OP_CONNECT | SelectionKey.OP_READ | SelectionKey.OP_WRITE;
-        this.channel.register(this.selector, operations);
-
-        while (true) {
-            // 0. Check if there are any requests to send
-            Request request = requests.poll();
-            if (Objects.nonNull(request) && this.channel.isConnected()) {
-                this.channel.write(ByteBuffer.wrap(request.toBytes()));
-                System.out.println("Request sent: " + request);
-                continue;
-            }
-
-            // 6. Else, listen for incoming data from the server
-            if (selector.select() > 0) {
-                boolean connected = listenToServer(selector);
-                if (!connected) {
-                    break;
-                }
-            }
-        }
-        this.channel.close();
-    }
-
-    @Override
-    public void close() {
-        if (Objects.isNull(this.channel) || !this.channel.isOpen()) {
-            return;
-        }
-        try {
-            // 0. Send a request to the server to close the connection
-            Request request = new Request.Builder()
-                    .method(Request.Method.WRITE)
-                    .clientName(this.host + ":" + this.port)
-                    .contentType(Request.ContentType.CLOSE)
-                    .content("Goodbye")
-                    .build();
-            this.sendRequest(request);
-            // 1. Stop the worker thread
-            this.worker.interrupt();
-            // 2. Close the channel
-            this.channel.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private boolean listenToServer(Selector selector) throws IOException, ClassNotFoundException {
@@ -136,12 +103,49 @@ public class Client implements AutoCloseable {
                 for (int i = 0; i < data.size(); i++) {
                     bytes[i] = data.get(i);
                 }
-                Response response = Response.deserialize(bytes);
+                Response response = Response.fromBytes(bytes);
                 responses.add(response);
                 // Notify the main thread that a response has been received
-                System.out.println("Response received: " + response);
+                System.out.println("Response received: " + response.getContent());
             }
         }
         return true;
+    }
+
+    @Override
+    public void run() {
+        try {
+            InetAddress address = Inet4Address.getByName(host);
+            InetSocketAddress socketAddress = new InetSocketAddress(address, port);
+            this.selector = Selector.open();
+            this.channel = SocketChannel.open();
+            this.channel.configureBlocking(false);
+            this.channel.connect(socketAddress);
+            int operations = SelectionKey.OP_CONNECT | SelectionKey.OP_READ | SelectionKey.OP_WRITE;
+            this.channel.register(this.selector, operations);
+            while (!Thread.currentThread().isInterrupted()) {
+                Request request = requests.poll();
+                if (Objects.nonNull(request) && this.channel.isConnected()) {
+                    this.channel.write(ByteBuffer.wrap(request.toBytes()));
+                    System.out.println("Request sent: " + request.getContent());
+                }
+                if (selector.select() > 0) {
+                    boolean connected = listenToServer(selector);
+                    if (!connected) {
+                        break;
+                    }
+                }
+            }
+            // Send a close connection request to the server
+            Request closeConnection = new CloseConnectionRequest("Alice");
+            this.channel.write(ByteBuffer.wrap(closeConnection.toBytes()));
+            System.out.println("Close connection request sent");
+            this.channel.close();
+            this.selector.close();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Connection failed. Server has been closed");
+            // Interrupt the main thread
+            Thread.currentThread().interrupt();
+        }
     }
 }
