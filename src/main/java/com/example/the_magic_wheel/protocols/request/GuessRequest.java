@@ -1,19 +1,28 @@
 package com.example.the_magic_wheel.protocols.request;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 
 public class GuessRequest extends Request {
-    public GuessRequest(String nextChar, String word) {
-        super("GUESS " + nextChar + (Objects.isNull(word) ? "" : (" " + word)));
+    private final String guessChar;
+    private final String guessWord;
+    private final String username;
+
+    public String getGuessWord() {
+        return guessWord;
     }
 
-    @Override
-    public Iterator<String> iterator() {
-        final List<String> list = List.of(content.split(" "));
-        final List<String> extracted = list.subList(1, list.size());
-        return extracted.iterator();
+    public String getGuessChar() {
+        return guessChar;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public GuessRequest(String username, String guessChar, String word) {
+        super();
+        this.guessChar = Objects.requireNonNull(guessChar);
+        this.guessWord = Objects.requireNonNull(word);
+        this.username = Objects.requireNonNull(username);
+    }
 }

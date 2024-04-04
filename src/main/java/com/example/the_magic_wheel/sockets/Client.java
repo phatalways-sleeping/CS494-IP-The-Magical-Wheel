@@ -10,45 +10,16 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.CloseConnectionRequest;
-import com.example.the_magic_wheel.protocols.request.GuessRequest;
-import com.example.the_magic_wheel.protocols.request.RegisterRequest;
 import com.example.the_magic_wheel.protocols.request.Request;
 import com.example.the_magic_wheel.protocols.response.Response;
 
 public class Client implements Runnable {
-    public static void main(String[] args) {
-        final BlockingQueue<Request> requests = new ArrayBlockingQueue<>(Configuration.BUFFER_SIZE);
-        final BlockingQueue<Response> responses = new ArrayBlockingQueue<>(Configuration.BUFFER_SIZE);
-        final Client client = new Client("localhost", 8080, requests, responses);
-        final Thread worker = new Thread(client);
-        worker.start();
-        // Register name with the server
-        try {
-            client.sendRequest(new RegisterRequest("Alice"));
-            // Create input stream from terminal
-            final java.util.Scanner scanner = new java.util.Scanner(System.in);
-            while (worker.isAlive()) {
-                System.out.println("Enter a message: ");
-                final String message = scanner.nextLine();
-                if (message.equals("exit")) {
-                    worker.interrupt();
-                    break;
-                }
-                client.sendRequest(new GuessRequest(message, ""));
-            }
-            scanner.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private final String host;
     private final int port;
     private Selector selector;
@@ -64,8 +35,19 @@ public class Client implements Runnable {
         this.responses = responses;
     }
 
+
+    // To send request to the remote server through the socket channel
+    // call the sendRequest method with the request object as the parameter
+    // The request object will be wrapped with the source and destination
+    // before sending it to the server
     public void sendRequest(Request request) {
-        requests.add(request);
+        requests.add(wrapWithHeader(request));
+    }
+
+    private Request wrapWithHeader(Request request) {
+        request.setSource(channel.socket().getLocalSocketAddress().toString());
+        request.setDestination(channel.socket().getRemoteSocketAddress().toString());
+        return request;
     }
 
     private boolean listenToServer(Selector selector) throws IOException, ClassNotFoundException {
@@ -103,10 +85,10 @@ public class Client implements Runnable {
                 for (int i = 0; i < data.size(); i++) {
                     bytes[i] = data.get(i);
                 }
-                Response response = Response.fromBytes(bytes);
+                final Response response = Response.fromBytes(bytes);
                 responses.add(response);
                 // Notify the main thread that a response has been received
-                System.out.println("Response received: " + response.getContent());
+                System.out.println("Response received: " + response.toString());
             }
         }
         return true;
@@ -127,7 +109,7 @@ public class Client implements Runnable {
                 Request request = requests.poll();
                 if (Objects.nonNull(request) && this.channel.isConnected()) {
                     this.channel.write(ByteBuffer.wrap(request.toBytes()));
-                    System.out.println("Request sent: " + request.getContent());
+                    System.out.println("Request sent: " + request.toString());
                 }
                 if (selector.select() > 0) {
                     boolean connected = listenToServer(selector);

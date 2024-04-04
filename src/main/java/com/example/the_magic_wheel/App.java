@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-
 /**
  * JavaFX App
  */

@@ -1,20 +1,32 @@
 package com.example.the_magic_wheel.protocols.response;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class GameStartResponse extends Response {
+    private final Map<Integer, String> players;
 
-    public GameStartResponse(String playersAndOrders, String requestedAt) {
+    private final int wordLength;
 
-        super("GAME_START " + playersAndOrders, requestedAt);
+    private final String hints;
+
+    public GameStartResponse(Map<Integer, String> players, String hints, Integer wordLength, String requestedAt) {
+        super(requestedAt);
+        this.players = Objects.requireNonNull(players);
+        this.wordLength = Objects.requireNonNull(wordLength);
+        this.hints = Objects.requireNonNull(hints);
     }
 
-    @Override
-    public Iterator<String> iterator() {
-        final List<String> list = List.of(content.split(" "));
-        list.remove(0); // GAME_START
-        return list.iterator();
+    public String getHints() {
+        return hints;
+    }
+
+    public int getWordLength() {
+        return wordLength;
+    }
+
+    public Map<Integer, String> getPlayers() {
+        return players;
     }
 
 }

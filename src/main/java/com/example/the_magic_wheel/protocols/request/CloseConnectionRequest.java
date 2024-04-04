@@ -1,15 +1,15 @@
 package com.example.the_magic_wheel.protocols.request;
 
-import java.util.Iterator;
-import java.util.List;
 
 public class CloseConnectionRequest extends Request {
+    private final String username;
+
     public CloseConnectionRequest(String username) {
-        super("CLOSE_CONNECTION " + username);
+        super();
+        this.username = username;
     }
 
-    @Override
-    public Iterator<String> iterator() {
-        return List.of(content.split(" ")).subList(1, 2).iterator();
+    public String getUsername() {
+        return username;
     }
 }

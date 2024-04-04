@@ -1,15 +1,22 @@
 package com.example.the_magic_wheel.protocols.response;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.Objects;
 
 public class RegisterSuccessResponse extends Response {
+    private final String username;
+    private final int order;
+
     public RegisterSuccessResponse(String username, int order, String requestedAt) {
-        super("REGISTER_SUCCESS " + username + " " + order, requestedAt);
+        super(requestedAt);
+        this.username = Objects.requireNonNull(username);
+        this.order = Objects.requireNonNull(order);
     }
 
-    @Override
-    public Iterator<String> iterator() {
-        return List.of(content.split(" ")).subList(1, 3).iterator();
+    public String getUsername() {
+        return username;
+    }
+
+    public int getOrder() {
+        return order;
     }
 }

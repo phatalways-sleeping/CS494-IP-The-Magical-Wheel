@@ -10,135 +10,42 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.List;
-import java.util.ArrayList;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.example.the_magic_wheel.Configuration;
+import com.example.the_magic_wheel.protocols.Event;
 import com.example.the_magic_wheel.protocols.request.Request;
 import com.example.the_magic_wheel.protocols.response.Response;
 
-public class Server implements Runnable {
-    public static void main(String[] args) throws Exception {
-        final BlockingQueue<Request> requests = new ArrayBlockingQueue<>(Configuration.BUFFER_SIZE);
-        final BlockingQueue<Response> responses = new ArrayBlockingQueue<>(Configuration.BUFFER_SIZE);
-        final Server server = new Server.Builder("localhost", 8080).witMaxConnections(1)
-                .withRequests(requests).withResponses(responses)
-                .withPlayers(new ConcurrentHashMap<>()).build();
+public class Server implements Runnable, Component {
+    public static void main(String[] args) {
+        final ServerConfiguration configuration = new ServerConfiguration(8080, 10, "localhost");
+        final Server server = Server.spawn(configuration);
         final Thread worker = new Thread(server);
         worker.start();
-
-        try {
-            while (server.players.size() < server.maxConnections) {
-                Thread.sleep(1000);
-            }
-            // Start the game
-            server.isServingGame.set(true);
-        } catch (Exception e) {
-
-        }
     }
 
-    private final int port;
-    private final String host;
-
-    private int maxConnections;
-
-    private AtomicBoolean isServingGame;
-
-    private AtomicBoolean gameEnded;
-
+    private final ServerConfiguration configuration;
     private ServerState state;
+    private final BlockingQueue<Response> responseQueue = new LinkedBlockingQueue<>();
+    GameMediator mediator;
 
     private Map<String, SocketChannel> clients = new TreeMap<>();
-
-    // Shared between main thread and worker thread
-    private Map<Integer, String> players;
-    private BlockingQueue<Request> requests;
-    private BlockingQueue<Response> responses;
-
     private static Map<String, Server> servers = new TreeMap<>();
-
-    public static class Builder {
-        private final String host;
-        private final int port;
-        private int maxConnections;
-        private Map<Integer, String> players;
-        private BlockingQueue<Request> requests;
-        private BlockingQueue<Response> responses;
-
-        public Builder(String host, int port) {
-            this.host = host;
-            this.port = port;
-            this.maxConnections = Configuration.MAX_CONNECTIONS;
-        }
-
-        public Builder witMaxConnections(int maxConnections) {
-            this.maxConnections = maxConnections;
-            return this;
-        }
-
-        public Builder withPlayers(Map<Integer, String> players) {
-            this.players = players;
-            return this;
-        }
-
-        public Builder withRequests(BlockingQueue<Request> requests) {
-            this.requests = requests;
-            return this;
-        }
-
-        public Builder withResponses(BlockingQueue<Response> responses) {
-            this.responses = responses;
-            return this;
-        }
-
-        public Server build() {
-            String key = host + ":" + port;
-            if (servers.containsKey(key)) {
-                return servers.get(key);
-            }
-
-            Server server = new Server(host, port, maxConnections);
-            server.players = players;
-            server.requests = requests;
-            server.responses = responses;
-
-            server.setState(new WaitingForPlayers());
-            servers.put(key, server);
-            return server;
-        }
-    }
 
     Map<String, SocketChannel> getClients() {
         return clients;
     }
 
-    Map<Integer, String> getPlayers() {
-        return players;
-    }
-
-    BlockingQueue<Request> getRequests() {
-        return requests;
-    }
-
-    BlockingQueue<Response> getResponses() {
-        return responses;
-    }
-
-    List<String> getTopicForGame() {
-        final List<String> topics = new ArrayList<>();
-        topics.add("python");
-        topics.add("Top 10 programming languages");
-        return topics;
-    }
-
-    public String getNextPlayer() {
-        return "Alice";
+    public static Server spawn(ServerConfiguration configuration) {
+        if (servers.containsKey(configuration.host + ":" + configuration.port)) {
+            return servers.get(configuration.host + ":" + configuration.port);
+        }
+        Server server = new Server(configuration);
+        servers.put(configuration.host + ":" + configuration.port, server);
+        return server;
     }
 
     public static void stop(String host, int port) {
@@ -148,28 +55,29 @@ public class Server implements Runnable {
         }
     }
 
-    boolean isServingGame() {
-        return isServingGame.get();
-    }
-
     int getMaxConnections() {
-        return maxConnections;
+        return configuration.maxConnections;
     }
 
-    boolean appropriateUsername(String username) {
-        return true;
+    public BlockingQueue<Response> getResponses() {
+        return responseQueue;
     }
 
     @Override
     public void run() {
         try {
-            InetAddress hostIpAddress = InetAddress.getByName(host);
+            // Setting up the server
+            InetAddress hostIpAddress = InetAddress.getByName(configuration.host);
             Selector selector = Selector.open();
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
             serverSocketChannel.configureBlocking(false);
-            serverSocketChannel.socket().bind(new InetSocketAddress(hostIpAddress, port));
+            serverSocketChannel.socket().bind(new InetSocketAddress(hostIpAddress, configuration.port));
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-            System.out.println("Server started at " + host + ":" + port);
+
+            // Logging the server start
+            System.out.println("Server started at " + configuration.host + ":" + configuration.port);
+
+            // Keep the server running until it is interrupted
             while (!Thread.currentThread().isInterrupted()) {
                 selector.select(Configuration.TIMEOUT);
                 Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
@@ -179,28 +87,19 @@ public class Server implements Runnable {
                     if (!key.isValid()) {
                         continue;
                     }
+                    // Depend on the state of the server
+                    // the server will handle the request differently
                     this.state.handle(selector, key);
-                    if (state instanceof GameEndState) {
-                        // Reset the state to waiting for players
-                        this.setState(new WaitingForPlayers());
-                        this.isServingGame.set(false);
-                        this.gameEnded.set(false);
-                        continue;
-                    }
-                    // If the server is serving game, switch to the next state
-                    if (isServingGame.get() && this.state instanceof WaitingForPlayers) {
-                        this.setState(new GameLoadingState());
-                        continue;
-                    }
-                    // If the game has ended, switch to the next state
-                    if (this.gameEnded.get()) {
-                        this.setState(new GameEndState());
-                    }
-                    // After the game has been loaded, switch to the next state
-                    // Assume that the topic has been loaded successfully and
-                    // being sent to the clients
-                    if (this.state instanceof GameLoadingState) {
-                        this.setState(new GamePlayState());
+
+                    // After handling the request, the server will send back the response
+                    // until the response queue is empty
+                    // state.sendBackResponse(socketChannel, response); takes care of
+                    // sending the response back to the client or broadcasting the response
+                    while (!responseQueue.isEmpty()) {
+                        Response response = responseQueue.poll();
+                        for (SocketChannel socketChannel : clients.values()) {
+                            state.sendBackResponse(socketChannel, response);
+                        }
                     }
                 }
             }
@@ -209,6 +108,12 @@ public class Server implements Runnable {
         }
     }
 
+
+    // The idea is to recover from the connection failure
+    // such as:
+    // - The client disconnects unexpectedly from the server during the game
+    // - The client loses the connection with the server when in waiting for players state
+    // - ...
     void recoverFromConnectionFailure(SocketChannel socketChannel) {
         // Handle exception to ensure the server
         // still runs at a valid state after connection failure
@@ -216,19 +121,8 @@ public class Server implements Runnable {
             System.out.println("Connection lost with " + socketChannel.getRemoteAddress());
             final String address = socketChannel.getRemoteAddress().toString();
             this.clients.remove(address);
-            this.players.values().removeIf(value -> value.split("@")[1].contains(address));
-            // unregister the channel
             socketChannel.close();
             System.out.println("Unregistered " + address);
-            // If the server is serving the game and there is no player left
-            // switch to the waiting for players state
-            if (this.isServingGame.get() && this.players.size() == 0) {
-                this.isServingGame.set(false);
-                this.setState(new WaitingForPlayers());
-                this.gameEnded.set(false);
-                System.out.println("No player left, switch to waiting for players state");
-                this.notifyServerApp();
-            }
         } catch (Exception e) {
             // Aborting the server
             e.printStackTrace();
@@ -237,7 +131,7 @@ public class Server implements Runnable {
         }
     }
 
-    private void setState(ServerState state) {
+    public void setState(ServerState state) {
         if (this.state != null) {
             this.state = null; // for garbage collection
         }
@@ -245,17 +139,40 @@ public class Server implements Runnable {
         this.state.setServer(this);
     }
 
-    private Server(String host, int port, int maxConnections) {
-        this.maxConnections = maxConnections;
-        this.port = port;
-        this.host = host;
-        this.isServingGame = new AtomicBoolean(false);
-        this.gameEnded = new AtomicBoolean(false);
+    public void sendResponse(Response response) {
+        this.responseQueue.add(response);
     }
 
-    public void notifyServerApp() {
-        // Notify about the change of state
-        // and isServingGame, gameEnded
+    private Server(ServerConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
+    @Override
+    public void setMediator(GameMediator mediator) {
+        this.mediator = mediator;
+    }
+
+    @Override
+    public void notify(Event event) {
+        // Socket will delegate the event to the mediator
+        // for further processing
+        this.mediator.process((Request) event);
+    }
+}
+
+class ServerConfiguration {
+    final int port;
+    final String host;
+    int maxConnections;
+
+    public ServerConfiguration(int port, int maxConnections, String host) {
+        this.port = port;
+        this.maxConnections = maxConnections;
+        this.host = host;
+    }
+
+    public void changeMaxConnections(int maxConnections) {
+        this.maxConnections = maxConnections;
     }
 }
 

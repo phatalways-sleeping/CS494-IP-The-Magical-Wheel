@@ -1,16 +1,15 @@
 package com.example.the_magic_wheel.protocols.request;
-
-import java.util.Iterator;
-import java.util.List;
+import java.util.Objects;
 
 public class RegisterRequest extends Request {
+    private final String username;
+
     public RegisterRequest(String username) {
-        super("REGISTER " + username);
+        super();
+        this.username = Objects.requireNonNull(username);
     }
 
-    @Override
-    public Iterator<String> iterator() {
-        List<String> list = List.of(content.split(" ")).subList(1, 2);
-        return list.iterator();
+    public String getUsername() {
+        return username;
     }
 }

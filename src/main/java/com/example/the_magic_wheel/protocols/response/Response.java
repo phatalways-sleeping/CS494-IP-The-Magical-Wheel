@@ -1,19 +1,20 @@
 package com.example.the_magic_wheel.protocols.response;
 
-import java.io.Serializable;
-import java.util.Iterator;
 
-import com.example.the_magic_wheel.protocols.ToBytes;
-
+import com.example.the_magic_wheel.protocols.Event;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.IOException;
+import java.util.Objects;
 
-public abstract class Response implements Serializable, ToBytes {
+
+public abstract class Response implements Event {
     protected final String respondedAt;
     protected final String requestedAt;
-    protected final String content;
+
+    protected String source; // The server's address
+    protected String destination; // Null indicates a broadcast
 
     public static Response fromBytes(byte[] bytes) throws IOException, ClassNotFoundException {
         try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes); ObjectInput in = new ObjectInputStream(bis)) {
@@ -21,12 +22,9 @@ public abstract class Response implements Serializable, ToBytes {
         }
     }
 
-    public abstract Iterator<String> iterator();
-
-    protected Response(String content, String requestedAt) {
+    protected Response(String requestedAt) {
         this.respondedAt = new java.util.Date().toString();
         this.requestedAt = requestedAt;
-        this.content = content;
     }
 
     public String getRespondedAt() {
@@ -37,7 +35,19 @@ public abstract class Response implements Serializable, ToBytes {
         return requestedAt;
     }
 
-    public String getContent() {
-        return content;
+    public String getSource() {
+        return source;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setSource(String source) {
+        this.source = Objects.requireNonNull(source);
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 }

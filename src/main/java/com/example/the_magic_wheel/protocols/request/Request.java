@@ -1,19 +1,18 @@
 package com.example.the_magic_wheel.protocols.request;
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.Objects;
 
-import com.example.the_magic_wheel.protocols.ToBytes;
-
+import com.example.the_magic_wheel.protocols.Event;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 
-public abstract class Request implements Serializable, ToBytes {
+public abstract class Request implements Event {
     protected final String requestedAt;
-    protected final String content;
+    protected String source;
+    protected String destination;
 
     public static Request fromBytes(byte[] bytes) throws IOException, ClassNotFoundException {
         try (ByteArrayInputStream byteStream = new ByteArrayInputStream(bytes);
@@ -22,21 +21,27 @@ public abstract class Request implements Serializable, ToBytes {
         }
     }
 
-    protected Request(String content) {
+    protected Request() {
         this.requestedAt = new Date().toString();
-        this.content = content;
-        // this.type = type;
     }
-
-    // Extract the content of the request
-    // ignore the RequestType
-    public abstract Iterator<String> iterator();
 
     public String getRequestedAt() {
         return requestedAt;
     }
 
-    public String getContent() {
-        return content;
+    public String getSource() {
+        return source;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setSource(String source) {
+        this.source = Objects.requireNonNull(source);
+    }
+
+    public void setDestination(String destination) {
+        this.destination = Objects.requireNonNull(destination);
     }
 }
