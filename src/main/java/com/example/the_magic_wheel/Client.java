@@ -1,4 +1,4 @@
-package com.example.the_magic_wheel.sockets;
+package com.example.the_magic_wheel;
 
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -20,6 +20,8 @@ import com.example.the_magic_wheel.protocols.request.CloseConnectionRequest;
 import com.example.the_magic_wheel.protocols.request.Request;
 import com.example.the_magic_wheel.protocols.response.Response;
 
+import javafx.application.Platform;
+
 public class Client implements Runnable {
     private final String host;
     private final int port;
@@ -36,13 +38,6 @@ public class Client implements Runnable {
         this.responses = responses;
     }
 
-    public static void main(String[] args) {
-        final Client client = new Client("localhost", 8080, new LinkedBlockingQueue<>(), new LinkedBlockingQueue<>());
-        final Thread worker = new Thread(client);
-        worker.start();
-    }
-
-
     // To send request to the remote server through the socket channel
     // call the sendRequest method with the request object as the parameter
     // The request object will be wrapped with the source and destination
@@ -55,6 +50,10 @@ public class Client implements Runnable {
         request.setSource(channel.socket().getLocalSocketAddress().toString());
         request.setDestination(channel.socket().getRemoteSocketAddress().toString());
         return request;
+    }
+
+    public Response receiveResponse() {
+        return responses.poll();
     }
 
     private boolean listenToServer(Selector selector) throws IOException, ClassNotFoundException {
@@ -94,6 +93,7 @@ public class Client implements Runnable {
                 }
                 final Response response = Response.fromBytes(bytes);
                 responses.add(response);
+
                 // Notify the main thread that a response has been received
                 System.out.println("Response received: " + response.toString());
             }
@@ -120,6 +120,7 @@ public class Client implements Runnable {
                 }
                 if (selector.select() > 0) {
                     boolean connected = listenToServer(selector);
+                    // System.out.println("listen to server");
                     if (!connected) {
                         break;
                     }
