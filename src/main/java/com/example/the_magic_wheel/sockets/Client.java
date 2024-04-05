@@ -35,7 +35,6 @@ public class Client implements Runnable {
         this.responses = responses;
     }
 
-
     // To send request to the remote server through the socket channel
     // call the sendRequest method with the request object as the parameter
     // The request object will be wrapped with the source and destination

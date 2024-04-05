@@ -11,9 +11,13 @@ import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
+
+import java.nio.channels.SocketChannel;;
 
 public class ServerApp extends Application implements GameMediator {
     // Server is the runnable component that listens for incoming connections
@@ -46,6 +50,8 @@ public class ServerApp extends Application implements GameMediator {
     @SuppressWarnings("unused")
     private Component databaseController;
 
+    public static List<SocketChannel> clients;
+
     public ServerApp(Server server, Component gameController) {
         this.server = server;
         this.gameController = gameController;
@@ -64,45 +70,50 @@ public class ServerApp extends Application implements GameMediator {
     }
 
     @Override
-    public void process(Request request) {
-        guard((Event) request);
-        Response response = null;
-        if (request instanceof RegisterRequest) {
-            final String source = request.getSource();
-            final String destination = request.getDestination();
-            final RegisterRequest registerRequest = (RegisterRequest) request;
-            final String username = registerRequest.getUsername();
+    public Response process(Request request, SocketChannel channel) {
+        // Syncronize the process method since this.process() is called by the multiple
+        // threads spanwned by the ExecutionManager
+        synchronized (this) {
+            Response response = null;
+            if (!guard((Event) request)) {
+                return response;
+            }
+            if (request instanceof RegisterRequest) {
+                final String source = request.getSource();
+                final String destination = request.getDestination();
+                final RegisterRequest registerRequest = (RegisterRequest) request;
+                final String username = registerRequest.getUsername();
 
-            // Register the player by interacting with the game controller
+                // Register the player by interacting with the game controller
 
-            // Suppose the game controller returns the response
-            response = new RegisterSuccessResponse(username, 1, registerRequest.getRequestedAt());
-            response.setSource(destination);
-            response.setDestination(source); // Send the response back to the client, not broadcast
-        } else if (request instanceof CloseConnectionRequest) {
-            guard((Event) request);
-            // final String source = request.getSource();
-            // final String destination = request.getDestination();
+                // Suppose the game controller returns the response
+                response = new RegisterSuccessResponse(username, 1, registerRequest.getRequestedAt());
+                response.setSource(destination);
+                response.setDestination(source); // Send the response back to the client, not broadcast
 
-            // Close the connection by interacting with the server
+                // Add new client to the list of clients
+                server.getClients().put(username, channel);
+            } else if (request instanceof CloseConnectionRequest) {
+                guard((Event) request);
+                // final String source = request.getSource();
+                // final String destination = request.getDestination();
 
-            // No response is needed for the CloseConnectionRequest
-        } else { // GuessRequest
-            final String destination = request.getDestination();
-            final GuessRequest guessRequest = (GuessRequest) request;
+                // Close the connection by interacting with the server
 
-            // Interact with the game controller to process the guess request
+                // No response is needed for the CloseConnectionRequest
+            } else { // GuessRequest
+                final String destination = request.getDestination();
+                final GuessRequest guessRequest = (GuessRequest) request;
 
-            // Suppose the game controller returns the response
-            response = ResultNotificationResponse.successfulGuessChar(guessRequest.getUsername(), 1,
-                    (short) 1, guessRequest.getRequestedAt());
-            response.setSource(destination);
-        }
+                // Interact with the game controller to process the guess request
 
-        // Server App will send the response back to the client
-        // by pushing it to the response queue
-        if (Objects.nonNull(response)) {
-            server.sendResponse(response);
+                // Suppose the game controller returns the response
+                response = ResultNotificationResponse.successfulGuessChar(guessRequest.getUsername(), 1,
+                        (short) 1, guessRequest.getRequestedAt());
+
+                response.setSource(destination);
+            }
+            return response;
         }
     }
 
@@ -114,10 +125,11 @@ public class ServerApp extends Application implements GameMediator {
     // The idea is to prevent the server from processing the request
     // that may lead to an invalid state
     // 1. If the game has not started, the server should not process the guess
-    // 2. If the game has started, the server should not process the register request
+    // 2. If the game has started, the server should not process the register
+    // request
     // 3. ...
-    private void guard(Event event) {
-
+    private boolean guard(Event event) {
+        return true;
     }
 
     @Override
@@ -128,5 +140,18 @@ public class ServerApp extends Application implements GameMediator {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public Iterator<SocketChannel> getClients() {
+        return server.getClients().values().iterator();
+    }
+
+    @Override
+    public void notifyConnectionLost(SocketChannel channel) throws Exception {
+        final String address = channel.getRemoteAddress().toString();
+        server.getClients().remove(address);
+        channel.close();
+        System.out.println("Mediator: Remove client " + address + " from the list of clients");
     }
 }

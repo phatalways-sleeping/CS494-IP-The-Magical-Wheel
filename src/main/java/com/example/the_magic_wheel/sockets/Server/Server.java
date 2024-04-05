@@ -1,23 +1,25 @@
 package com.example.the_magic_wheel.sockets.Server;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import com.example.the_magic_wheel.Configuration;
-import com.example.the_magic_wheel.protocols.Event;
 import com.example.the_magic_wheel.protocols.request.Request;
-import com.example.the_magic_wheel.protocols.response.Response;
+import com.example.the_magic_wheel.sockets.Server.manager.ExecutionManager;
+import com.example.the_magic_wheel.sockets.Server.manager.RequestHandler;
+import com.example.the_magic_wheel.sockets.Server.manager.ServerExecutor;
 
 public class Server implements Runnable, Component {
     public static void main(String[] args) {
@@ -28,8 +30,7 @@ public class Server implements Runnable, Component {
     }
 
     private final ServerConfiguration configuration;
-    private ServerState state;
-    private final BlockingQueue<Response> responseQueue = new LinkedBlockingQueue<>();
+    private final ExecutionManager executionManager = new ServerExecutor(10);
     GameMediator mediator;
 
     private Map<String, SocketChannel> clients = new TreeMap<>();
@@ -44,6 +45,7 @@ public class Server implements Runnable, Component {
             return servers.get(configuration.host + ":" + configuration.port);
         }
         Server server = new Server(configuration);
+        // server.setState(new WaitingForPlayers());
         servers.put(configuration.host + ":" + configuration.port, server);
         return server;
     }
@@ -59,9 +61,9 @@ public class Server implements Runnable, Component {
         return configuration.maxConnections;
     }
 
-    public BlockingQueue<Response> getResponses() {
-        return responseQueue;
-    }
+    // public BlockingQueue<Response> getResponses() {
+    // return responseQueue;
+    // }
 
     @Override
     public void run() {
@@ -75,7 +77,7 @@ public class Server implements Runnable, Component {
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             // Logging the server start
-            System.out.println("Server started at " + configuration.host + ":" + configuration.port);
+            System.out.println("Server: Server started at " + configuration.host + ":" + configuration.port);
 
             // Keep the server running until it is interrupted
             while (!Thread.currentThread().isInterrupted()) {
@@ -87,42 +89,55 @@ public class Server implements Runnable, Component {
                     if (!key.isValid()) {
                         continue;
                     }
-                    // Depend on the state of the server
-                    // the server will handle the request differently
-                    this.state.handle(selector, key);
-
-                    // After handling the request, the server will send back the response
-                    // until the response queue is empty
-                    // state.sendBackResponse(socketChannel, response); takes care of
-                    // sending the response back to the client or broadcasting the response
-                    while (!responseQueue.isEmpty()) {
-                        Response response = responseQueue.poll();
-                        for (SocketChannel socketChannel : clients.values()) {
-                            state.sendBackResponse(socketChannel, response);
+                    try {
+                        if (key.isAcceptable()) {
+                            final SocketChannel socketChannel = tryToSpawnNewConnection(selector, key);
+                            System.out
+                                    .println("Server: Spawned new connection from " + socketChannel.getRemoteAddress());
                         }
+                        if (key.isReadable()) {
+                            // Deserialize the request
+                            SocketChannel socketChannel = (SocketChannel) key.channel();
+                            final Request request = deserializeRequest(socketChannel);
+
+                            // Logging the request
+                            System.out.println("Server: Request received from " + socketChannel.getRemoteAddress());
+                            System.out.println("Server: Request: " + request.toString());
+
+                            executionManager.execute(new RequestHandler(request, socketChannel, mediator));
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        recoverFromConnectionFailure((SocketChannel) key.channel());
                     }
+
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            System.out.println("Server: Server stopped");
+            System.out.println("Server: Cleaning up...");
+            servers.remove(configuration.host + ":" + configuration.port);
+            System.out.println("Server: Server cleaned up");
+            executionManager.shutdown();
+            System.out.println("Server: Execution manager shut down");
         }
     }
-
 
     // The idea is to recover from the connection failure
     // such as:
     // - The client disconnects unexpectedly from the server during the game
-    // - The client loses the connection with the server when in waiting for players state
+    // - The client loses the connection with the server when in waiting for players
+    // state
     // - ...
     void recoverFromConnectionFailure(SocketChannel socketChannel) {
         // Handle exception to ensure the server
         // still runs at a valid state after connection failure
         try {
-            System.out.println("Connection lost with " + socketChannel.getRemoteAddress());
-            final String address = socketChannel.getRemoteAddress().toString();
-            this.clients.remove(address);
-            socketChannel.close();
-            System.out.println("Unregistered " + address);
+            System.out.println("Server: Connection lost with " + socketChannel.getRemoteAddress());
+            System.out.println("Server: Notifying the mediator...");
+            mediator.notifyConnectionLost(socketChannel);
+            System.out.println("Server: The mediator has been notified and recovered from the connection failure");
         } catch (Exception e) {
             // Aborting the server
             e.printStackTrace();
@@ -131,17 +146,17 @@ public class Server implements Runnable, Component {
         }
     }
 
-    public void setState(ServerState state) {
-        if (this.state != null) {
-            this.state = null; // for garbage collection
-        }
-        this.state = state;
-        this.state.setServer(this);
-    }
+    // public void setState(ServerState state) {
+    // if (this.state != null) {
+    // this.state = null; // for garbage collection
+    // }
+    // this.state = state;
+    // this.state.setServer(this);
+    // }
 
-    public void sendResponse(Response response) {
-        this.responseQueue.add(response);
-    }
+    // public void sendResponse(Response response) {
+    // this.responseQueue.add(response);
+    // }
 
     private Server(ServerConfiguration configuration) {
         this.configuration = configuration;
@@ -152,11 +167,32 @@ public class Server implements Runnable, Component {
         this.mediator = mediator;
     }
 
-    @Override
-    public void notify(Event event) {
-        // Socket will delegate the event to the mediator
-        // for further processing
-        this.mediator.process((Request) event);
+    private Request deserializeRequest(SocketChannel socketChannel) throws IOException, ClassNotFoundException {
+        ByteBuffer buffer = ByteBuffer.allocate(Configuration.BUFFER_SIZE);
+        int bytesRead = socketChannel.read(buffer);
+        List<Byte> data = new ArrayList<>();
+        while (bytesRead > 0) {
+            buffer.flip();
+            while (buffer.hasRemaining()) {
+                data.add(buffer.get());
+            }
+            buffer.clear();
+            bytesRead = socketChannel.read(buffer);
+        }
+        byte[] bytes = new byte[data.size()];
+        for (int i = 0; i < data.size(); i++) {
+            bytes[i] = data.get(i);
+        }
+        return (Request) Request.fromBytes(bytes);
+    }
+
+    private SocketChannel tryToSpawnNewConnection(Selector selector, SelectionKey key)
+            throws IllegalConnectionException, IOException, ClosedChannelException {
+        ServerSocketChannel serverSocket = (ServerSocketChannel) key.channel();
+        SocketChannel socketChannel = serverSocket.accept();
+        socketChannel.configureBlocking(false);
+        socketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+        return socketChannel;
     }
 }
 
