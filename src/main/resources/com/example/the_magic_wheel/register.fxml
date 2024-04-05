@@ -41,7 +41,6 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" style="-fx-background-color: rgb(4, 54, 74);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.the_magic_wheel.controllers.RegisterController">
    <children>
       <Label alignment="CENTER" layoutX="195.0" layoutY="102.0" prefHeight="29.0" prefWidth="510.0" text="The Magical Wheel" textAlignment="CENTER" textFill="WHITE">
@@ -56,7 +55,7 @@
                   <Font name="DejaVu Sans Mono Bold" size="24.0" />
                </font>
             </Label>
-            <TextField alignment="CENTER" prefHeight="61.0" prefWidth="637.0" promptText="YourOnlyHero..." style="-fx-padding: 10; -fx-background-radius: 40;">
+            <TextField fx:id="nameTextField" alignment="CENTER" prefHeight="61.0" prefWidth="637.0" promptText="YourOnlyHero..." style="-fx-padding: 10; -fx-background-radius: 40;">
                <font>
                   <Font name="DejaVu Sans Mono Bold" size="18.0" />
                </font>
