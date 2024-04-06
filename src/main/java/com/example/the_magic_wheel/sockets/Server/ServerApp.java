@@ -10,16 +10,21 @@ import com.example.the_magic_wheel.protocols.response.Response;
 import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
 
 import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import java.nio.channels.SocketChannel;;
 
 public class ServerApp extends Application implements GameMediator {
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     // Server is the runnable component that listens for incoming connections
     // Therefore, it is wrapped in Thread to run in the background
     // Receiving connections is a blocking operation and should not be done on the
@@ -32,7 +37,7 @@ public class ServerApp extends Application implements GameMediator {
     // The server will iteratively checking the response queue and sending the
     // responses to the clients
     // if it finds any responses
-    private Server server;
+    private final Server server;
 
     // GameController is the component that manages the game state
     // It contains the logic for the game and is responsible for updating the game
@@ -41,22 +46,26 @@ public class ServerApp extends Application implements GameMediator {
     // The ServerApp may call methods on the GameController to update the game state
     // when it is notified
     // with a request from Server
-    private Component gameController;
+    private final Component gameController;
 
     // DatabaseController is the component that manages the database of keywords and
     // hints
     // It is responsible for fetching the keywords and hints from the text file
     // It usually is called by the GameController to get the keywords and hints
-    @SuppressWarnings("unused")
-    private Component databaseController;
+    private final Component databaseController;
 
-    public static List<SocketChannel> clients;
-
-    public ServerApp(Server server, Component gameController) {
+    public ServerApp() {
+        final Server server = Server.spawn(new ServerConfiguration(8080,
+                "localhost"));
+        final Component gameController = Server.spawn(new ServerConfiguration(8000,
+                "localhost"));
         this.server = server;
         this.gameController = gameController;
+        this.databaseController = Server.spawn(new ServerConfiguration(8001,
+                "localhost"));
         this.server.setMediator(this);
         this.gameController.setMediator(this);
+        this.databaseController.setMediator(this);
     }
 
     @Override
@@ -74,6 +83,7 @@ public class ServerApp extends Application implements GameMediator {
         // Syncronize the process method since this.process() is called by the multiple
         // threads spanwned by the ExecutionManager
         synchronized (this) {
+            System.out.println("Mediator: Processing request " + request.toString());
             Response response = null;
             if (!guard((Event) request)) {
                 return response;
@@ -92,7 +102,7 @@ public class ServerApp extends Application implements GameMediator {
                 response.setDestination(source); // Send the response back to the client, not broadcast
 
                 // Add new client to the list of clients
-                server.getClients().put(username, channel);
+                server.getClients().put(source, channel);
             } else if (request instanceof CloseConnectionRequest) {
                 guard((Event) request);
                 // final String source = request.getSource();
@@ -129,17 +139,33 @@ public class ServerApp extends Application implements GameMediator {
     // request
     // 3. ...
     private boolean guard(Event event) {
+        // 1. If the game has not started, the server should not process the guess
+
+        // 2. If the game has started, the server should not process the register
+        // request
+
+        // 3. The server should not process the request if the client is not in the list
+        // of clients
+
+        // 4. If the game has ended or in the waiting for players state, the server
+        // should not process the guess
+
+        // 5. Ignore duplicate requests from the same client to avoid DOS attack
+
         return true;
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'start'");
-    }
+    public void start(@SuppressWarnings("exports") Stage stage) throws Exception {
+        // Start the server
+        final Thread serverThread = new Thread(server);
+        serverThread.setDaemon(true);
+        serverThread.start();
 
-    public static void main(String[] args) {
-        launch(args);
+        Scene scene = new Scene(new Group(), 300, 250);
+        stage.setTitle("Simple Window");
+        stage.setScene(scene);
+        stage.show();
     }
 
     @Override

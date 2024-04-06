@@ -29,6 +29,7 @@ public class Configuration {
 
     public static final int TIMEOUT = 5000; // milliseconds
     public static final int RETRY_ATTEMPTS = 3;
+    public static final int RETRY_INTERVAL = 3000; // milliseconds
 
     public static final int MAX_CONNECTIONS = 10;
     public static final int MIN_CONNECTIONS = 2;

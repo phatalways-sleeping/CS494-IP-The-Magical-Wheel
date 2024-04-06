@@ -5,6 +5,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Objects;
 import java.util.Iterator;
 
+import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.Request;
 import com.example.the_magic_wheel.protocols.response.Response;
 import com.example.the_magic_wheel.sockets.Server.GameMediator;
@@ -21,19 +22,37 @@ public class RequestHandler implements Handler {
     public RequestHandler(Request request, SocketChannel channel, GameMediator mediator) {
         this.request = Objects.requireNonNull(request);
         this.channel = Objects.requireNonNull(channel);
-        // this.mediator = Objects.requireNonNull(mediator);
-        this.mediator = mediator;
+        this.mediator = Objects.requireNonNull(mediator);
     }
 
     @Override
     public void run() {
         try {
-            this.handle();
-        } catch (Exception e) {
-            e.printStackTrace();
+            for (int i = 0; i < Configuration.RETRY_ATTEMPTS; i++) {
+                try {
+                    this.handle();
+                    break;
+                } catch (Exception e) {
+                    System.err.println("RequestHandler: Failed to handle the request: " + request.toString());
+                    // Check if this channel is still open
+                    if (!this.channel.isOpen()) {
+                        System.err.println("RequestHandler: Channel is closed");
+                        break;
+                    }
+                    // Random sleep time to avoid busy waiting from 0 to Configuration.RETRY_SLEEP *
+                    // (i + 1)
+                    final int sleepTime = (int) (Math.random() * (Configuration.RETRY_INTERVAL * (i + 1)));
+                    System.err.println("RequestHandler: Retrying in " + sleepTime + "ms");
+                    Thread.sleep(sleepTime);
+                }
+            }
+        } catch (InterruptedException e) {
+            System.err.println("RequestHandler: Error when sleeping - " + e.getMessage());
+            System.err.println("RequestHandler: Dropping the request - " + request.toString());
         } finally {
-            this.channel = null; // Release the channel
-            this.mediator = null; // Release the mediator
+            // Release the resources
+            this.mediator = null;
+            this.channel = null;
         }
     }
 
@@ -59,4 +78,8 @@ public class RequestHandler implements Handler {
         }
     }
 
+    @Override
+    public String getSource() {
+        return this.request.getSource();
+    }
 }

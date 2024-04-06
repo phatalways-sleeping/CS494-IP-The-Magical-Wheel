@@ -44,4 +44,10 @@ public abstract class Request implements Event {
     public void setDestination(String destination) {
         this.destination = Objects.requireNonNull(destination);
     }
+
+    @Override
+    public String toString() {
+        return "Request{" + "requestedAt='" + requestedAt + '\'' + ", source='" + source + '\'' + ", destination='"
+                + destination + '\'' + '}';
+    }
 }

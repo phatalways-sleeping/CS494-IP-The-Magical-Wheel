@@ -1,13 +1,11 @@
 package com.example.the_magic_wheel.protocols.response;
 
-
 import com.example.the_magic_wheel.protocols.Event;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.util.Objects;
-
 
 public abstract class Response implements Event {
     protected final String respondedAt;
@@ -49,5 +47,15 @@ public abstract class Response implements Event {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    @Override
+    public String toString() {
+        return "Response{" +
+                "respondedAt='" + respondedAt + '\'' +
+                ", requestedAt='" + requestedAt + '\'' +
+                ", source='" + source + '\'' +
+                ", destination='" + destination + '\'' +
+                '}';
     }
 }
