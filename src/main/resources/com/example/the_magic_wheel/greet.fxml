@@ -35,42 +35,23 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-  prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21"
-  xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="com.example.the_magic_wheel.controllers.HallController"
-  >
-  <children>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="598.0" prefWidth="1241.0"
-      style="-fx-background-color: rgb(4, 54, 74);" VBox.vgrow="ALWAYS">
-      <children>
-        <Circle fill="#dafffb" layoutX="142.0" layoutY="378.0" radius="128.0" stroke="#dafffb"
-          strokeType="INSIDE" />
-        <Circle fill="#dafffb" layoutX="761.0" layoutY="129.0" radius="115.0" stroke="#dafffb"
-          strokeType="INSIDE" />
-        <Label alignment="CENTER" layoutX="215.0" layoutY="215.0" prefHeight="29.0"
-          prefWidth="510.0" text="The Magical Wheel" textAlignment="CENTER" textFill="WHITE">
-          <font>
-            <Font name="DejaVu Sans Mono Bold" size="48.0" />
-          </font>
-        </Label>
-        <Circle fill="#dafffb" layoutX="725.0" layoutY="462.0" radius="124.0" stroke="#dafffb"
-          strokeType="INSIDE" />
-        <Button id="btn_get_started" alignment="CENTER" layoutX="299.0" layoutY="300.0"
-          mnemonicParsing="false" prefHeight="59.0" prefWidth="302.0"
-          style="-fx-background-color: white; -fx-background-radius: 16;" text="Get started"
-          textAlignment="CENTER"
-          onAction="#switchToRegister"
-        >
-          <font>
-            <Font name="DejaVu Sans Mono Bold" size="24.0" />
-          </font>
-        </Button>
-      </children>
-    </AnchorPane>
-  </children>
-</VBox>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: rgb(4, 54, 74);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<children>
+  <Circle fill="#dafffb" layoutX="142.0" layoutY="378.0" radius="128.0" stroke="#dafffb" strokeType="INSIDE" />
+  <Circle fill="#dafffb" layoutX="761.0" layoutY="129.0" radius="115.0" stroke="#dafffb" strokeType="INSIDE" />
+  <Label alignment="CENTER" layoutX="215.0" layoutY="215.0" prefHeight="29.0" prefWidth="510.0" text="The Magical Wheel" textAlignment="CENTER" textFill="WHITE">
+    <font>
+      <Font name="DejaVu Sans Mono Bold" size="48.0" />
+    </font>
+  </Label>
+  <Circle fill="#dafffb" layoutX="725.0" layoutY="462.0" radius="124.0" stroke="#dafffb" strokeType="INSIDE" />
+  <Button id="btn_get_started" fx:id="getStartedButton" alignment="CENTER" layoutX="299.0" layoutY="300.0" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="59.0" prefWidth="302.0" style="-fx-background-color: white; -fx-background-radius: 16;" text="Get started" textAlignment="CENTER">
+    <font>
+      <Font name="DejaVu Sans Mono Bold" size="24.0" />
+    </font>
+  </Button>
+</children>
+</AnchorPane>

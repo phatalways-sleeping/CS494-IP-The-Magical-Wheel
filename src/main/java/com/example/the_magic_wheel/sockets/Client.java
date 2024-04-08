@@ -10,6 +10,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +34,12 @@ public class Client implements Runnable {
         this.port = port;
         this.requests = requests;
         this.responses = responses;
+    }
+
+    public static void main(String[] args) {
+        final Client client = new Client("localhost", 8080, new LinkedBlockingQueue<>(), new LinkedBlockingQueue<>());
+        final Thread worker = new Thread(client);
+        worker.start();
     }
 
 

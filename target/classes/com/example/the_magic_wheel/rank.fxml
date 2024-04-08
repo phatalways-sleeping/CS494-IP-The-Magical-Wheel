@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #04364A;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text fill="#dafffb" layoutX="353.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score Board">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Text>
+      <VBox id="scoreBoard" fx:id="rankingVBox" alignment="TOP_CENTER" layoutX="237.0" layoutY="94.0" prefHeight="400.0" prefWidth="445.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 20; -fx-spacing: 10;">
+         <children>
+            <HBox fx:id="itemHBox" alignment="CENTER" prefHeight="64.0" prefWidth="421.0" style="-fx-background-color: #176B87; -fx-border-color: #000000; -fx-background-radius: 20; -fx-border-radius: 20;">
+               <children>
+                  <Label id="Ranking" text="No.1" textAlignment="CENTER" textFill="#dafffb">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                  </Label>
+                  <Region prefHeight="62.0" prefWidth="51.0" />
+                  <Label id="RankingName" alignment="CENTER" text="Nguyen Van A" textAlignment="CENTER" textFill="#dafffb">
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+                  <Region prefHeight="62.0" prefWidth="51.0" />
+                  <Label id="RankingScore" alignment="CENTER_RIGHT" text="320" textAlignment="CENTER" textFill="#dafffb">
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="421.0" style="-fx-background-color: #176B87; -fx-border-color: #000000; -fx-background-radius: 20; -fx-border-radius: 20;">
+               <children>
+                  <Label id="Ranking" text="No.2" textAlignment="CENTER" textFill="#dafffb">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                  </Label>
+                  <Region prefHeight="62.0" prefWidth="51.0" />
+                  <Label id="RankingName" alignment="CENTER" text="Nguyen Van A" textAlignment="CENTER" textFill="#dafffb">
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+                  <Region prefHeight="62.0" prefWidth="51.0" />
+                  <Label id="RankingScore" alignment="CENTER_RIGHT" text="320" textAlignment="CENTER" textFill="#dafffb">
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="421.0" style="-fx-background-color: #176B87; -fx-border-color: #000000; -fx-background-radius: 20; -fx-border-radius: 20;">
+               <children>
+                  <Label id="Ranking" text="No.3" textAlignment="CENTER" textFill="#dafffb">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                  </Label>
+                  <Region prefHeight="62.0" prefWidth="51.0" />
+                  <Label id="RankingName" alignment="CENTER" text="Nguyen Van A" textAlignment="CENTER" textFill="#dafffb">
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+                  <Region prefHeight="62.0" prefWidth="51.0" />
+                  <Label id="RankingScore" alignment="CENTER_RIGHT" text="320" textAlignment="CENTER" textFill="#dafffb">
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="421.0" style="-fx-background-color: #176B87; -fx-border-color: #000000; -fx-background-radius: 20; -fx-border-radius: 20;">
+               <children>
+                  <Label id="Ranking" text="No.4" textAlignment="CENTER" textFill="#dafffb">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                  </Label>
+                  <Region prefHeight="62.0" prefWidth="51.0" />
+                  <Label id="RankingName" alignment="CENTER" text="Nguyen Van A" textAlignment="CENTER" textFill="#dafffb">
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+                  <Region prefHeight="62.0" prefWidth="51.0" />
+                  <Label id="RankingScore" alignment="CENTER_RIGHT" text="320" textAlignment="CENTER" textFill="#dafffb">
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="421.0" style="-fx-background-color: #176B87; -fx-border-color: #000000; -fx-background-radius: 20; -fx-border-radius: 20;">
+               <children>
+                  <Label id="Ranking" text="No.5" textAlignment="CENTER" textFill="#dafffb">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                  </Label>
+                  <Region prefHeight="62.0" prefWidth="51.0" />
+                  <Label id="RankingName" alignment="CENTER" text="Nguyen Van A" textAlignment="CENTER" textFill="#dafffb">
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+                  <Region prefHeight="62.0" prefWidth="51.0" />
+                  <Label id="RankingScore" alignment="CENTER_RIGHT" text="320" textAlignment="CENTER" textFill="#dafffb">
+                     <font>
+                        <Font name="NSimSun" size="21.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER" layoutX="237.0" layoutY="486.0" prefHeight="100.0" prefWidth="458.0">
+         <children>
+            <Button id="btn_get_started" fx:id="exitButton" alignment="CENTER" mnemonicParsing="false" onAction="#closeGame" prefHeight="42.0" prefWidth="200.0" style="-fx-background-color: #DAFFFB; -fx-background-radius: 16;" text="Exit" textAlignment="CENTER" textFill="#04364a">
+               <font>
+                  <Font name="DejaVu Sans Mono Bold" size="24.0" />
+               </font>
+            </Button>
+            <Region prefHeight="100.0" prefWidth="105.0" />
+            <Button id="btn_get_started" fx:id="playAgainButton" alignment="CENTER" mnemonicParsing="false" onAction="#playAgain" prefHeight="42.0" prefWidth="200.0" style="-fx-background-color: #DAFFFB; -fx-background-radius: 16;" text="Play again" textAlignment="CENTER" textFill="#04364a">
+               <font>
+                  <Font name="DejaVu Sans Mono Bold" size="24.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
