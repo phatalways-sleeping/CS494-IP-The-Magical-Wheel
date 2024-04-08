@@ -18,12 +18,14 @@ import javafx.stage.Stage;
 
 public class ScenesManager {
 
+    private App app;
     private Scene scene;
     private String currentFxml;
     private HashMap<String, Parent> scenesMap = new HashMap<>();
     private HashMap<String, Controller> controllersMap = new HashMap<>();
 
     ScenesManager(Stage stage, App app) throws IOException {
+        this.app = app;
         addNewScene(Configuration.CLIENT_GREET_FXML, new GreetController(app));
         addNewScene(Configuration.CLIENT_REGISTER_FXML, new RegisterController(app));
         addNewScene(Configuration.CLIENT_HALL_FXML, new HallController(app));
@@ -62,5 +64,17 @@ public class ScenesManager {
     public void exitGame() {
         Platform.exit();
         System.exit(0);
+    }
+
+    public void resetController() throws IOException {
+        scenesMap.clear();
+        controllersMap.clear();
+
+
+        addNewScene(Configuration.CLIENT_GREET_FXML, new GreetController(app));
+        addNewScene(Configuration.CLIENT_REGISTER_FXML, new RegisterController(app));
+        addNewScene(Configuration.CLIENT_HALL_FXML, new HallController(app));
+        addNewScene(Configuration.CLIENT_GAME_FXML, new GameController(app));
+        addNewScene(Configuration.CLIENT_RANKING_FXML, new RankController(app));
     }
 }
