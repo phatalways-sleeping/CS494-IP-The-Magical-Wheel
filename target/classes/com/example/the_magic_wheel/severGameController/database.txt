@@ -1,0 +1,9 @@
+4
+Cat
+A furry mammal often kept as a pet.
+Dog
+Known as man's best friend, often used for companionship and as working animals.
+Apple
+A round fruit with red, green, or yellow skin and a crisp texture.
+Banana
+A long curved fruit with a yellow skin and soft flesh inside.

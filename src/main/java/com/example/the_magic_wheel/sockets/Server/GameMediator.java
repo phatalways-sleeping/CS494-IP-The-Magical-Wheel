@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.nio.channels.SocketChannel;
 
 import com.example.the_magic_wheel.protocols.request.Request;
+
 import com.example.the_magic_wheel.protocols.response.Response;
 
 public interface GameMediator {
@@ -12,4 +13,7 @@ public interface GameMediator {
     public Iterator<SocketChannel> getClients();
 
     public void notifyConnectionLost(SocketChannel channel) throws Exception;
+  // mediator call the getKeyWordString function from DatabaseController, then
+    // return a string with format: keywork#hint
+    public String getKeyWordString();  
 }
