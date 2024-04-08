@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #04364A;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.the_magic_wheel.controllers.RankController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #04364A;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Text fill="#dafffb" layoutX="353.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score Board">
          <font>
@@ -19,7 +19,7 @@
       </Text>
       <VBox id="scoreBoard" fx:id="rankingVBox" alignment="TOP_CENTER" layoutX="237.0" layoutY="94.0" prefHeight="400.0" prefWidth="445.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 20; -fx-spacing: 10;">
          <children>
-            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="421.0" style="-fx-background-color: #176B87; -fx-border-color: #000000; -fx-background-radius: 20; -fx-border-radius: 20;">
+            <HBox fx:id="itemHBox" alignment="CENTER" prefHeight="64.0" prefWidth="421.0" style="-fx-background-color: #176B87; -fx-border-color: #000000; -fx-background-radius: 20; -fx-border-radius: 20;">
                <children>
                   <Label id="Ranking" text="No.1" textAlignment="CENTER" textFill="#dafffb">
                      <HBox.margin>
@@ -173,13 +173,13 @@
       </VBox>
       <HBox alignment="CENTER" layoutX="237.0" layoutY="486.0" prefHeight="100.0" prefWidth="458.0">
          <children>
-            <Button id="btn_get_started" fx:id="exitButton" alignment="CENTER" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="42.0" prefWidth="200.0" style="-fx-background-color: #DAFFFB; -fx-background-radius: 16;" text="Exit" textAlignment="CENTER" textFill="#04364a">
+            <Button id="btn_get_started" fx:id="exitButton" alignment="CENTER" mnemonicParsing="false" onAction="#closeGame" prefHeight="42.0" prefWidth="200.0" style="-fx-background-color: #DAFFFB; -fx-background-radius: 16;" text="Exit" textAlignment="CENTER" textFill="#04364a">
                <font>
                   <Font name="DejaVu Sans Mono Bold" size="24.0" />
                </font>
             </Button>
             <Region prefHeight="100.0" prefWidth="105.0" />
-            <Button id="btn_get_started" fx:id="playAgainButton" alignment="CENTER" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="42.0" prefWidth="200.0" style="-fx-background-color: #DAFFFB; -fx-background-radius: 16;" text="Play again" textAlignment="CENTER" textFill="#04364a">
+            <Button id="btn_get_started" fx:id="playAgainButton" alignment="CENTER" mnemonicParsing="false" onAction="#playAgain" prefHeight="42.0" prefWidth="200.0" style="-fx-background-color: #DAFFFB; -fx-background-radius: 16;" text="Play again" textAlignment="CENTER" textFill="#04364a">
                <font>
                   <Font name="DejaVu Sans Mono Bold" size="24.0" />
                </font>

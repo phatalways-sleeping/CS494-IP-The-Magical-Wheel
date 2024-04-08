@@ -2,11 +2,16 @@ package com.example.the_magic_wheel.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.example.the_magic_wheel.App;
+import com.example.the_magic_wheel.Client;
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.RegisterRequest;
+import com.example.the_magic_wheel.protocols.response.GameEndResponse;
+import com.example.the_magic_wheel.protocols.response.GameStartResponse;
 import com.example.the_magic_wheel.protocols.response.RegisterFailureResponse;
 import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import com.example.the_magic_wheel.protocols.response.Response;
@@ -23,8 +28,16 @@ import javafx.scene.layout.HBox;
 
 public class RegisterController implements Controller {
 
+    public RegisterController(App app) {
+        this.app = app;
+    }
+    private App app;
+
     @FXML
     private TextField nameTextField;
+
+    @FXML
+    private HBox errorMsgHBox;
 
     @FXML
     private void initialize() {
@@ -41,14 +54,14 @@ public class RegisterController implements Controller {
 
     @FXML
     private void switchToGreet() throws IOException {
-        App.setRoot(Configuration.CLIENT_GREET_FXML);
+        app.getScenesManager().switchScene(Configuration.CLIENT_GREET_FXML);
     }
 
     @FXML 
     private void sendRegisterRequest() throws IOException {
         String nickname = nameTextField.getText();
         if (validate(nickname)) {
-            App.getClient().sendRequest(new RegisterRequest(nickname));
+            app.getClient().sendRequest(new RegisterRequest(nickname));
             System.out.println("Client: sending register request...");
         }
     }
@@ -56,21 +69,19 @@ public class RegisterController implements Controller {
 
     @FXML
     private void deleteErrMsgNode() {
-        HBox errMsgContainer = (HBox) App.lookup("#hbox_for_err_msg");
         Platform.runLater(() -> {
-            if (errMsgContainer.getChildren().size() > 0)
-                errMsgContainer.getChildren().remove(errMsgContainer.getChildren().size() - 1);
+            if (errorMsgHBox.getChildren().size() > 0)
+            errorMsgHBox.getChildren().remove(errorMsgHBox.getChildren().size() - 1);
         });
     }
 
     @FXML
     private void createErrMsgNode(String errorMessage) {
-        HBox errMsgContainer = (HBox) App.lookup("#hbox_for_err_msg");
         Label errMsg = new Label(errorMessage);
         errMsg.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         errMsg.setTextFill(javafx.scene.paint.Color.RED);
         errMsg.setFont(new javafx.scene.text.Font("DejaVu Sans Mono Bold", 16));
-        errMsgContainer.getChildren().add(errMsg);
+        errorMsgHBox.getChildren().add(errMsg);
     }
     
 
@@ -81,19 +92,48 @@ public class RegisterController implements Controller {
             handleRegisterSuccess((RegisterSuccessResponse) response);
         } else if (response instanceof RegisterFailureResponse) {
             handleRegisterFailure((RegisterFailureResponse) response);
+        } else if (response instanceof GameStartResponse) {
+            handleGameStart((GameStartResponse) response);
         } else {
             System.out.println("Called from RegisterController");
         }
     }
 
+    private void handleGameStart(GameStartResponse response) {
+        // System.out.println("Called from HallController: inside");
+        app.getScenesManager().switchScene(Configuration.CLIENT_GAME_FXML);
+        GameController gameController = (GameController) app.getScenesManager().getController(Configuration.CLIENT_GAME_FXML);
+        gameController.setNickname(nameTextField.getText());
+        gameController.handleResponse((GameStartResponse) response);
+    }
+
     private void handleRegisterSuccess(RegisterSuccessResponse response) {
-        try {
-            System.out.println("nickname: " + response.getUsername());
-            System.out.println("order: " + String.valueOf(response.getOrder()));
-            App.setRoot(Configuration.CLIENT_GAME_FXML);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println("nickname: " + response.getUsername());
+        System.out.println("order: " + String.valueOf(response.getOrder()));
+        app.getScenesManager().switchScene(Configuration.CLIENT_HALL_FXML);
+        HallController hallController = (HallController) app.getScenesManager().getController(Configuration.CLIENT_HALL_FXML);
+        hallController.setNickname(response.getUsername());
+        Thread worker = new Thread(() -> {
+            try {
+                Thread.sleep(3000); // Delay execution for 3 seconds (3000 milliseconds)
+                simulateGameStartResponse();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        worker.start();
+
+        Thread worker2 = new Thread(() -> {
+            try {
+                Thread.sleep(5000); // Delay execution for 3 seconds (3000 milliseconds)
+                simulateGameEndResponse();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        // worker2.start();
+
+        System.out.println("simulateGameStartResponse is called");
     }
 
     private void handleRegisterFailure(RegisterFailureResponse response) {
@@ -117,5 +157,36 @@ public class RegisterController implements Controller {
             createErrMsgNode("Nickname cannot be empty!");
             return false;
         }
+    }
+
+    // This method add game start reponse to queue. Only used for debug purpose
+    private void simulateGameStartResponse() {
+        // Create a sample GameStartResponse for debugging
+        Map<Integer, String> players = new HashMap<>();
+        players.put(1, "phuc");
+        players.put(2, "tran");
+
+        String hints = "Sample hints";
+        int wordLength = 8;
+
+        GameStartResponse gameStartResponse = new GameStartResponse(players, hints, wordLength, "");
+        
+        // Forward the GameStartResponse to HallController
+        app.getClient().addResponseeeeeeeeeeeee(gameStartResponse);
+    }
+
+    private void simulateGameEndResponse() {
+        // Create a sample GameStartResponse for debugging
+        Map<String, Integer> scores = new HashMap<>();
+        scores.put("phuc", 5);
+        scores.put("tran", 2);
+
+        String hints = "Sample hints";
+        int wordLength = 8;
+
+        GameEndResponse gameEndResponse = new GameEndResponse("", scores, hints);
+        
+        // Forward the GameStartResponse to HallController
+        app.getClient().addResponseeeeeeeeeeeee(gameEndResponse);
     }
 }
