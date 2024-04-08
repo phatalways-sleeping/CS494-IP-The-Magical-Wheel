@@ -1,5 +1,6 @@
 package com.example.the_magic_wheel.severGameController;
 
+import com.example.the_magic_wheel.sockets.Server.Component;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.util.List;
 
 
 
-public class DatabaseController {
+public class DatabaseController extends Component{
     private static DatabaseController instance = null;
     private List<Keyword> keywordList;
 

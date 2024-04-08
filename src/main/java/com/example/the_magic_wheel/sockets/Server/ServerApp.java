@@ -1,5 +1,6 @@
 package com.example.the_magic_wheel.sockets.Server;
 
+import com.example.the_magic_wheel.severGameController.GameController;
 import com.example.the_magic_wheel.protocols.Event;
 import com.example.the_magic_wheel.protocols.request.CloseConnectionRequest;
 import com.example.the_magic_wheel.protocols.request.GuessRequest;
@@ -8,6 +9,7 @@ import com.example.the_magic_wheel.protocols.request.Request;
 import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import com.example.the_magic_wheel.protocols.response.Response;
 import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
+import com.example.the_magic_wheel.severGameController.DatabaseController;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -44,26 +46,26 @@ public class ServerApp extends Application implements GameMediator {
     // The ServerApp may call methods on the GameController to update the game state
     // when it is notified
     // with a request from Server
-    private final Component gameController;
+    private final GameController gameController;
 
     // DatabaseController is the component that manages the database of keywords and
     // hints
     // It is responsible for fetching the keywords and hints from the text file
     // It usually is called by the GameController to get the keywords and hints
-    private final Component databaseController;
+    private final DatabaseController databaseController;
 
     public ServerApp() {
         final Server server = Server.spawn(new ServerConfiguration(8080,
                 "localhost"));
-        final Component gameController = Server.spawn(new ServerConfiguration(8000,
-                "localhost"));
         this.server = server;
-        this.gameController = gameController;
-        this.databaseController = Server.spawn(new ServerConfiguration(8001,
-                "localhost"));
+        this.gameController = new GameController(this);
+        this.databaseController = DatabaseController.getInstance();
         this.server.setMediator(this);
-        this.gameController.setMediator(this);
         this.databaseController.setMediator(this);
+    }
+    public void setMaxconnection(int maxConnections)
+    {
+        this.gameController.setMaxConnections(maxConnections);
     }
 
     @Override
@@ -166,7 +168,6 @@ public class ServerApp extends Application implements GameMediator {
 
     @Override
     public String getKeyWordString() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getKeyWordString'");
+        return databaseController.getKeyWordString();
     }
 }

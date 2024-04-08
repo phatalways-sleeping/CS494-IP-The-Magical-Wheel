@@ -10,13 +10,14 @@ import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import com.example.the_magic_wheel.protocols.response.Response;
 import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
 import com.example.the_magic_wheel.sockets.Server.GameMediator;
+import com.example.the_magic_wheel.sockets.Server.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GameController {
+public class GameController extends Component{
     private List<String> playerList;
     private List<String> disqualifiedList;
     private Map<String, Integer> scores;
@@ -25,18 +26,18 @@ public class GameController {
     private GameMediator mediator;
     private Keyword keyword;
     private StringBuffer currentKeyword;
-    private final int maxConnections;
+    private int maxConnections;
 
     // currentPlayerIndex != -1 => game is running
     // else waiting for enough players to join
 
-    public GameController(GameMediator mediator, int maxConnections) {
+    public GameController(GameMediator mediator) {
         this.mediator = mediator;
         this.playerList = new ArrayList<>();
         this.disqualifiedList = new ArrayList<>();
         this.currentPlayerIndex = -1;
         this.turn = 1;
-        this.maxConnections = maxConnections;
+        this.maxConnections = 3;
         this.scores = new HashMap<>();
     }
 
@@ -194,6 +195,10 @@ public class GameController {
         }
         return new GameStartResponse(players, keyword.getHint(), keyword.getKeyword().length(),
                 registerRequest.getRequestedAt());
+    }
+
+    public void setMaxConnections(int maxConnections2) {
+        this.maxConnections = maxConnections2;
     }
 
 }
