@@ -115,11 +115,6 @@ public class ServerApp extends Application implements GameMediator {
         }
     }
 
-    @SuppressWarnings("unused")
-    private boolean gameHasStarted() {
-        return false;
-    }
-
     // The idea is to prevent the server from processing the request
     // that may lead to an invalid state
     // 1. If the game has not started, the server should not process the guess
@@ -167,5 +162,11 @@ public class ServerApp extends Application implements GameMediator {
         server.getClients().remove(address);
         channel.close();
         System.out.println("Mediator: Remove client " + address + " from the list of clients");
+    }
+
+    @Override
+    public String getKeyWordString() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getKeyWordString'");
     }
 }

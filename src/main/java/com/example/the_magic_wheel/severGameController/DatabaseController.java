@@ -7,14 +7,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 
 // public class Server implements Runnable, Component {
 //     public static void main(String[] args) throws IOException {
 //         DatabaseController databaseController = DatabaseController.getInstance();
 //         String keywordstring = databaseController.getKeyWordString();
 //         System.out.println(keywordstring);
-       
+
 //     }
 
 
