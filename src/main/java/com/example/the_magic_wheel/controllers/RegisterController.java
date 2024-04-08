@@ -85,8 +85,22 @@ public class RegisterController implements Controller {
             handleRegisterSuccess((RegisterSuccessResponse) response);
         } else if (response instanceof RegisterFailureResponse) {
             handleRegisterFailure((RegisterFailureResponse) response);
+        } else if (response instanceof GameStartResponse) {
+            handleGameStart((GameStartResponse) response);
         } else {
             System.out.println("Called from RegisterController");
+        }
+    }
+
+    private void handleGameStart(GameStartResponse response) {
+        try {
+            // System.out.println("Called from HallController: inside");
+            App.setRoot(Configuration.CLIENT_GAME_FXML);
+            GameController gameController = (GameController) App.getCurrentController();
+            gameController.setNickname(nameTextField.getText());
+            gameController.handleResponse((GameStartResponse) response);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
