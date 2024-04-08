@@ -2,7 +2,12 @@ package com.example.the_magic_wheel.sockets.Server.defense;
 
 import com.example.the_magic_wheel.sockets.Server.manager.RequestInformation;
 
-public abstract interface Defender {
+public abstract class Defender {
+    protected Defender nextDefender;
+
     public abstract boolean inspect(RequestInformation requestInformation);
-    public abstract void chain(Defender nextDefender);
+
+    public void chain(Defender nextDefender) {
+        this.nextDefender = nextDefender;
+    }
 }

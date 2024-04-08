@@ -15,8 +15,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
 
 import java.nio.channels.SocketChannel;;
 
@@ -66,16 +64,6 @@ public class ServerApp extends Application implements GameMediator {
         this.server.setMediator(this);
         this.gameController.setMediator(this);
         this.databaseController.setMediator(this);
-    }
-
-    @Override
-    public Map<Integer, String> getPlayers() {
-        return new TreeMap<>();
-    }
-
-    @Override
-    public void addPlayer(String username) {
-        getPlayers().put(getPlayers().size(), username);
     }
 
     @Override

@@ -25,16 +25,14 @@ import com.example.the_magic_wheel.sockets.Server.manager.ExecutionManager;
 import com.example.the_magic_wheel.sockets.Server.manager.RequestHandler;
 import com.example.the_magic_wheel.sockets.Server.manager.ServerExecutor;
 
-public class Server implements Runnable, Component {
+public class Server extends Component implements Runnable {
     private final ServerConfiguration configuration;
     private final ExecutionManager executionManager = new ServerExecutor(5);
-    private GameMediator mediator;
-
     // The key is stored as the address of the client
-    private Map<String, SocketChannel> clients = new TreeMap<>();
+    private final Map<String, SocketChannel> clients = new TreeMap<>();
 
     // The black list is stored as the address of the client
-    private Set<String> blackList = new HashSet<>();
+    private final Set<String> blackList = new HashSet<>();
 
     // The servers are stored in a map to ensure that there is only one server for
     // each host and port
@@ -54,8 +52,8 @@ public class Server implements Runnable, Component {
         return server;
     }
 
-    public static void stop(String host, int port) {
-        String key = host + ":" + port;
+    public static void stop(@SuppressWarnings("exports") ServerConfiguration configuration) {
+        final String key = configuration.host + ":" + configuration.port;
         if (servers.containsKey(key)) {
             servers.remove(key);
         }
@@ -163,7 +161,7 @@ public class Server implements Runnable, Component {
     // - The client loses the connection with the server when in waiting for players
     // state
     // - ...
-    void recoverFromConnectionFailure(SocketChannel socketChannel) {
+    private void recoverFromConnectionFailure(SocketChannel socketChannel) {
         // Handle exception to ensure the server
         // still runs at a valid state after connection failure
         try {
