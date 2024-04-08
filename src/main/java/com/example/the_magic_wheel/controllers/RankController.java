@@ -65,7 +65,7 @@ public class RankController extends Controller {
         }
     }
 
-    public void initializeRanking(Map<String, Integer> scores) {
+    private void initializeRanking(Map<String, Integer> scores) {
 
         rankingVBox.getChildren().clear();
 
@@ -89,20 +89,20 @@ public class RankController extends Controller {
         rankingVBox.setPrefWidth(300);
     }
 
-    public HBox createItemRanking(int rank, String nickname, int score) {
+    private HBox createItemRanking(int rank, String nickname, int score) {
         HBox itemHBox = new HBox(10);
         itemHBox.setAlignment(Pos.CENTER_LEFT);
         itemHBox.setStyle("-fx-background-color: #176B87; -fx-border-color: #000000; -fx-background-radius: 15; -fx-border-radius: 15; -fx-padding: 5; -fx-pref-height: 40px;");
-        
+
         // Create Labels for ranking number, name, and score
         Label rankLabel = new Label("No." + String.valueOf(rank));
-        rankLabel.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 16.0; -fx-padding: 0 0 0 5px;");
+        rankLabel.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 16.0; -fx-font-family: 'DejaVu Sans'; -fx-padding: 0 0 0 5px;");
         
         Label nameLabel = new Label(nickname);
-        nameLabel.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 16.0;");
+        nameLabel.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 16.0; -fx-font-family: 'DejaVu Sans';");
         
         Label scoreLabel = new Label(String.valueOf(score));
-        scoreLabel.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 16.0; -fx-padding: 0 5px 0 0;");
+        scoreLabel.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 16.0; -fx-font-family: 'DejaVu Sans'; -fx-padding: 0 5px 0 0;");
         
         Region spacer1 = new Region();
         HBox.setHgrow(spacer1, Priority.ALWAYS);
@@ -116,8 +116,9 @@ public class RankController extends Controller {
         return itemHBox;
     }
 
-    public void initializeReason(String reason) {
+    private void initializeReason(String reason) {
         reasonText.setText(reason);
+        reasonText.setStyle("-fx-font-family: 'DejaVu Sans';");
         reasonTextFlow.getChildren().clear();
         reasonTextFlow.getChildren().addAll(reasonText);
     }

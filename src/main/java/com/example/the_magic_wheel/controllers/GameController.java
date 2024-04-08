@@ -39,7 +39,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-public class GameController extends Controller  {
+public class GameController extends Controller {
 
     public GameController(App app) {
         super(app);
@@ -143,7 +143,7 @@ public class GameController extends Controller  {
     }
 
 
-    public void setLeaderboard() {
+    private void setLeaderboard() {
         leaderBoardVBox.getChildren().clear();
         leaderBoardVBox.setStyle("-fx-padding: 0 10px;");
 
@@ -157,7 +157,7 @@ public class GameController extends Controller  {
         }
     }
 
-    public void sortPlayersScore() {
+    private void sortPlayersScore() {
         Map<String, Integer> sortedMap = playerScores.entrySet()
         .stream()
         .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -168,34 +168,34 @@ public class GameController extends Controller  {
         playerScores = sortedMap;
     }
 
-    public void updatePlayerScore(String nickname, Integer score) {
+    private void updatePlayerScore(String nickname, Integer score) {
         playerScores.put(nickname, score);
     }
 
-    public void updateLeaderboard(String nickname, Integer score) {
+    private void updateLeaderboard(String nickname, Integer score) {
         updatePlayerScore(nickname, score);
         sortPlayersScore();
         leaderBoardVBox.getChildren().clear();
         setLeaderboard();
     }
 
-    public void setEnableSubmitButton() {
+    private void setEnableSubmitButton() {
         submitButton.setDisable(false);
     }
 
-    public void setDisableSubmitButton() {
+    private void setDisableSubmitButton() {
         submitButton.setDisable(true);
     }
 
-    public void setDisqualified() {
+    private void setDisqualified() {
         setDisableSubmitButton();
     }
 
-    public void updateTurn(Short n) {
+    private void updateTurn(Short n) {
         turnText.setText(String.valueOf(n));
     }
 
-    public void updateNotification(String notification) {
+    private void updateNotification(String notification) {
         notificationTextField.setText(notification);
     }
 
@@ -203,22 +203,8 @@ public class GameController extends Controller  {
         nickname = nname;
     }
 
-    void initialize() {
-        guessTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                Platform.runLater(() -> clearErrorLabel(errorGuessLabel));
-            }
-        });
-    
-        keywordTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                Platform.runLater(() -> clearErrorLabel(errorKeywordLabel));
-            }
-        });
-    }
-
     @FXML
-    void submitAnswer(ActionEvent event) throws IOException {
+    private void submitAnswer(ActionEvent event) throws IOException {
         String guessChar = guessTextField.getText();
         String guessKeyword = keywordTextField.getText();
         
@@ -320,10 +306,26 @@ public class GameController extends Controller  {
     
     private void setErrorLabel(Label label, String message) {
         label.setText(message);
-        label.setStyle("-fx-text-fill: red;");
+        label.setStyle("-fx-text-fill: red; -fx-font-family: 'DejaVu Sans';");
     }
 
     private void clearErrorLabel(Label label) {
         label.setText(null);
+    }
+
+
+    @FXML
+    public void initialize() {
+        guessTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                Platform.runLater(() -> clearErrorLabel(errorGuessLabel));
+            }
+        });
+    
+        keywordTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                Platform.runLater(() -> clearErrorLabel(errorKeywordLabel));
+            }
+        });
     }
 }

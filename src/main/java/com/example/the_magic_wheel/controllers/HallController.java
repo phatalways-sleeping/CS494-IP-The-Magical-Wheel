@@ -43,6 +43,7 @@ public class HallController extends Controller {
 
     public void setNickname(String username) {
         nickname = username;
+        nicknameTextField.setStyle("-fx-font-family: 'DejaVu Sans';");
         nicknameTextField.setText("Your nickname: " + nickname);
     }
 

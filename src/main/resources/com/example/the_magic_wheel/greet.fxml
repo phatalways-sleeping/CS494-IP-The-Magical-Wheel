@@ -39,19 +39,19 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: rgb(4, 54, 74);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-<children>
-  <Circle fill="#dafffb" layoutX="142.0" layoutY="378.0" radius="128.0" stroke="#dafffb" strokeType="INSIDE" />
-  <Circle fill="#dafffb" layoutX="761.0" layoutY="129.0" radius="115.0" stroke="#dafffb" strokeType="INSIDE" />
-  <Label alignment="CENTER" layoutX="215.0" layoutY="215.0" prefHeight="29.0" prefWidth="510.0" text="The Magical Wheel" textAlignment="CENTER" textFill="WHITE">
-    <font>
-      <Font name="DejaVu Sans Mono Bold" size="48.0" />
-    </font>
-  </Label>
-  <Circle fill="#dafffb" layoutX="725.0" layoutY="462.0" radius="124.0" stroke="#dafffb" strokeType="INSIDE" />
-  <Button id="btn_get_started" fx:id="getStartedButton" alignment="CENTER" layoutX="299.0" layoutY="300.0" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="59.0" prefWidth="302.0" style="-fx-background-color: white; -fx-background-radius: 16;" text="Get started" textAlignment="CENTER">
-    <font>
-      <Font name="DejaVu Sans Mono Bold" size="24.0" />
-    </font>
-  </Button>
-</children>
+  <children>
+    <Circle fill="#dafffb" layoutX="142.0" layoutY="378.0" radius="128.0" stroke="#dafffb" strokeType="INSIDE" />
+    <Circle fill="#dafffb" layoutX="761.0" layoutY="129.0" radius="115.0" stroke="#dafffb" strokeType="INSIDE" />
+    <Label alignment="CENTER" layoutX="215.0" layoutY="215.0" prefHeight="29.0" prefWidth="510.0" text="The Magical Wheel" textAlignment="CENTER" textFill="WHITE">
+      <font>
+        <Font name="DejaVu Sans" size="48.0" />
+      </font>
+    </Label>
+    <Circle fill="#dafffb" layoutX="725.0" layoutY="462.0" radius="124.0" stroke="#dafffb" strokeType="INSIDE" />
+    <Button id="btn_get_started" fx:id="getStartedButton" alignment="CENTER" layoutX="299.0" layoutY="300.0" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="59.0" prefWidth="302.0" style="-fx-background-color: white; -fx-background-radius: 16;" text="Get started" textAlignment="CENTER">
+      <font>
+        <Font name="DejaVu Sans" size="24.0" />
+      </font>
+    </Button>
+  </children>
 </AnchorPane>

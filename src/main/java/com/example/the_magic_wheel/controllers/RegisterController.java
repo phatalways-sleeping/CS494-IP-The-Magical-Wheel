@@ -130,7 +130,7 @@ public class RegisterController extends Controller {
                 e.printStackTrace();
             }
         });
-        worker2.start();
+        // worker2.start();
 
         System.out.println("simulateGameStartResponse is called");
     }
