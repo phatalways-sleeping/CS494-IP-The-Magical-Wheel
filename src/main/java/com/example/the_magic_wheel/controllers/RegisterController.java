@@ -2,11 +2,15 @@ package com.example.the_magic_wheel.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.example.the_magic_wheel.App;
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.RegisterRequest;
+import com.example.the_magic_wheel.protocols.response.GameEndResponse;
+import com.example.the_magic_wheel.protocols.response.GameStartResponse;
 import com.example.the_magic_wheel.protocols.response.RegisterFailureResponse;
 import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import com.example.the_magic_wheel.protocols.response.Response;
@@ -90,7 +94,30 @@ public class RegisterController implements Controller {
         try {
             System.out.println("nickname: " + response.getUsername());
             System.out.println("order: " + String.valueOf(response.getOrder()));
-            App.setRoot(Configuration.CLIENT_GAME_FXML);
+            App.setRoot(Configuration.CLIENT_HALL_FXML);
+            HallController hallController = (HallController) App.getCurrentController();
+            hallController.setNickname(response.getUsername());
+            Thread worker = new Thread(() -> {
+                try {
+                    Thread.sleep(3000); // Delay execution for 3 seconds (3000 milliseconds)
+                    simulateGameStartResponse();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            worker.start();
+
+            Thread worker2 = new Thread(() -> {
+                try {
+                    Thread.sleep(5000); // Delay execution for 3 seconds (3000 milliseconds)
+                    simulateGameEndResponse();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            // worker2.start();
+
+            System.out.println("simulateGameStartResponse is called");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,5 +144,36 @@ public class RegisterController implements Controller {
             createErrMsgNode("Nickname cannot be empty!");
             return false;
         }
+    }
+
+    // This method add game start reponse to queue. Only used for debug purpose
+    private void simulateGameStartResponse() {
+        // Create a sample GameStartResponse for debugging
+        Map<Integer, String> players = new HashMap<>();
+        players.put(1, "phuc");
+        players.put(2, "tran");
+
+        String hints = "Sample hints";
+        int wordLength = 8;
+
+        GameStartResponse gameStartResponse = new GameStartResponse(players, hints, wordLength, "");
+        
+        // Forward the GameStartResponse to HallController
+        App.getClient().addResponseeeeeeeeeeeee(gameStartResponse);
+    }
+
+    private void simulateGameEndResponse() {
+        // Create a sample GameStartResponse for debugging
+        Map<String, Integer> scores = new HashMap<>();
+        scores.put("phuc", 5);
+        scores.put("tran", 2);
+
+        String hints = "Sample hints";
+        int wordLength = 8;
+
+        GameEndResponse gameEndResponse = new GameEndResponse("", scores, hints);
+        
+        // Forward the GameStartResponse to HallController
+        App.getClient().addResponseeeeeeeeeeeee(gameEndResponse);
     }
 }

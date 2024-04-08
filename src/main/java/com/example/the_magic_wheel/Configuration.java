@@ -15,6 +15,8 @@ public class Configuration {
 
     public static final String CLIENT_REGISTER_FXML = "register";
 
+    public static final String CLIENT_HALL_FXML = "client_hall";
+
     public static final String CLIENT_GAME_FXML = "game";
 
     public static final String CLIENT_RANKING_FXML = "rank";

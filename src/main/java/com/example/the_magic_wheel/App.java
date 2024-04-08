@@ -91,27 +91,6 @@ public class App extends Application {
                 Response response = getClient().receiveResponse(); // Blocks until a response is available
                 if (response != null) {
                     Platform.runLater(() -> {
-                        // if (response instanceof GameEndResponse) {
-    
-                        // }
-                        // else if (response instanceof GameStartResponse) {
-    
-                        // }
-                        // else if (response instanceof RegisterFailureResponse) {
-    
-                        // }
-                        // else if (response instanceof RegisterFailureResponse) {
-    
-                        // }
-                        // else if (response instanceof RegisterSuccessResponse) {
-    
-                        // }
-                        // else if (response instanceof ResultNotificationResponse) {
-    
-                        // }
-                        // else {
-                        //     System.out.println("Undefined response");
-                        // }
                         getCurrentController().handleResponse(response);
                     });
                     Thread.sleep(100);
