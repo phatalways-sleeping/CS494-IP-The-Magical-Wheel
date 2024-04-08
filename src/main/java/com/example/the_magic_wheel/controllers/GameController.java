@@ -15,6 +15,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.example.the_magic_wheel.App;
+import com.example.the_magic_wheel.Client;
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.GuessRequest;
 import com.example.the_magic_wheel.protocols.request.RegisterRequest;
@@ -40,7 +41,13 @@ import javafx.scene.text.Text;
 
 public class GameController implements Controller  {
 
+    public GameController(App app) {
+        this.app = app;
+    }
+
     public static final Character FREE_CHARACTER = '_';
+
+    private App app;
 
     private Map<String, Integer> playerScores;
     
@@ -51,23 +58,9 @@ public class GameController implements Controller  {
     private String nickname;
     private int numberOfPlayers;
 
-    void initialize() {
-        guessTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                Platform.runLater(() -> clearErrorLabel(errorGuessLabel));
-            }
-        });
-    
-        keywordTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                Platform.runLater(() -> clearErrorLabel(errorKeywordLabel));
-            }
-        });
-    }
-    
-
     @FXML
     private Label errorGuessLabel;
+    
 
     @FXML
     private Label errorKeywordLabel;
@@ -96,28 +89,6 @@ public class GameController implements Controller  {
     @FXML
     private Text turnText;
 
-    
-    @FXML
-    void submitAnswer(ActionEvent event) throws IOException {
-        String guessChar = guessTextField.getText();
-        String guessKeyword = keywordTextField.getText();
-        
-        boolean isValidGuessChar = validateGuessChar(guessChar);
-        boolean isValidGuessKeyword = validateGuessKeyword(guessKeyword);
-        
-        if (isValidGuessChar && isValidGuessKeyword) {
-            App.getClient().sendRequest(new GuessRequest(nickname, guessChar, guessKeyword));
-        } else {
-            if (!isValidGuessChar) {
-                setErrorLabel(errorGuessLabel, "Invalid input! Guess should be a single alphabetic character");
-            }
-            if (!isValidGuessKeyword) {
-                setErrorLabel(errorKeywordLabel, "Invalid input! Keyword should contain only alphabetic characters.");
-            }
-        }
-
-    }      
-
     @Override
     public void handleResponse(Response response) {
         if (response instanceof GameEndResponse) {
@@ -131,83 +102,7 @@ public class GameController implements Controller  {
         }
     }
 
-
-    private void handleGameEndResponse(GameEndResponse response) {
-        try {
-            App.setRoot(Configuration.CLIENT_RANKING_FXML);
-            RankController rankController = (RankController) App.getCurrentController();
-            rankController.handleResponse(response);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void handleGameStartResponse(GameStartResponse response) {
-        if (isPlaying) {
-            System.out.println("Duplicate GameStartResponse");
-            return;
-        }
-        
-        isPlaying = true;
-
-        String hint = response.getHints();
-        int wordLength = response.getWordLength();
-        Map<Integer, String> players = response.getPlayers();
-
-        initializeGame(hint, wordLength, players);
-    }
-
-    private void handleResultNotificationResponse(ResultNotificationResponse response) {
-        
-        String username = response.getUsername();
-        int updatedScore = response.getUpdatedScore();
-
-
-        boolean successful = response.isSuccessful();
-        boolean guessChar = response.guessChar();
-        boolean guessWord = response.guessWord();
-        String explanation = response.getExplanation();
-        String nextPlayer = response.getNextPlayer();
-        short turn = response.getTurn();
-
-        updateLeaderboard(response.getUsername(), response.getUpdatedScore());
-
-        // updateKeyword();
-
-        updateTurn(response.getTurn());
-
-        if (isDisqualified) {
-            return;
-        }
-
-        // Client is the person guessing forward turn
-        if (nickname.equals(response.getUsername())) {
-            updateNotification(response.getExplanation());
-            if (response.guessWord() && !response.isSuccessful()) {
-                isDisqualified = true;
-            }
-        }
-
-        if (nickname.equals(response.getNextPlayer())) {
-            setEnableSubmitButton();
-        }
-        else {
-            setDisableSubmitButton();
-        }
-
-        // Debug
-        System.out.println("Result Notification:");
-        System.out.println("Nicknameeeeeeee: " + nickname);
-        System.out.println("Username: " + username);
-        System.out.println("Updated Score: " + updatedScore);
-        System.out.println("Successful: " + successful);
-        System.out.println("Guess Type: " + (guessChar ? "Character" : "Word"));
-        System.out.println("Explanation: " + explanation);
-        System.out.println("Next Player: " + nextPlayer);
-        System.out.println("Current Turn: " + turn);
-
-    }
-
+    
     public void initializeGame(String hint, int wordLength, Map<Integer, String> players) {
 
         hintText.setText(hint);
@@ -232,7 +127,7 @@ public class GameController implements Controller  {
         else {
             setEnableSubmitButton();
         }
-    }
+    }      
 
     @SuppressWarnings("exports")
     public HBox createLeaderboardItem(String username, String score) {
@@ -248,6 +143,7 @@ public class GameController implements Controller  {
         itemHBox.getChildren().addAll(label1, spacer, label2);
         return itemHBox;
     }
+
 
     public void setLeaderboard() {
         leaderBoardVBox.getChildren().clear();
@@ -308,20 +204,127 @@ public class GameController implements Controller  {
     public void setNickname(String nname) {
         nickname = nname;
     }
+
+    void initialize() {
+        guessTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                Platform.runLater(() -> clearErrorLabel(errorGuessLabel));
+            }
+        });
+    
+        keywordTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                Platform.runLater(() -> clearErrorLabel(errorKeywordLabel));
+            }
+        });
+    }
+
+    @FXML
+    void submitAnswer(ActionEvent event) throws IOException {
+        String guessChar = guessTextField.getText();
+        String guessKeyword = keywordTextField.getText();
+        
+        boolean isValidGuessChar = validateGuessChar(guessChar);
+        boolean isValidGuessKeyword = validateGuessKeyword(guessKeyword);
+        
+        if (isValidGuessChar && isValidGuessKeyword) {
+            app.getClient().sendRequest(new GuessRequest(nickname, guessChar, guessKeyword));
+        } else {
+            if (!isValidGuessChar) {
+                setErrorLabel(errorGuessLabel, "Invalid input! Guess should be a single alphabetic character");
+            }
+            if (!isValidGuessKeyword) {
+                setErrorLabel(errorKeywordLabel, "Invalid input! Keyword should contain only alphabetic characters.");
+            }
+        }
+
+    }
+
+    private void handleGameEndResponse(GameEndResponse response) {
+        app.getScenesManager().switchScene(Configuration.CLIENT_RANKING_FXML);
+        RankController rankController = (RankController) app.getScenesManager().getController(Configuration.CLIENT_RANKING_FXML);
+        rankController.handleResponse(response);
+    }
+
+    private void handleGameStartResponse(GameStartResponse response) {
+        if (isPlaying) {
+            System.out.println("Duplicate GameStartResponse");
+            return;
+        }
+        
+        isPlaying = true;
+
+        String hint = response.getHints();
+        int wordLength = response.getWordLength();
+        Map<Integer, String> players = response.getPlayers();
+
+        initializeGame(hint, wordLength, players);
+    }
    
+    private void handleResultNotificationResponse(ResultNotificationResponse response) {
+        
+        String username = response.getUsername();
+        int updatedScore = response.getUpdatedScore();
+
+
+        boolean successful = response.isSuccessful();
+        boolean guessChar = response.guessChar();
+        boolean guessWord = response.guessWord();
+        String explanation = response.getExplanation();
+        String nextPlayer = response.getNextPlayer();
+        short turn = response.getTurn();
+
+        updateLeaderboard(response.getUsername(), response.getUpdatedScore());
+
+        // updateKeyword();
+
+        updateTurn(response.getTurn());
+
+        if (isDisqualified) {
+            return;
+        }
+
+        // Client is the person guessing forward turn
+        if (nickname.equals(response.getUsername())) {
+            updateNotification(response.getExplanation());
+            if (response.guessWord() && !response.isSuccessful()) {
+                isDisqualified = true;
+            }
+        }
+
+        if (nickname.equals(response.getNextPlayer())) {
+            setEnableSubmitButton();
+        }
+        else {
+            setDisableSubmitButton();
+        }
+
+        // Debug
+        System.out.println("Result Notification:");
+        System.out.println("Nicknameeeeeeee: " + nickname);
+        System.out.println("Username: " + username);
+        System.out.println("Updated Score: " + updatedScore);
+        System.out.println("Successful: " + successful);
+        System.out.println("Guess Type: " + (guessChar ? "Character" : "Word"));
+        System.out.println("Explanation: " + explanation);
+        System.out.println("Next Player: " + nextPlayer);
+        System.out.println("Current Turn: " + turn);
+
+    }
+    
     private boolean validateGuessChar(String guess) {
         return guess != null && !guess.isEmpty() && guess.length() == 1 && guess.matches("[a-zA-Z]");
     }
-    
+
     private boolean validateGuessKeyword(String guess) {
         return guess != null && !guess.isEmpty() && guess.matches("[a-zA-Z]+");
     }
-
+    
     private void setErrorLabel(Label label, String message) {
         label.setText(message);
         label.setStyle("-fx-text-fill: red;");
     }
-    
+
     private void clearErrorLabel(Label label) {
         label.setText(null);
     }

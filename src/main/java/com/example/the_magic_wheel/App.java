@@ -27,71 +27,43 @@ import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse
  */
 public class App extends Application {
 
-    private static Scene scene;
-    private static Controller controller;
-    private static Client client;
+    private ScenesManager scenesManager;
+    private Client client;
 
-    @Override
-    public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML(Configuration.CLIENT_GREET_FXML), Configuration.WIDTH, Configuration.HEIGHT);
-        stage.setScene(scene);
-        stage.show();
-
-        
+    public App() {
         // Connect to server
         BlockingQueue<Request> requests = new LinkedBlockingQueue<>();
         BlockingQueue<Response> responses = new LinkedBlockingQueue<>();
 
         // Initialize the client with host, port, and the blocking queues
         client = new Client("localhost", 8080, requests, responses);
+    }
+
+    @Override
+    public void start(@SuppressWarnings("exports") Stage stage) throws IOException {
+        scenesManager = new ScenesManager(stage, this);
 
         // Start the client in a separate thread
         Thread clientThread = new Thread(client);
         clientThread.setDaemon(true); // Set it as daemon thread
         clientThread.start();
 
-
         Thread responseListenerThread = new Thread(() -> listenForResponses());
         responseListenerThread.setDaemon(true); // Set it as daemon thread
         responseListenerThread.start();
-    }
-
-    public static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        Parent root = fxmlLoader.load();
-        // Get the controller associated with the loaded FXML
-        controller = fxmlLoader.getController();
-        return root;
     }
 
     public static void main(String[] args) {
         launch();
     }
 
-    @SuppressWarnings("exports")
-    public static Node lookup(String string) {
-        return scene.lookup(string);
-    }
-
-    public static Client getClient() {
-        return client;
-    }
-
-    public static Controller getCurrentController() {
-        return controller;
-    }
-
     private void listenForResponses() {
         try {
             while (true) {
-                Response response = getClient().receiveResponse(); // Blocks until a response is available
+                Response response = client.receiveResponse(); // Blocks until a response is available
                 if (response != null) {
                     Platform.runLater(() -> {
-                        getCurrentController().handleResponse(response);
+                        scenesManager.getCurrentController().handleResponse(response);
                     });
                     Thread.sleep(100);
                 }
@@ -100,5 +72,13 @@ public class App extends Application {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public ScenesManager getScenesManager() {
+        return scenesManager;
+    }
+
+    public Client getClient() {
+        return client;
     }
 }

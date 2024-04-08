@@ -1,5 +1,6 @@
 package com.example.the_magic_wheel.controllers;
 
+import com.example.the_magic_wheel.Client;
 import com.example.the_magic_wheel.protocols.response.Response;
 
 /**
@@ -8,4 +9,5 @@ import com.example.the_magic_wheel.protocols.response.Response;
 public interface Controller {
 
     void handleResponse(Response response);
+
 }

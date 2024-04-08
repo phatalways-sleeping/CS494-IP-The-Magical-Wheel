@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.example.the_magic_wheel.App;
+import com.example.the_magic_wheel.Client;
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.CloseConnectionRequest;
 import com.example.the_magic_wheel.protocols.response.GameEndResponse;
@@ -21,6 +22,10 @@ import javafx.scene.layout.VBox;
 
 public class RankController implements Controller {
 
+    public RankController(App app) {
+        this.app = app;
+    }
+
     @FXML
     private Button exitButton;
 
@@ -30,18 +35,16 @@ public class RankController implements Controller {
     @FXML
     private VBox rankingVBox;
 
+    private App app;
+
     @FXML
     void closeGame(ActionEvent event) {
-        App.getClient().sendRequest(new CloseConnectionRequest(null));
+        app.getClient().sendRequest(new CloseConnectionRequest(null));
     }
 
     @FXML
     void playAgain(ActionEvent event) {
-        try {
-            App.setRoot(Configuration.CLIENT_REGISTER_FXML);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        app.getScenesManager().switchScene(Configuration.CLIENT_REGISTER_FXML);
     }
 
     @Override
@@ -104,4 +107,5 @@ public class RankController implements Controller {
         
         return itemHBox;
     }
+
 }
