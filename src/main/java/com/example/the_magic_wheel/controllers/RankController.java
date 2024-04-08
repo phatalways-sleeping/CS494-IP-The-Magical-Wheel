@@ -19,6 +19,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 public class RankController implements Controller {
 
@@ -34,6 +36,12 @@ public class RankController implements Controller {
 
     @FXML
     private VBox rankingVBox;
+
+    @FXML
+    private Text reasonText;
+
+    @FXML
+    private TextFlow reasonTextFlow;
 
     private App app;
 
@@ -53,11 +61,10 @@ public class RankController implements Controller {
             Map<String, Integer> finalScores = ((GameEndResponse)response).getFinalScores();
             String reason = ((GameEndResponse)response).getReason();
             initializeRanking(finalScores);
-            System.out.println(reason);
+            initializeReason(reason);
         } else {
             System.out.println("RankController: undefined response");
         }
-        
     }
 
     public void initializeRanking(Map<String, Integer> scores) {
@@ -68,33 +75,36 @@ public class RankController implements Controller {
         // Map<String, Integer> sortedScores = scores.entrySet().stream()
         //         .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
         //         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
+    
         // Iterate over the sorted scores map to create ranking items
         int rank = 1;
         for (Map.Entry<String, Integer> entry : scores.entrySet()) {
             String nickname = entry.getKey();
             int score = entry.getValue();
-
+    
             // Create the ranking item and add it to the rankingVBox
             HBox rankingItem = createItemRanking(rank++, nickname, score);
             rankingVBox.getChildren().add(rankingItem);
         }
+    
+        // Set the width of the VBox
+        rankingVBox.setPrefWidth(300);
     }
 
     public HBox createItemRanking(int rank, String nickname, int score) {
         HBox itemHBox = new HBox(10);
         itemHBox.setAlignment(Pos.CENTER_LEFT);
-        itemHBox.setStyle("-fx-background-color: #176B87; -fx-border-color: #000000; -fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 10; -fx-pref-height: 64px; -fx-pref-width: 445px;");
+        itemHBox.setStyle("-fx-background-color: #176B87; -fx-border-color: #000000; -fx-background-radius: 15; -fx-border-radius: 15; -fx-padding: 5; -fx-pref-height: 40px;");
         
         // Create Labels for ranking number, name, and score
         Label rankLabel = new Label("No." + String.valueOf(rank));
-        rankLabel.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 21.0;");
+        rankLabel.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 16.0; -fx-padding: 0 0 0 5px;");
         
         Label nameLabel = new Label(nickname);
-        nameLabel.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 21.0;");
+        nameLabel.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 16.0;");
         
         Label scoreLabel = new Label(String.valueOf(score));
-        scoreLabel.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 21.0;");
+        scoreLabel.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 16.0; -fx-padding: 0 5px 0 0;");
         
         Region spacer1 = new Region();
         HBox.setHgrow(spacer1, Priority.ALWAYS);
@@ -108,4 +118,8 @@ public class RankController implements Controller {
         return itemHBox;
     }
 
+    public void initializeReason(String reason) {
+        reasonText.setText(reason);
+        reasonTextFlow.getChildren().addAll(reasonText);
+    }
 }

@@ -131,7 +131,7 @@ public class RegisterController implements Controller {
                 e.printStackTrace();
             }
         });
-        // worker2.start();
+        worker2.start();
 
         System.out.println("simulateGameStartResponse is called");
     }
