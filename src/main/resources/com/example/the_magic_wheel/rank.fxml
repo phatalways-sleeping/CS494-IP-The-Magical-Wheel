@@ -18,9 +18,9 @@
             <Font size="40.0" />
          </font>
       </Text>
-      <VBox id="scoreBoard" fx:id="rankingVBox" alignment="TOP_CENTER" layoutX="545.0" layoutY="80.0" prefWidth="300.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 20; -fx-spacing: 5;">
+      <VBox id="scoreBoard" fx:id="rankingVBox" alignment="TOP_CENTER" layoutX="545.0" layoutY="79.0" prefWidth="300.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 20; -fx-spacing: 5;">
          <children>
-            <HBox fx:id="itemHBox1" alignment="CENTER" prefHeight="40.0" style="-fx-background-color: #176B87; -fx-border-color: #000000; -fx-background-radius: 20; -fx-border-radius: 20;">
+            <HBox fx:id="itemHBox1" alignment="CENTER" prefHeight="40.0" style="-fx-background-color: #176B87; -fx-border-color: #000000; -fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 5;">
                <children>
                   <Label id="Ranking" text="No.1" textAlignment="CENTER" textFill="#dafffb">
                      <HBox.margin>
