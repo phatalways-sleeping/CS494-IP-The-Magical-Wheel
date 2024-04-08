@@ -22,10 +22,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class RankController implements Controller {
+public class RankController extends Controller {
 
     public RankController(App app) {
-        this.app = app;
+        super(app);
     }
 
     @FXML
@@ -42,8 +42,6 @@ public class RankController implements Controller {
 
     @FXML
     private TextFlow reasonTextFlow;
-
-    private App app;
 
     @FXML
     void closeGame(ActionEvent event) {
@@ -120,6 +118,7 @@ public class RankController implements Controller {
 
     public void initializeReason(String reason) {
         reasonText.setText(reason);
+        reasonTextFlow.getChildren().clear();
         reasonTextFlow.getChildren().addAll(reasonText);
     }
 }

@@ -12,10 +12,10 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
-public class HallController implements Controller {
+public class HallController extends Controller {
 
     public HallController(App app) {
-        this.app = app;
+        super(app);
     }
 
     private String nickname;
@@ -24,10 +24,7 @@ public class HallController implements Controller {
     private ImageView imageView;
 
     @FXML
-    private Text nicknameTextField;
-
-    private App app;
-    
+    private Text nicknameTextField;    
 
     @Override
     public void handleResponse(Response response) {

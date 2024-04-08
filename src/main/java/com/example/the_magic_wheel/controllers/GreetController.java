@@ -11,15 +11,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class GreetController implements Controller{
+public class GreetController extends Controller{
 
     public GreetController(App app) {
-        this.app = app;
+        super(app);
     }
 
     @FXML
     private Button getStartedButton;
-    private App app;
 
     @FXML
     void switchToRegister(ActionEvent event) throws IOException {

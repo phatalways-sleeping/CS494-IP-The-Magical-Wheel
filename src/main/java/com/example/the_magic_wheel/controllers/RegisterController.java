@@ -26,12 +26,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
-public class RegisterController implements Controller {
+public class RegisterController extends Controller {
 
     public RegisterController(App app) {
-        this.app = app;
+        super(app);
     }
-    private App app;
 
     @FXML
     private TextField nameTextField;
@@ -184,7 +183,7 @@ public class RegisterController implements Controller {
         String hints = "Sample hints";
         int wordLength = 8;
 
-        GameEndResponse gameEndResponse = new GameEndResponse("", scores, hints);
+        GameEndResponse gameEndResponse = new GameEndResponse("lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsumlorem ipsum lorem ipsum lorem ipsum", scores, hints);
         
         // Forward the GameStartResponse to HallController
         app.getClient().addResponseeeeeeeeeeeee(gameEndResponse);

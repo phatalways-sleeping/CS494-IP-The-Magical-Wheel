@@ -39,15 +39,13 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-public class GameController implements Controller  {
+public class GameController extends Controller  {
 
     public GameController(App app) {
-        this.app = app;
+        super(app);
     }
 
     public static final Character FREE_CHARACTER = '_';
-
-    private App app;
 
     private Map<String, Integer> playerScores;
     
@@ -242,7 +240,7 @@ public class GameController implements Controller  {
 
     private void handleGameEndResponse(GameEndResponse response) {
         app.getScenesManager().switchScene(Configuration.CLIENT_RANKING_FXML);
-        RankController rankController = (RankController) app.getScenesManager().getController(Configuration.CLIENT_RANKING_FXML);
+        RankController rankController = (RankController) app.getScenesManager().getCurrentController();
         rankController.handleResponse(response);
     }
 
