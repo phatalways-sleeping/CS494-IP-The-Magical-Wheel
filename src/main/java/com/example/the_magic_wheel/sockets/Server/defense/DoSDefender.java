@@ -4,11 +4,9 @@ import java.util.Objects;
 
 import com.example.the_magic_wheel.sockets.Server.manager.RequestInformation;
 
-public class DoSDefender implements Defender {
+public class DoSDefender extends Defender {
     private final int MAX_REQUESTS = 10;
     private final int MAX_REQUESTS_INTERVAL = 1000; // milliseconds
-    private Defender nextDefender;
-
     public DoSDefender() {
     }
 
@@ -25,10 +23,5 @@ public class DoSDefender implements Defender {
             return false;
         }
         return Objects.isNull(nextDefender) || nextDefender.inspect(requestInformation);
-    }
-
-    @Override
-    public void chain(Defender nextDefender) {
-        this.nextDefender = nextDefender;
     }
 }

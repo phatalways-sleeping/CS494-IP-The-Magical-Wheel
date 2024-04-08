@@ -15,8 +15,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
 
 import java.nio.channels.SocketChannel;;
 
@@ -69,16 +67,6 @@ public class ServerApp extends Application implements GameMediator {
     }
 
     @Override
-    public Map<Integer, String> getPlayers() {
-        return new TreeMap<>();
-    }
-
-    @Override
-    public void addPlayer(String username) {
-        getPlayers().put(getPlayers().size(), username);
-    }
-
-    @Override
     public Response process(Request request, SocketChannel channel) {
         // Syncronize the process method since this.process() is called by the multiple
         // threads spanwned by the ExecutionManager
@@ -125,11 +113,6 @@ public class ServerApp extends Application implements GameMediator {
             }
             return response;
         }
-    }
-
-    @SuppressWarnings("unused")
-    private boolean gameHasStarted() {
-        return false;
     }
 
     // The idea is to prevent the server from processing the request
@@ -179,5 +162,11 @@ public class ServerApp extends Application implements GameMediator {
         server.getClients().remove(address);
         channel.close();
         System.out.println("Mediator: Remove client " + address + " from the list of clients");
+    }
+
+    @Override
+    public String getKeyWordString() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getKeyWordString'");
     }
 }
