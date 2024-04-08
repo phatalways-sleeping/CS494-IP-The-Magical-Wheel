@@ -46,17 +46,17 @@ public class DatabaseController {
         return keywordAndHint;
     }
 
-    public Keyword getKeyWord() {
-        // return a keyword object
-        Keyword keyword = new Keyword("", "No keyword available");
-        if (keywordList.size() == 0) {
-            return keyword;
-        }
-        int lastIdx = keywordList.size() - 1;
-        keyword = keywordList.get(lastIdx);
-        keywordList.remove(lastIdx);
-        return keyword;
-    }
+    // public Keyword getKeyWord() {
+    //     // return a keyword object
+    //     Keyword keyword = new Keyword("", "No keyword available");
+    //     if (keywordList.size() == 0) {
+    //         return keyword;
+    //     }
+    //     int lastIdx = keywordList.size() - 1;
+    //     keyword = keywordList.get(lastIdx);
+    //     keywordList.remove(lastIdx);
+    //     return keyword;
+    // }
 
     private void readDataFromFile() {
         String workingDir = System.getProperty("user.dir");
@@ -84,27 +84,4 @@ public class DatabaseController {
         }
     }
 
-    private static class Keyword {
-        private String keyword;
-        private String hint;
-        private int priorityNo = 0;
-
-        public Keyword(String keyword, String hint) {
-            this.keyword = keyword;
-            this.hint = hint;
-            this.priorityNo = new Random().nextInt(100);
-        }
-
-        public String getKeyword() {
-            return keyword;
-        }
-
-        public String getHint() {
-            return hint;
-        }
-
-        public int getPriorityNo() {
-            return priorityNo;
-        }
-    }
 }
