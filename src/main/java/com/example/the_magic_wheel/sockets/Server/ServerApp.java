@@ -8,7 +8,6 @@ import com.example.the_magic_wheel.protocols.request.RegisterRequest;
 import com.example.the_magic_wheel.protocols.request.Request;
 import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import com.example.the_magic_wheel.protocols.response.Response;
-import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
 import com.example.the_magic_wheel.severGameController.DatabaseController;
 
 import javafx.application.Application;
@@ -63,8 +62,8 @@ public class ServerApp extends Application implements GameMediator {
         this.server.setMediator(this);
         this.databaseController.setMediator(this);
     }
-    public void setMaxconnection(int maxConnections)
-    {
+
+    public void setMaxconnection(int maxConnections) {
         this.gameController.setMaxConnections(maxConnections);
     }
 
@@ -73,44 +72,33 @@ public class ServerApp extends Application implements GameMediator {
         // Syncronize the process method since this.process() is called by the multiple
         // threads spanwned by the ExecutionManager
         synchronized (this) {
-            System.out.println("Mediator: Processing request " + request.toString());
             Response response = null;
             if (!guard((Event) request)) {
                 return response;
             }
+            System.out.println("Mediator: Processing request " + request.toString());
             if (request instanceof RegisterRequest) {
                 final String source = request.getSource();
                 final String destination = request.getDestination();
-                final RegisterRequest registerRequest = (RegisterRequest) request;
-                final String username = registerRequest.getUsername();
-
-                // Register the player by interacting with the game controller
-
-                // Suppose the game controller returns the response
-                response = new RegisterSuccessResponse(username, 1, registerRequest.getRequestedAt());
+                response = gameController.process(request);
                 response.setSource(destination);
                 response.setDestination(source); // Send the response back to the client, not broadcast
-
-                // Add new client to the list of clients
-                server.getClients().put(source, channel);
+                if (response instanceof RegisterSuccessResponse) {
+                    final RegisterSuccessResponse registerSuccessResponse = (RegisterSuccessResponse) response;
+                    final String username = registerSuccessResponse.getUsername();
+                    server.getClients().put(username, channel);
+                }
             } else if (request instanceof CloseConnectionRequest) {
                 guard((Event) request);
-                // final String source = request.getSource();
-                // final String destination = request.getDestination();
-
-                // Close the connection by interacting with the server
-
-                // No response is needed for the CloseConnectionRequest
+                final String source = request.getSource();
+                final String destination = request.getDestination();
+                response = gameController.process(request);
+                response.setSource(destination);
+                server.getClients().remove(source);
             } else { // GuessRequest
                 final String destination = request.getDestination();
                 final GuessRequest guessRequest = (GuessRequest) request;
-
-                // Interact with the game controller to process the guess request
-
-                // Suppose the game controller returns the response
-                response = ResultNotificationResponse.successfulGuessChar(guessRequest.getUsername(), 1,
-                        (short) 1, guessRequest.getRequestedAt());
-
+                response = gameController.process(guessRequest);
                 response.setSource(destination);
             }
             return response;
