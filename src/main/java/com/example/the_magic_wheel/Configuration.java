@@ -23,8 +23,12 @@ public class Configuration {
 
     public static final String SERVER_HALL_FXML = "server_hall";
 
+    public static final String SERVER_MAXIMUM_PLAYER_FXML = "Server_maximumPlayer";
+    
+    public static final String SERVER_GAME_RUNNING_FXML = "server_gameIsRunning";
+    
     public static final String SERVER_END_GAME_FXML = "server_endgame";
-
+    
     public static final String HOST = "localhost";
     public static final int PORT = 4000;
     public static final int BUFFER_SIZE = 2048;

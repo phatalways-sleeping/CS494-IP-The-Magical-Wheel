@@ -12,11 +12,12 @@ public class ResultNotificationResponse extends Response {
     private final String explanation;
     private final String nextPlayer;
     private final short turn;
+    private final String currentKeyword;
 
     public ResultNotificationResponse(String username, int score, boolean successful, short code, String explanation,
             String nextPlayer,
             short turn,
-            String requestedAt) {
+            String requestedAt, String currentKeyword) {
         super(requestedAt);
         this.username = Objects.requireNonNull(username);
         this.updatedScore = Objects.requireNonNull(score);
@@ -25,40 +26,41 @@ public class ResultNotificationResponse extends Response {
         this.nextPlayer = Objects.requireNonNull(nextPlayer);
         this.explanation = Objects.requireNonNull(explanation);
         this.turn = Objects.requireNonNull(turn);
+        this.currentKeyword = Objects.requireNonNull(currentKeyword);
     }
 
     public static ResultNotificationResponse successfulGuessChar(String username, int score, short nextTurn,
-            String requestedAt) {
+            String requestedAt, String currentKeyword) {
         final String explanation = new StringBuilder("Correct guess for ").append(username).append(" !").toString();
         return new ResultNotificationResponse(username, score, true, (short) 0, explanation, username, nextTurn,
-                requestedAt);
+                requestedAt, currentKeyword);
     }
 
     public static ResultNotificationResponse successfulGuessWord(String username, int score, short nextTurn,
-            String requestedAt) {
+            String requestedAt, String currentKeyword) {
         final String explanation = new StringBuilder("Congratulations! You guessed the whole word correctly.")
                 .toString();
         return new ResultNotificationResponse(username, score, true, (short) 1, explanation, username, nextTurn,
-                requestedAt);
+                requestedAt, currentKeyword);
     }
 
     public static ResultNotificationResponse unsuccessfulGuessChar(char guessChar, String username, int score,
             String nextPlayer,
             short nextTurn,
-            String requestedAt) {
+            String requestedAt, String currentKeyword) {
         final String explanation = new StringBuilder("Character `").append(guessChar).append("` is not in the keyword.")
                 .toString();
         return new ResultNotificationResponse(username, score, false, (short) 0, explanation, username, nextTurn,
-                requestedAt);
+                requestedAt, currentKeyword);
     }
 
     public static ResultNotificationResponse unsuccessfulGuessWord(String username, int score, String nextPlayer,
             short nextTurn,
-            String requestedAt) {
+            String requestedAt, String currentKeyword) {
         final String explanation = new StringBuilder("You guessed the whole word incorrectly.")
                 .toString();
         return new ResultNotificationResponse(username, score, false, (short) 1, explanation, username, nextTurn,
-                requestedAt);
+                requestedAt, currentKeyword);
     }
 
     public String getUsername() {
@@ -98,6 +100,6 @@ public class ResultNotificationResponse extends Response {
     }
 
     public String getCurrentKeyword() {
-        return "default";
+        return this.currentKeyword;
     }
 }

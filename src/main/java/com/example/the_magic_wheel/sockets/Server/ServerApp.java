@@ -12,8 +12,6 @@ import com.example.the_magic_wheel.protocols.request.RegisterRequest;
 import com.example.the_magic_wheel.protocols.response.GameStartResponse;
 import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
-import com.example.the_magic_wheel.protocols.response.Response;
-import com.example.the_magic_wheel.severGameController.DatabaseController;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -63,21 +61,22 @@ public class ServerApp extends Application implements GameMediator {
         final Server server = Server.spawn(new ServerConfiguration(8080,
                 "localhost"));
         this.server = server;
-        this.gameController = new GameController(this);
+        this.gameController = new GameController((GameMediator) this);
         this.databaseController = DatabaseController.getInstance();
         this.server.setMediator(this);
         //this.databaseController.setMediator(this);
     }
-
-    public void setMaxconnection(int maxConnections) {
+    public void setMaxconnection(int maxConnections)
+    {
         this.gameController.setMaxConnections(maxConnections);
     }
 
     @Override
-    public Response process(Request request, SocketChannel channel) throws Exception {
+    public Response process(Request request, SocketChannel channel) {
         // Syncronize the process method since this.process() is called by the multiple
         // threads spanwned by the ExecutionManager
         synchronized (this) {
+            System.out.println("Mediator: Processing request " + request.toString());
             Response response = null;
             if (!guard((Event) request)) {
                 return response;

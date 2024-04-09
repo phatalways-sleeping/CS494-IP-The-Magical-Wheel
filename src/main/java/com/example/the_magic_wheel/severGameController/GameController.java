@@ -123,13 +123,13 @@ public class GameController extends Component{
         char character = guessRequest.getGuessChar().charAt(0);
         currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
         return ResultNotificationResponse.unsuccessfulGuessChar(character, currentUser, scores.get(currentUser),
-            playerList.get(currentPlayerIndex), (short) turn, guessRequest.getRequestedAt());
+            playerList.get(currentPlayerIndex), (short) turn, guessRequest.getRequestedAt(), currentKeyword.toString());
     }
 
     private ResultNotificationResponse guessCharactorSucessful(GuessRequest guessRequest, String currentUser) {
         scores.put(currentUser, scores.get(currentUser) + 1);
         return ResultNotificationResponse.successfulGuessChar(currentUser, scores.get(currentUser),
-                (short) turn, guessRequest.getRequestedAt());
+                (short) turn, guessRequest.getRequestedAt(), currentKeyword.toString());
     }
 
     private boolean isGuessCharactorSucessful(GuessRequest guessRequest) {
@@ -150,7 +150,7 @@ public class GameController extends Component{
         playerList.remove(currentUser);
         currentPlayerIndex %= playerList.size();
         return ResultNotificationResponse.unsuccessfulGuessWord(currentUser, scores.get(currentUser),
-                playerList.get(currentPlayerIndex), (short) turn, guessRequest.getRequestedAt());
+                playerList.get(currentPlayerIndex), (short) turn, guessRequest.getRequestedAt(), currentKeyword.toString());
     }
 
     private GameEndResponse getKeyWordSucessful(GuessRequest guessRequest, String currentUser) {
