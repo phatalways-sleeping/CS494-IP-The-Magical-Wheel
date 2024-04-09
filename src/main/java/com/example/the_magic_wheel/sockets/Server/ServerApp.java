@@ -68,7 +68,7 @@ public class ServerApp extends Application implements GameMediator {
     }
 
     @Override
-    public Response process(Request request, SocketChannel channel) {
+    public Response process(Request request, SocketChannel channel) throws Exception {
         // Syncronize the process method since this.process() is called by the multiple
         // threads spanwned by the ExecutionManager
         synchronized (this) {
@@ -95,6 +95,8 @@ public class ServerApp extends Application implements GameMediator {
                 response = gameController.process(request);
                 response.setSource(destination);
                 server.getClients().remove(source);
+                channel.close();
+                System.out.println("Mediator: Remove client " + source + " from the list of clients");
             } else { // GuessRequest
                 final String destination = request.getDestination();
                 final GuessRequest guessRequest = (GuessRequest) request;
@@ -147,11 +149,11 @@ public class ServerApp extends Application implements GameMediator {
     }
 
     @Override
-    public void notifyConnectionLost(SocketChannel channel) throws Exception {
-        final String address = channel.getRemoteAddress().toString();
-        server.getClients().remove(address);
-        channel.close();
-        System.out.println("Mediator: Remove client " + address + " from the list of clients");
+    public Response notifyConnectionLost(SocketChannel channel) throws Exception {
+        // server.getClients().remove(address);
+        // channel.close();
+        final Request request = new CloseConnectionRequest(null);
+        return this.process(request, channel);
     }
 
     @Override

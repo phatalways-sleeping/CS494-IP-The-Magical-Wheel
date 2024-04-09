@@ -8,12 +8,12 @@ import com.example.the_magic_wheel.protocols.request.Request;
 import com.example.the_magic_wheel.protocols.response.Response;
 
 public interface GameMediator {
-    public Response process(Request request, SocketChannel channel);
+    public Response process(Request request, SocketChannel channel) throws Exception;
 
     public Iterator<SocketChannel> getClients();
 
-    public void notifyConnectionLost(SocketChannel channel) throws Exception;
+    public Response notifyConnectionLost(SocketChannel channel) throws Exception;
   // mediator call the getKeyWordString function from DatabaseController, then
     // return a string with format: keywork#hint
-    public String getKeyWordString();  
+    public String getKeyWordString();
 }
