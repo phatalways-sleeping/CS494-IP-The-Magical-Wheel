@@ -14,12 +14,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.Set;
 import java.util.HashSet;
 
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.Request;
+import com.example.the_magic_wheel.protocols.response.Response;
 import com.example.the_magic_wheel.sockets.Server.defense.DoSAttackException;
 import com.example.the_magic_wheel.sockets.Server.manager.ExecutionManager;
 import com.example.the_magic_wheel.sockets.Server.manager.RequestHandler;
@@ -167,7 +169,19 @@ public class Server extends Component implements Runnable {
         try {
             System.out.println("Server: Connection lost with " + socketChannel.getRemoteAddress());
             System.out.println("Server: Notifying the mediator...");
-            mediator.notifyConnectionLost(socketChannel);
+            final Response response = mediator.notifyConnectionLost(socketChannel);
+            if (Objects.nonNull(response)) {
+                System.out.println("Server: Sending the response back to the client...");
+                if (Objects.nonNull(response.getDestination())) {
+                    // Broadcast the response to all clients
+                    for (SocketChannel client : clients.values()) {
+                        client.write(ByteBuffer.wrap(response.toBytes()));
+                    }
+                } else {
+                    // Send the response to the specific client
+                    clients.get(response.getDestination()).write(ByteBuffer.wrap(response.toBytes()));
+                }
+            }
             System.out.println("Server: The mediator has been notified and recovered from the connection failure");
         } catch (Exception e) {
             // Aborting the server

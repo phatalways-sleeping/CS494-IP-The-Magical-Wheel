@@ -96,4 +96,8 @@ public class ResultNotificationResponse extends Response {
     public short getTurn() {
         return turn;
     }
+
+    public String getCurrentKeyword() {
+        return "default";
+    }
 }

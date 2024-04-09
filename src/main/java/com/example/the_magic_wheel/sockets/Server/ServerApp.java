@@ -12,6 +12,8 @@ import com.example.the_magic_wheel.protocols.request.RegisterRequest;
 import com.example.the_magic_wheel.protocols.response.GameStartResponse;
 import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
+import com.example.the_magic_wheel.protocols.response.Response;
+import com.example.the_magic_wheel.severGameController.DatabaseController;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -66,17 +68,16 @@ public class ServerApp extends Application implements GameMediator {
         this.server.setMediator(this);
         //this.databaseController.setMediator(this);
     }
-    public void setMaxconnection(int maxConnections)
-    {
+
+    public void setMaxconnection(int maxConnections) {
         this.gameController.setMaxConnections(maxConnections);
     }
 
     @Override
-    public Response process(Request request, SocketChannel channel) {
+    public Response process(Request request, SocketChannel channel) throws Exception {
         // Syncronize the process method since this.process() is called by the multiple
         // threads spanwned by the ExecutionManager
         synchronized (this) {
-            System.out.println("Mediator: Processing request " + request.toString());
             Response response = null;
             if (!guard((Event) request)) {
                 return response;
@@ -171,11 +172,11 @@ public class ServerApp extends Application implements GameMediator {
     }
 
     @Override
-    public void notifyConnectionLost(SocketChannel channel) throws Exception {
-        final String address = channel.getRemoteAddress().toString();
-        server.getClients().remove(address);
-        channel.close();
-        System.out.println("Mediator: Remove client " + address + " from the list of clients");
+    public Response notifyConnectionLost(SocketChannel channel) throws Exception {
+        // server.getClients().remove(address);
+        // channel.close();
+        final Request request = new CloseConnectionRequest(null);
+        return this.process(request, channel);
     }
 
     @Override
