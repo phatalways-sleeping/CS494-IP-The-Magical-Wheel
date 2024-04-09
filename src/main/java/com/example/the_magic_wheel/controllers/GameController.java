@@ -187,10 +187,6 @@ public class GameController extends Controller {
         submitButton.setDisable(true);
     }
 
-    private void setDisqualified() {
-        setDisableSubmitButton();
-    }
-
     private void updateTurn(Short n) {
         turnText.setText(String.valueOf(n));
     }
@@ -232,7 +228,7 @@ public class GameController extends Controller {
 
     private void handleGameStartResponse(GameStartResponse response) {
         if (isPlaying) {
-            System.out.println("Duplicate GameStartResponse");
+            System.out.println("GameController: duplicate GameStartResponse");
             return;
         }
         
@@ -246,23 +242,10 @@ public class GameController extends Controller {
     }
    
     private void handleResultNotificationResponse(ResultNotificationResponse response) {
-        
-        String username = response.getUsername();
-        int updatedScore = response.getUpdatedScore();
-
-
-        boolean successful = response.isSuccessful();
-        boolean guessChar = response.guessChar();
-        boolean guessWord = response.guessWord();
-        String explanation = response.getExplanation();
-        String nextPlayer = response.getNextPlayer();
-        short turn = response.getTurn();
-
         updateLeaderboard(response.getUsername(), response.getUpdatedScore());
-
-        // updateKeyword();
-
         updateTurn(response.getTurn());
+        updateKeyword(response.getCurrentKeyword());
+        updateNotification(response.getExplanation());
 
         if (isDisqualified) {
             return;
@@ -270,38 +253,29 @@ public class GameController extends Controller {
 
         // Client is the person guessing forward turn
         if (nickname.equals(response.getUsername())) {
-            updateNotification(response.getExplanation());
             if (response.guessWord() && !response.isSuccessful()) {
                 isDisqualified = true;
+                setDisableSubmitButton();
             }
-        }
-
-        if (nickname.equals(response.getNextPlayer())) {
+        } else if (nickname.equals(response.getNextPlayer())) {
             setEnableSubmitButton();
-        }
-        else {
+        } else {
             setDisableSubmitButton();
         }
-
-        // Debug
-        System.out.println("Result Notification:");
-        System.out.println("Nicknameeeeeeee: " + nickname);
-        System.out.println("Username: " + username);
-        System.out.println("Updated Score: " + updatedScore);
-        System.out.println("Successful: " + successful);
-        System.out.println("Guess Type: " + (guessChar ? "Character" : "Word"));
-        System.out.println("Explanation: " + explanation);
-        System.out.println("Next Player: " + nextPlayer);
-        System.out.println("Current Turn: " + turn);
-
     }
     
+    private void updateKeyword(String currentKeyword) {
+        String spacedKeyword = currentKeyword.replaceAll("", "  ");
+        keywordText.setText(spacedKeyword);
+    }
+
+
     private boolean validateGuessChar(String guess) {
         return guess != null && !guess.isEmpty() && guess.length() == 1 && guess.matches("[a-zA-Z]");
     }
 
     private boolean validateGuessKeyword(String guess) {
-        return guess != null && !guess.isEmpty() && guess.matches("[a-zA-Z]+");
+        return guess != null && guess.matches("[a-zA-Z]+");
     }
     
     private void setErrorLabel(Label label, String message) {
