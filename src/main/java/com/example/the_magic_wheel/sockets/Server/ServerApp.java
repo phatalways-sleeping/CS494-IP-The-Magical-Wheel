@@ -6,11 +6,13 @@ import com.example.the_magic_wheel.protocols.Event;
 import com.example.the_magic_wheel.severGameController.DatabaseController;
 import com.example.the_magic_wheel.protocols.request.Request;
 import com.example.the_magic_wheel.protocols.response.Response;
+import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
 import com.example.the_magic_wheel.protocols.request.CloseConnectionRequest;
 import com.example.the_magic_wheel.protocols.request.GuessRequest;
 import com.example.the_magic_wheel.protocols.request.RegisterRequest;
 import com.example.the_magic_wheel.protocols.response.GameEndResponse;
 import com.example.the_magic_wheel.protocols.response.GameStartResponse;
+import com.example.the_magic_wheel.protocols.response.RegisterFailureResponse;
 import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -98,19 +100,20 @@ public class ServerApp extends Application implements GameMediator {
                 return response;
             }
             response = gameController.process(request);
-            response.setSource(request.getDestination());
-            response.setDestination(request.getSource()); // Send the response back to the client, not broadcast
-            if (request instanceof RegisterRequest
-                    && (response instanceof RegisterSuccessResponse || response instanceof GameStartResponse))
-                // Add new client to the list of clients
-                server.getClients().put(request.getSource(), channel);
-            if (response instanceof GameStartResponse || response instanceof GameEndResponse) {
-                response.setDestination(null);
-            }
+             response.setSource(request.getDestination());
+             response.setDestination(request.getSource()); 
+             if (request instanceof RegisterRequest
+                     && (response instanceof RegisterSuccessResponse || response instanceof GameStartResponse))
+            //     // Add new client to the list of clients
+                 server.getClients().put(request.getSource(), channel);
+             if (response instanceof GameStartResponse || response instanceof GameEndResponse) {
+                 response.setDestination(null);
+             }
 
             if (response instanceof GameEndResponse)
                 isEndGame = true;
-                
+
+            //System.err.println("Game start!!!!!!!!!!!!!!!" + response.getClass().toString());
             // if (request instanceof RegisterRequest) {
             //     final String source = request.getSource();
             //     final String destination = request.getDestination();
@@ -146,6 +149,29 @@ public class ServerApp extends Application implements GameMediator {
 
             //     response.setSource(destination);
             // }
+            if(response instanceof GameStartResponse)
+            {
+                System.err.println("Game Start!");
+            }
+            if (response instanceof GameEndResponse)
+            {
+                System.err.println("Game End!");
+            }
+            if (response instanceof RegisterSuccessResponse)
+            {
+                System.err.println("Register Success!");
+            }
+            if (response instanceof RegisterFailureResponse)
+            {
+                System.err.println("Register Failure!");
+            }
+            if (response instanceof ResultNotificationResponse)
+            {
+                System.err.println("Result Notification!");
+            }
+            
+
+
              return response;
         }
     }

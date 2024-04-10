@@ -1,9 +1,97 @@
-4
-Cat
-A furry mammal often kept as a pet.
-Dog
-Known as man's best friend, often used for companionship and as working animals.
-Apple
-A round fruit with red, green, or yellow skin and a crisp texture.
-Banana
-A long curved fruit with a yellow skin and soft flesh inside.
+48
+Abroad
+A word indicating being in or to a foreign country or countries.
+Casual
+Relaxed and unconcerned; not formal or serious.
+Around
+Located or situated on every side; surrounding.
+Couple
+Two individuals considered as a pair; a pair who are married.
+Accept
+Agree to receive or undertake something offered.
+Caught
+Intercept and hold (something that has been thrown, propelled, or dropped).
+Arrive
+Reach a place at the end of a journey or a stage in a journey.
+Course
+The route or direction followed by a ship, aircraft, road, or river.
+Access
+The means or opportunity to approach or enter a place.
+Centre
+The point that is equally distant from every point on the circumference of a circle.
+Artist
+A person who produces paintings or drawings as a profession or hobby.
+Covers
+A thing that lies on, over, or around something, especially in order to protect or conceal it.
+Across
+From one side to the other of (something).
+Centum
+Denoting or relating to the Indo-European language family or its parent language.
+Aspect
+A particular part or feature of something.
+Create
+Bring something into existence.
+Acting
+Behaving in a specified way.
+Chance
+A possibility of something happening.
+Assess
+Evaluate or estimate the nature, ability, or quality of.
+Credit
+The ability of a customer to obtain goods or services before payment, based on the trust that payment will be made in the future.
+Action
+The fact or process of doing something, typically to achieve an aim.
+Change
+Make or become different.
+Assist
+Help (someone), typically by doing a share of the work.
+Crisis
+A time of intense difficulty, trouble, or danger.
+Active
+Engaging or ready to engage in physically energetic pursuits.
+Charge
+Demand (an amount) as a price from someone for a service rendered or goods supplied.
+Assume
+Suppose to be the case, without proof.
+Custom
+A traditional and widely accepted way of behaving or doing something that is specific to a particular society, place, or time.
+Actual
+Existing in fact; real.
+Choice
+An act of selecting or making a decision when faced with two or more possibilities.
+Attack
+Take aggressive action against (a place or enemy forces) with weapons or armed force.
+Damage
+Physical harm caused to something in such a way as to impair its value, usefulness, or normal function.
+Advice
+Guidance or recommendations offered with regard to prudent future action.
+Choose
+Pick out or select (someone or something) as being the best or most appropriate of two or more alternatives.
+Attend
+Be present at (an event, meeting, or function).
+Danger
+The possibility of suffering harm or injury.
+Advise
+Offer suggestions about the best course of action to someone.
+Chosen
+Having been selected as the best or most appropriate.
+August
+Respected and impressive.
+Dealer
+A person or business that buys and sells goods.
+Affect
+Have an effect on; make a difference to.
+Church
+A building used for public Christian worship.
+Author
+The writer of a book, article, or document.
+Debate
+A formal discussion on a particular topic in a public meeting or legislative assembly, in which opposing arguments are put forward and which usually ends with a vote.
+Afford
+Have enough money to pay for.
+Circle
+A round plane figure whose boundary (the circumference) consists of points equidistant from a fixed point (the center).
+Avenue
+A broad road in a town or city, typically having trees at regular intervals along its sides.
+Decade
+A period of ten years.

@@ -29,6 +29,6 @@ public abstract class Event implements ToBytes, Serializable {
     }
 
     public void setDestination(String destination) {
-        this.destination = Objects.requireNonNull(destination);
+        this.destination = destination;
     }
 }
