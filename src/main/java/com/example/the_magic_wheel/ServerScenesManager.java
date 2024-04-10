@@ -1,24 +1,25 @@
-package com.example.the_magic_wheel.severScenesManager;
+package com.example.the_magic_wheel;
 
 import java.io.IOException;
 import java.util.HashMap;
-import com.example.the_magic_wheel.App;
+
 import com.example.the_magic_wheel.sockets.Server.Component;
-import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.sockets.Server.ServerApp;
 import com.example.the_magic_wheel.severScenesManager.controllers.ServerController;
 import com.example.the_magic_wheel.severScenesManager.controllers.ServerEndGameController;
 import com.example.the_magic_wheel.severScenesManager.controllers.ServerGameIsRunningController;
 import com.example.the_magic_wheel.severScenesManager.controllers.ServerHallController;
 import com.example.the_magic_wheel.severScenesManager.controllers.ServerMaximumPlayerController;
-
+import com.example.the_magic_wheel.controllers.Controller;
+import com.example.the_magic_wheel.controllers.GreetController;
+ 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class ServerScenesManager extends Component {
+public class ServerScenesManager  {
     private ServerApp app;
     private Scene scene;
     private String currentFxml;
@@ -27,24 +28,33 @@ public class ServerScenesManager extends Component {
 
     public ServerScenesManager(Stage stage, ServerApp app) throws IOException {
         this.app = app;
-        String workingDir = System.getProperty("user.dir");
-        System.out.println("Current working directory : " + workingDir);
-        
-        addNewScene(Configuration.SERVER_HALL_FXML, new ServerHallController(app));
-        addNewScene(Configuration.SERVER_MAXIMUM_PLAYER_FXML, new ServerMaximumPlayerController(app));
-        addNewScene(Configuration.SERVER_GAME_RUNNING_FXML, new ServerGameIsRunningController(app));
-        addNewScene(Configuration.SERVER_END_GAME_FXML, new ServerEndGameController(app));
+        addNewScene(Configuration.CLIENT_GREET_FXML, new ServerHallController(app));
 
-        scene = new Scene(scenesMap.get(Configuration.SERVER_HALL_FXML), Configuration.WIDTH, Configuration.HEIGHT);
-        currentFxml = Configuration.SERVER_HALL_FXML;
+        // String workingDir = System.getProperty("user.dir");
+        // workingDir += "/src/main/resources/com/example/the_magic_wheel/";
+        
+        // addNewScene(workingDir + Configuration.SERVER_HALL_FXML, new ServerHallController(app));
+        // addNewScene(Configuration.SERVER_MAXIMUM_PLAYER_FXML, new ServerMaximumPlayerController(app));
+        // addNewScene(Configuration.SERVER_GAME_RUNNING_FXML, new ServerGameIsRunningController(app));
+        // addNewScene(Configuration.SERVER_END_GAME_FXML, new ServerEndGameController(app));
+
+        // scene = new Scene(scenesMap.get(workingDir + Configuration.SERVER_HALL_FXML), Configuration.WIDTH, Configuration.HEIGHT);
+        // currentFxml = workingDir + Configuration.SERVER_HALL_FXML;
+
+        scene = new Scene(scenesMap.get(Configuration.CLIENT_GREET_FXML), Configuration.WIDTH, Configuration.HEIGHT);
+        currentFxml = Configuration.CLIENT_GREET_FXML;
 
         stage.setTitle("Magical Wheel Server");
         stage.setScene(scene);
         stage.show();
     }
+   
 
     private void addNewScene(String fxml, ServerController serverController) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml + ".fxml"));
+        //FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml + ".fxml"));
+      //  System.out.println(getClass().getResource());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(Configuration.CLIENT_GREET_FXML));
+        
         loader.setController(serverController);
         scenesMap.put(fxml, loader.load());
         controllersMap.put(fxml, serverController);
@@ -70,12 +80,12 @@ public class ServerScenesManager extends Component {
         System.exit(0);
     }
 
-    public void resetController() throws IOException {
+    public void resetController(String workingDir) throws IOException {
         scenesMap.clear();
         controllersMap.clear();
-        addNewScene(Configuration.SERVER_HALL_FXML, new ServerHallController(app));
-        addNewScene(Configuration.SERVER_MAXIMUM_PLAYER_FXML, new ServerMaximumPlayerController(app));
-        addNewScene(Configuration.SERVER_GAME_RUNNING_FXML, new ServerGameIsRunningController(app));
-        addNewScene(Configuration.SERVER_END_GAME_FXML, new ServerEndGameController(app));
+        addNewScene(workingDir + Configuration.SERVER_HALL_FXML, new ServerHallController(app));
+        // addNewScene(Configuration.SERVER_MAXIMUM_PLAYER_FXML, new ServerMaximumPlayerController(app));
+        // addNewScene(Configuration.SERVER_GAME_RUNNING_FXML, new ServerGameIsRunningController(app));
+        // addNewScene(Configuration.SERVER_END_GAME_FXML, new ServerEndGameController(app));
     }
 }

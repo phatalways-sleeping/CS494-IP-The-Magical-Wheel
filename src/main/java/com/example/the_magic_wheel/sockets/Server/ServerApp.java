@@ -1,7 +1,7 @@
 package com.example.the_magic_wheel.sockets.Server;
 
 import com.example.the_magic_wheel.severGameController.GameController;
-import com.example.the_magic_wheel.severScenesManager.ServerScenesManager;
+import com.example.the_magic_wheel.ServerScenesManager;
 import com.example.the_magic_wheel.protocols.Event;
 import com.example.the_magic_wheel.severGameController.DatabaseController;
 import com.example.the_magic_wheel.protocols.request.Request;
@@ -9,6 +9,7 @@ import com.example.the_magic_wheel.protocols.response.Response;
 import com.example.the_magic_wheel.protocols.request.CloseConnectionRequest;
 import com.example.the_magic_wheel.protocols.request.GuessRequest;
 import com.example.the_magic_wheel.protocols.request.RegisterRequest;
+import com.example.the_magic_wheel.protocols.response.GameEndResponse;
 import com.example.the_magic_wheel.protocols.response.GameStartResponse;
 import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
@@ -87,7 +88,12 @@ public class ServerApp extends Application implements GameMediator {
             if (request instanceof RegisterRequest && (response instanceof RegisterSuccessResponse || response instanceof GameStartResponse))
                 // Add new client to the list of clients
                 server.getClients().put(request.getSource(), channel);
+            if (response instanceof GameStartResponse || response instanceof GameEndResponse )
+            {
+                response.setDestination(null);
+            }
 
+                
             // if (request instanceof RegisterRequest) {
             //     final String source = request.getSource();
             //     final String destination = request.getDestination();
@@ -153,9 +159,7 @@ public class ServerApp extends Application implements GameMediator {
     @Override
     public void start(@SuppressWarnings("exports") Stage stage) throws Exception {
         // Start the server
-       // serverScenesManager = new ServerScenesManager(stage, this);
-        // String workingDir = System.getProperty("user.dir");
-        // System.out.println("Current working directory : " + workingDir);
+        //serverScenesManager = new ServerScenesManager(stage, this);
         final Thread serverThread = new Thread(server);
         serverThread.setDaemon(true);
         serverThread.start();
