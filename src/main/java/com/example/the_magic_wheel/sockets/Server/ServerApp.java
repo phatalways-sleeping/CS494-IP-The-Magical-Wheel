@@ -1,7 +1,7 @@
 package com.example.the_magic_wheel.sockets.Server;
 
 import com.example.the_magic_wheel.severGameController.GameController;
-//import com.example.the_magic_wheel.severScenesManager.ServerScenesManager;
+import com.example.the_magic_wheel.severScenesManager.ServerScenesManager;
 import com.example.the_magic_wheel.protocols.Event;
 import com.example.the_magic_wheel.severGameController.DatabaseController;
 import com.example.the_magic_wheel.protocols.request.Request;
@@ -55,7 +55,7 @@ public class ServerApp extends Application implements GameMediator {
     // It is responsible for fetching the keywords and hints from the text file
     // It usually is called by the GameController to get the keywords and hints
     private final DatabaseController databaseController;
-    //private ServerScenesManager serverScenesManager;
+    private ServerScenesManager serverScenesManager;
 
     public ServerApp() {
         final Server server = Server.spawn(new ServerConfiguration(8080,
@@ -154,15 +154,16 @@ public class ServerApp extends Application implements GameMediator {
     public void start(@SuppressWarnings("exports") Stage stage) throws Exception {
         // Start the server
        // serverScenesManager = new ServerScenesManager(stage, this);
-
+        // String workingDir = System.getProperty("user.dir");
+        // System.out.println("Current working directory : " + workingDir);
         final Thread serverThread = new Thread(server);
         serverThread.setDaemon(true);
         serverThread.start();
 
-        Scene scene = new Scene(new Group(), 300, 250);
-        stage.setTitle("Simple Window");
-        stage.setScene(scene);
-        stage.show();
+        // Scene scene = new Scene(new Group(), 300, 250);
+        // stage.setTitle("Simple Window");
+        // stage.setScene(scene);
+        // stage.show();
     }
 
     @Override

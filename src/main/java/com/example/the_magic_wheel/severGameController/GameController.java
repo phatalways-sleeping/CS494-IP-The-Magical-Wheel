@@ -55,6 +55,8 @@ public class GameController extends Component{
         }
         playerList.add(username);
         scores.put(username, 0);
+        if (playerList.size() == maxConnections)
+            currentPlayerIndex = 0;
         return "register success";
     }
 

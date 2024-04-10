@@ -27,6 +27,9 @@ public class ServerScenesManager extends Component {
 
     public ServerScenesManager(Stage stage, ServerApp app) throws IOException {
         this.app = app;
+        String workingDir = System.getProperty("user.dir");
+        System.out.println("Current working directory : " + workingDir);
+        
         addNewScene(Configuration.SERVER_HALL_FXML, new ServerHallController(app));
         addNewScene(Configuration.SERVER_MAXIMUM_PLAYER_FXML, new ServerMaximumPlayerController(app));
         addNewScene(Configuration.SERVER_GAME_RUNNING_FXML, new ServerGameIsRunningController(app));
