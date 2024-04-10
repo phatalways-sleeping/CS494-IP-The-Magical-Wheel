@@ -27,7 +27,7 @@ public class GreetController extends Controller{
 
     @Override
     public void handleResponse(Response response) {
-        System.out.println("Called from GreetController");
+        System.out.println("GreetController: handleResponse is invoked");
     }
 
 }

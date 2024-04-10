@@ -29,14 +29,14 @@ public class HallController extends Controller {
     @Override
     public void handleResponse(Response response) {
         if (response instanceof GameStartResponse) {
-            // System.out.println("Called from HallController: inside");
             app.getScenesManager().switchScene(Configuration.CLIENT_GAME_FXML);
             GameController gameController = (GameController) app.getScenesManager().getController(Configuration.CLIENT_GAME_FXML);
             gameController.setNickname(nickname);
             gameController.handleResponse((GameStartResponse) response);
+            System.out.println("HallController: receive GameStartResponse");
         }
         else {
-            System.out.println("Called from HallController: Undefined Reponse");
+            System.out.println("HallController: undefined Reponse");
         }
     }
 
@@ -46,6 +46,4 @@ public class HallController extends Controller {
         nicknameTextField.setStyle("-fx-font-family: 'DejaVu Sans';");
         nicknameTextField.setText("Your nickname: " + nickname);
     }
-
-
 }

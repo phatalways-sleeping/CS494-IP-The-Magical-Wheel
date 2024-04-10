@@ -119,7 +119,7 @@ public class GameController extends Controller {
         setLeaderboard();
 
         // Check if client is the first person to make guess
-        if (!nickname.equals(players.get(1))) {
+        if (!nickname.equals(players.get(0))) {
             setDisableSubmitButton();
         }
         else {

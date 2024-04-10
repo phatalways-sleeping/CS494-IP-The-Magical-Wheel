@@ -94,7 +94,7 @@ public class RegisterController extends Controller {
         } else if (response instanceof GameStartResponse) {
             handleGameStart((GameStartResponse) response);
         } else {
-            System.out.println("Called from RegisterController");
+            System.out.println("RegisterController: undefined response");
         }
     }
 
@@ -112,33 +112,11 @@ public class RegisterController extends Controller {
         app.getScenesManager().switchScene(Configuration.CLIENT_HALL_FXML);
         HallController hallController = (HallController) app.getScenesManager().getController(Configuration.CLIENT_HALL_FXML);
         hallController.setNickname(response.getUsername());
-        Thread worker = new Thread(() -> {
-            try {
-                Thread.sleep(3000); // Delay execution for 3 seconds (3000 milliseconds)
-                simulateGameStartResponse();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        worker.start();
-
-        Thread worker2 = new Thread(() -> {
-            try {
-                Thread.sleep(5000); // Delay execution for 3 seconds (3000 milliseconds)
-                simulateGameEndResponse();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        // worker2.start();
-
-        System.out.println("simulateGameStartResponse is called");
     }
 
     private void handleRegisterFailure(RegisterFailureResponse response) {
-        // Example: Show an error message
         createErrMsgNode(response.getReason());
-        // Example: Delete the error message after 2 seconds
+        // Delete the error message after 2 seconds
         new Thread(() -> {
             try {
                 Thread.sleep(2000);
@@ -156,36 +134,5 @@ public class RegisterController extends Controller {
             createErrMsgNode("Nickname cannot be empty!");
             return false;
         }
-    }
-
-    // This method add game start reponse to queue. Only used for debug purpose
-    private void simulateGameStartResponse() {
-        // Create a sample GameStartResponse for debugging
-        Map<Integer, String> players = new HashMap<>();
-        players.put(1, "phuc");
-        players.put(2, "tran");
-
-        String hints = "Sample hints";
-        int wordLength = 8;
-
-        GameStartResponse gameStartResponse = new GameStartResponse(players, hints, wordLength, "");
-        
-        // Forward the GameStartResponse to HallController
-        app.getClient().addResponseeeeeeeeeeeee(gameStartResponse);
-    }
-
-    private void simulateGameEndResponse() {
-        // Create a sample GameStartResponse for debugging
-        Map<String, Integer> scores = new HashMap<>();
-        scores.put("phuc", 5);
-        scores.put("tran", 2);
-
-        String hints = "Sample hints";
-        int wordLength = 8;
-
-        GameEndResponse gameEndResponse = new GameEndResponse("lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsumlorem ipsum lorem ipsum lorem ipsum", scores, hints);
-        
-        // Forward the GameStartResponse to HallController
-        app.getClient().addResponseeeeeeeeeeeee(gameEndResponse);
     }
 }
