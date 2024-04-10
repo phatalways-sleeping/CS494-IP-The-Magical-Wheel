@@ -32,9 +32,9 @@ public class Server extends Component implements Runnable {
     private final ExecutionManager executionManager = new ServerExecutor(5);
     // The key is stored as the address of the client
     private final Map<String, SocketChannel> clients = new TreeMap<>();
-
     // The black list is stored as the address of the client
     private final Set<String> blackList = new HashSet<>();
+    private InetSocketAddress hostAdress;
 
     // The servers are stored in a map to ensure that there is only one server for
     // each host and port
@@ -43,6 +43,11 @@ public class Server extends Component implements Runnable {
 
     Map<String, SocketChannel> getClients() {
         return clients;
+    }
+
+    InetSocketAddress getAddress() {
+        final InetAddress hostIpAddress = hostAdress.getAddress();
+        return new InetSocketAddress(hostIpAddress, configuration.port);
     }
 
     public static Server spawn(@SuppressWarnings("exports") ServerConfiguration configuration) {
@@ -149,11 +154,11 @@ public class Server extends Component implements Runnable {
         Selector selector = Selector.open();
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
-        serverSocketChannel.socket().bind(new InetSocketAddress(hostIpAddress, configuration.port));
+        this.hostAdress = new InetSocketAddress(hostIpAddress, configuration.port);
+        serverSocketChannel.socket().bind(hostAdress);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-
         // Logging the server start
-        System.out.println("Server: Server started at " + configuration.host + ":" + configuration.port);
+        System.out.println("Server: Server started at " + hostAdress);
         return selector;
     }
 
@@ -172,7 +177,7 @@ public class Server extends Component implements Runnable {
             final Response response = mediator.notifyConnectionLost(socketChannel);
             if (Objects.nonNull(response)) {
                 System.out.println("Server: Sending the response back to the client...");
-                if (Objects.nonNull(response.getDestination())) {
+                if (Objects.isNull(response.getDestination())) {
                     // Broadcast the response to all clients
                     for (SocketChannel client : clients.values()) {
                         client.write(ByteBuffer.wrap(response.toBytes()));

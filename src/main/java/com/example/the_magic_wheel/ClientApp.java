@@ -25,12 +25,14 @@ import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse
 /**
  * JavaFX App
  */
-public class App extends Application {
+public class ClientApp extends Application {
 
     private ScenesManager scenesManager;
     private Client client;
 
-    public App() {
+    private volatile boolean isClientRunning = true;
+
+    public ClientApp() {
         // Connect to server
         BlockingQueue<Request> requests = new LinkedBlockingQueue<>();
         BlockingQueue<Response> responses = new LinkedBlockingQueue<>();
@@ -43,8 +45,11 @@ public class App extends Application {
     public void start(@SuppressWarnings("exports") Stage stage) throws IOException {
         scenesManager = new ScenesManager(stage, this);
 
-        // Start the client in a separate thread
-        Thread clientThread = new Thread(client);
+        Thread clientThread = new Thread(() -> {
+            client.run();
+            isClientRunning = false;
+            scenesManager.showAlert();
+        });
         clientThread.setDaemon(true); // Set it as daemon thread
         clientThread.start();
 
@@ -59,7 +64,7 @@ public class App extends Application {
 
     private void listenForResponses() {
         try {
-            while (true) {
+            while (isClientRunning) {
                 Response response = client.receiveResponse(); // Blocks until a response is available
                 if (response != null) {
                     Platform.runLater(() -> {
@@ -70,6 +75,7 @@ public class App extends Application {
                 
             }
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             e.printStackTrace();
         }
     }

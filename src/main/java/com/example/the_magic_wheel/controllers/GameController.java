@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import com.example.the_magic_wheel.App;
+import com.example.the_magic_wheel.ClientApp;
 import com.example.the_magic_wheel.Client;
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.GuessRequest;
@@ -41,7 +41,7 @@ import javafx.scene.text.Text;
 
 public class GameController extends Controller {
 
-    public GameController(App app) {
+    public GameController(ClientApp app) {
         super(app);
     }
 
@@ -119,7 +119,7 @@ public class GameController extends Controller {
         setLeaderboard();
 
         // Check if client is the first person to make guess
-        if (!nickname.equals(players.get(1))) {
+        if (!nickname.equals(players.get(0))) {
             setDisableSubmitButton();
         }
         else {

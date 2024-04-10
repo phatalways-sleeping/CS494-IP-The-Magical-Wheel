@@ -28,6 +28,7 @@ public class RequestHandler implements Handler {
     @Override
     public void run() {
         try {
+            boolean aborted = false;
             for (int i = 0; i < Configuration.RETRY_ATTEMPTS; i++) {
                 try {
                     this.handle();
@@ -39,12 +40,20 @@ public class RequestHandler implements Handler {
                         System.err.println("RequestHandler: Channel is closed");
                         break;
                     }
+                    if (i == Configuration.RETRY_ATTEMPTS - 1) {
+                        System.err.println("RequestHandler: Maximum retry attempts reached");
+                        aborted = true;
+                        break;
+                    }
                     // Random sleep time to avoid busy waiting from 0 to Configuration.RETRY_SLEEP *
                     // (i + 1)
                     final int sleepTime = (int) (Math.random() * (Configuration.RETRY_INTERVAL * (i + 1)));
                     System.err.println("RequestHandler: Retrying in " + sleepTime + "ms");
                     Thread.sleep(sleepTime);
                 }
+            }
+            if (aborted) {
+                System.err.println("RequestHandler: Aborting the request: " + request.toString());
             }
         } catch (InterruptedException e) {
             System.err.println("RequestHandler: Error when sleeping - " + e.getMessage());

@@ -38,11 +38,6 @@ public class Client implements Runnable {
         this.responses = responses;
     }
 
-    // This method only used for debug purpose
-    public void addResponseeeeeeeeeeeee(Response response) {
-        responses.add(response);
-    }
-
     // To send request to the remote server through the socket channel
     // call the sendRequest method with the request object as the parameter
     // The request object will be wrapped with the source and destination
