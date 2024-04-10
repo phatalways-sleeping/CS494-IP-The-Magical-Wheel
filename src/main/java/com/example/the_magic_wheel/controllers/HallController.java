@@ -2,7 +2,7 @@ package com.example.the_magic_wheel.controllers;
 
 import java.io.IOException;
 
-import com.example.the_magic_wheel.App;
+import com.example.the_magic_wheel.ClientApp;
 import com.example.the_magic_wheel.Client;
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.response.GameStartResponse;
@@ -14,7 +14,7 @@ import javafx.scene.text.Text;
 
 public class HallController extends Controller {
 
-    public HallController(App app) {
+    public HallController(ClientApp app) {
         super(app);
     }
 

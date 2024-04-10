@@ -25,14 +25,14 @@ import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse
 /**
  * JavaFX App
  */
-public class App extends Application {
+public class ClientApp extends Application {
 
     private ScenesManager scenesManager;
     private Client client;
 
     private volatile boolean isClientRunning = true;
 
-    public App() {
+    public ClientApp() {
         // Connect to server
         BlockingQueue<Request> requests = new LinkedBlockingQueue<>();
         BlockingQueue<Response> responses = new LinkedBlockingQueue<>();

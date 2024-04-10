@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.example.the_magic_wheel.App;
+import com.example.the_magic_wheel.ClientApp;
 import com.example.the_magic_wheel.Client;
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.RegisterRequest;
@@ -28,7 +28,7 @@ import javafx.scene.layout.HBox;
 
 public class RegisterController extends Controller {
 
-    public RegisterController(App app) {
+    public RegisterController(ClientApp app) {
         super(app);
     }
 
