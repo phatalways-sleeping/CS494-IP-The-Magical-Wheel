@@ -12,11 +12,7 @@ import com.example.the_magic_wheel.protocols.request.RegisterRequest;
 import com.example.the_magic_wheel.protocols.response.GameEndResponse;
 import com.example.the_magic_wheel.protocols.response.GameStartResponse;
 import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
-import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
-
 import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.Iterator;
@@ -28,33 +24,8 @@ public class ServerApp extends Application implements GameMediator {
         launch(args);
     }
 
-    // Server is the runnable component that listens for incoming connections
-    // Therefore, it is wrapped in Thread to run in the background
-    // Receiving connections is a blocking operation and should not be done on the
-    // main thread
-    // Servers receive requests from clients and call this.notify() to pass the
-    // request to the mediator
-    // The mediator is responsible for processing the request and returning a
-    // response by
-    // inserting it into the response queue
-    // The server will iteratively checking the response queue and sending the
-    // responses to the clients
-    // if it finds any responses
     private final Server server;
-
-    // GameController is the component that manages the game state
-    // It contains the logic for the game and is responsible for updating the game
-    // state
-    // based on the requests from the clients
-    // The ServerApp may call methods on the GameController to update the game state
-    // when it is notified
-    // with a request from Server
     private final GameController gameController;
-
-    // DatabaseController is the component that manages the database of keywords and
-    // hints
-    // It is responsible for fetching the keywords and hints from the text file
-    // It usually is called by the GameController to get the keywords and hints
     private final DatabaseController databaseController;
     private ServerScenesManager serverScenesManager;
 
@@ -65,10 +36,9 @@ public class ServerApp extends Application implements GameMediator {
         this.gameController = new GameController((GameMediator) this);
         this.databaseController = DatabaseController.getInstance();
         this.server.setMediator(this);
-        //this.databaseController.setMediator(this);
     }
-    public void setMaxconnection(int maxConnections)
-    {
+
+    public void setMaxconnection(int maxConnections) {
         this.gameController.setMaxConnections(maxConnections);
     }
 
@@ -82,54 +52,17 @@ public class ServerApp extends Application implements GameMediator {
             if (!guard((Event) request)) {
                 return response;
             }
-            response =  gameController.process(request);
+            response = gameController.process(request);
             response.setSource(request.getDestination());
             response.setDestination(request.getSource()); // Send the response back to the client, not broadcast
-            if (request instanceof RegisterRequest && (response instanceof RegisterSuccessResponse || response instanceof GameStartResponse))
+            if (request instanceof RegisterRequest
+                    && (response instanceof RegisterSuccessResponse || response instanceof GameStartResponse))
                 // Add new client to the list of clients
                 server.getClients().put(request.getSource(), channel);
-            if (response instanceof GameStartResponse || response instanceof GameEndResponse )
-            {
+            if (response instanceof GameStartResponse || response instanceof GameEndResponse) {
                 response.setDestination(null);
             }
-
-                
-            // if (request instanceof RegisterRequest) {
-            //     final String source = request.getSource();
-            //     final String destination = request.getDestination();
-            //     final RegisterRequest registerRequest = (RegisterRequest) request;
-            //     final String username = registerRequest.getUsername();
-
-            //     // Register the player by interacting with the game controller
-
-            //     // Suppose the game controller returns the response
-            //     response = new RegisterSuccessResponse(username, 1, registerRequest.getRequestedAt());
-            //     response.setSource(destination);
-            //     response.setDestination(source); // Send the response back to the client, not broadcast
-
-            //     // Add new client to the list of clients
-            //     server.getClients().put(source, channel);
-            // } else if (request instanceof CloseConnectionRequest) {
-            //     guard((Event) request);
-            //     // final String source = request.getSource();
-            //     // final String destination = request.getDestination();
-
-            //     // Close the connection by interacting with the server
-
-            //     // No response is needed for the CloseConnectionRequest
-            // } else { // GuessRequest
-            //     final String destination = request.getDestination();
-            //     final GuessRequest guessRequest = (GuessRequest) request;
-
-            //     // Interact with the game controller to process the guess request
-
-            //     // Suppose the game controller returns the response
-            //     response = ResultNotificationResponse.successfulGuessChar(guessRequest.getUsername(), 1,
-            //             (short) 1, guessRequest.getRequestedAt());
-
-            //     response.setSource(destination);
-            // }
-             return response;
+            return response;
         }
     }
 
@@ -141,25 +74,26 @@ public class ServerApp extends Application implements GameMediator {
     // 3. ...
     private boolean guard(Event event) {
         // 1. If the game has not started, the server should not process the guess
-
-        // 2. If the game has started, the server should not process the register
-        // request
-
+        // if (event instanceof GuessRequest && !gameController.gameIsStarted())
+        // return false;
+        // // 2. If the game has started, the server should not process the register
+        // // request
+        // if (event instanceof RegisterRequest && gameController.gameIsStarted())
+        // return false;
         // 3. The server should not process the request if the client is not in the list
         // of clients
-
+        if (event instanceof GuessRequest && !server.getClients().containsKey(event.getSource()))
+            return false;
         // 4. If the game has ended or in the waiting for players state, the server
         // should not process the guess
-
         // 5. Ignore duplicate requests from the same client to avoid DOS attack
-
         return true;
     }
 
     @Override
     public void start(@SuppressWarnings("exports") Stage stage) throws Exception {
         // Start the server
-        //serverScenesManager = new ServerScenesManager(stage, this);
+        // serverScenesManager = new ServerScenesManager(stage, this);
         final Thread serverThread = new Thread(server);
         serverThread.setDaemon(true);
         serverThread.start();
@@ -177,9 +111,11 @@ public class ServerApp extends Application implements GameMediator {
 
     @Override
     public Response notifyConnectionLost(SocketChannel channel) throws Exception {
-        // server.getClients().remove(address);
-        // channel.close();
         final Request request = new CloseConnectionRequest(null);
+        request.setSource(channel.getRemoteAddress().toString());
+        request.setDestination(server.getAddress().toString());
+        System.err.println("Mediator: Contacting GameController to process the closing connection request of "
+                + request.getSource());
         return this.process(request, channel);
     }
 

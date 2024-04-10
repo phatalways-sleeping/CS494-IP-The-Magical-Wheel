@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import com.example.the_magic_wheel.sockets.Server.defense.AttackException;
 import com.example.the_magic_wheel.sockets.Server.defense.Defender;
@@ -20,7 +21,17 @@ public class ServerExecutor implements ExecutionManager {
     private final Defender defenders;
 
     public ServerExecutor(int poolSize) {
-        this.executor = Executors.newFixedThreadPool(Objects.requireNonNullElse(poolSize, 5));
+        this.executor = Executors.newCachedThreadPool(
+                new ThreadFactory() {
+                    @Override
+                    public Thread newThread(Runnable r) {
+                        final Thread thread = new Thread(r);
+                        thread.setName("ServerExecutor-" + thread.getId());
+                        thread.setDaemon(true);
+                        System.out.println("ServerExecutor: Created new thread " + thread.getName());
+                        return thread;
+                    }
+                });
         final Defender doSDefender = new DoSDefender();
         this.defenders = doSDefender;
     }
