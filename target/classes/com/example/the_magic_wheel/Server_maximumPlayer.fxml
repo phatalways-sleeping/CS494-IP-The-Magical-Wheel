@@ -58,12 +58,12 @@
             <HBox id="hbox_for_err_msg" fx:id="errorMsgHBox" alignment="CENTER" spacing="30.0" />
             <HBox alignment="CENTER" spacing="30.0">
                <children>
-                  <Button id="btn_cancel_register" alignment="CENTER" mnemonicParsing="false" onAction="#switchToGreet" prefHeight="40.0" prefWidth="180.0" style="-fx-background-radius: 20; -fx-background-color: white;" text="Cancel" textAlignment="CENTER">
+                  <Button id="btn_cancel_register" alignment="CENTER" mnemonicParsing="false" onAction="#switchToServerHall" prefHeight="40.0" prefWidth="180.0" style="-fx-background-radius: 20; -fx-background-color: white;" text="Cancel" textAlignment="CENTER">
                      <font>
                         <Font name="DejaVu Sans" size="14.0" />
                      </font>
                   </Button>
-                  <Button id="btn_OK" alignment="CENTER" mnemonicParsing="false" onAction="#sendRegisterRequest" prefHeight="40.0" prefWidth="180.0" style="-fx-background-radius: 20; -fx-background-color: DAFFFB;" text="OK" textAlignment="CENTER">
+                  <Button id="btn_OK" alignment="CENTER" mnemonicParsing="false" onAction="#startSever" prefHeight="40.0" prefWidth="180.0" style="-fx-background-radius: 20; -fx-background-color: DAFFFB;" text="OK" textAlignment="CENTER">
                      <font>
                         <Font name="DejaVu Sans" size="14.0" />
                      </font>

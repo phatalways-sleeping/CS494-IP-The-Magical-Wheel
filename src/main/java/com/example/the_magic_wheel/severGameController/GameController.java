@@ -17,17 +17,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GameController extends Component{
+public class GameController extends Component {
     private List<String> playerList;
     private List<String> disqualifiedList;
     private Map<String, Integer> scores;
+    private Map<String, Integer> guessCountMap;
     private int currentPlayerIndex;
     private int turn;
     private GameMediator mediator;
     private Keyword keyword;
     private StringBuffer currentKeyword;
     private int maxConnections;
-
+    private boolean isEndGame;
     // currentPlayerIndex != -1 => game is running
     // else waiting for enough players to join
 
@@ -39,10 +40,15 @@ public class GameController extends Component{
         this.turn = 1;
         this.maxConnections = 3;
         this.scores = new HashMap<>();
+        this.guessCountMap = new HashMap<>();
+        this.isEndGame = false;
     }
 
     public String addPlayer(String username) {
-
+        if (isEndGame == true)
+        {
+            return "game is ended";
+        }
         while (playerList.size() > maxConnections) {
             playerList.remove(playerList.size() - 1);
         }
@@ -60,8 +66,6 @@ public class GameController extends Component{
         return "register success";
     }
 
-    
-
     // deep copy for the hash map before clear all state
     private Map<String, Integer> copyScore(Map<String, Integer> originalMap) {
         Map<String, Integer> newMap = new HashMap<>();
@@ -78,19 +82,36 @@ public class GameController extends Component{
 
     public synchronized Response process(Request request) {
         if (request instanceof GuessRequest) {
-            GuessRequest guessRequest = (GuessRequest) request;
-            if (playerList.get(playerList.size() - 1) == guessRequest.getUsername()) {
-                turn++;
+            if (isEndGame)
+            {
+                return getGameEndResponse(request, "Game is ended");
             }
+            GuessRequest guessRequest = (GuessRequest) request;
+            increaseTurnAndGuessCount(guessRequest);
             if (turn > 2 && guessRequest.getGuessWord() != null && guessRequest.getGuessWord().length() > 0) {
                 if (guessRequest.getGuessWord().equals(keyword.getKeyword())) {
                     return getKeyWordSucessful(guessRequest, guessRequest.getUsername());
+                }
+                if (canNotGuessWord()) {
+                    return getGameEndResponse(guessRequest,
+                            "End game because each active player is already guess more than 3 times");
                 }
                 return getKeyWordUnsucessful(guessRequest, guessRequest.getUsername());
             }
 
             if (isGuessCharactorSucessful(guessRequest)) {
+                if (currentKeyword.toString().equals(keyword.getKeyword())) {
+                    return getKeyWordSucessful(guessRequest, guessRequest.getUsername());
+                }
+                if (canNotGuessWord()) {
+                    return getGameEndResponse(guessRequest,
+                            "End game because each active player is already guess more than 3 times");
+                }
                 return guessCharactorSucessful(guessRequest, guessRequest.getUsername());
+            }
+            if (canNotGuessWord()) {
+                return getGameEndResponse(guessRequest,
+                        "End game because each active player is already guess more than 3 times");
             }
             return guessCharactorUnsucessful(guessRequest, guessRequest.getUsername());
 
@@ -108,24 +129,44 @@ public class GameController extends Component{
                 return getRegisterFailureResponse(registerRequest, responeString);
             }
         }
-        return new GameEndResponse("Some players close connection", scores, request.getRequestedAt());
+        return getGameEndResponse(request, "Some players close connection");
     }
 
-    private GameEndResponse getGameEndResponse(GuessRequest guessRequest, String reason) {
+    private void increaseTurnAndGuessCount(GuessRequest guessRequest) {
+        turn++;
+        if (!guessCountMap.containsKey(guessRequest.getUsername())) {
+            guessCountMap.put(guessRequest.getUsername(), 1);
+        } else {
+            guessCountMap.put(guessRequest.getUsername(), guessCountMap.get(guessRequest.getUsername()) + 1);
+        }
+    }
+
+    private boolean canNotGuessWord() {
+        for (int i = 0; i < playerList.size(); i++) {
+            if (guessCountMap.get(playerList.get(i)) < 3) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private GameEndResponse getGameEndResponse(Request request, String reason) {
         Map<String, Integer> copyscore = copyScore(scores);
         this.playerList = new ArrayList<>();
         this.disqualifiedList = new ArrayList<>();
         this.currentPlayerIndex = -1;
         this.turn = 0;
         this.scores = new HashMap<>();
-        return new GameEndResponse(reason, copyscore, guessRequest.getRequestedAt());
+        isEndGame = true;
+        return new GameEndResponse(reason, copyscore, request.getRequestedAt());
     }
 
     private ResultNotificationResponse guessCharactorUnsucessful(GuessRequest guessRequest, String currentUser) {
         char character = guessRequest.getGuessChar().charAt(0);
         currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
         return ResultNotificationResponse.unsuccessfulGuessChar(character, currentUser, scores.get(currentUser),
-            playerList.get(currentPlayerIndex), (short) turn, guessRequest.getRequestedAt(), currentKeyword.toString());
+                playerList.get(currentPlayerIndex), (short) turn, guessRequest.getRequestedAt(),
+                currentKeyword.toString());
     }
 
     private ResultNotificationResponse guessCharactorSucessful(GuessRequest guessRequest, String currentUser) {
@@ -147,12 +188,16 @@ public class GameController extends Component{
         return isCorrect;
     }
 
-    private ResultNotificationResponse getKeyWordUnsucessful(GuessRequest guessRequest, String currentUser) {
+    private Response getKeyWordUnsucessful(GuessRequest guessRequest, String currentUser) {
         disqualifiedList.add(currentUser);
         playerList.remove(currentUser);
         currentPlayerIndex %= playerList.size();
+        if (playerList.size() == 0) {
+            return getGameEndResponse(guessRequest, "All players are disqualified.");
+        }
         return ResultNotificationResponse.unsuccessfulGuessWord(currentUser, scores.get(currentUser),
-                playerList.get(currentPlayerIndex), (short) turn, guessRequest.getRequestedAt(), currentKeyword.toString());
+                playerList.get(currentPlayerIndex), (short) turn, guessRequest.getRequestedAt(),
+                currentKeyword.toString());
     }
 
     private GameEndResponse getKeyWordSucessful(GuessRequest guessRequest, String currentUser) {

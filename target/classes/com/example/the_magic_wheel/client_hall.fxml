@@ -15,13 +15,14 @@
       </ImageView>
       <Text fill="#04364a" layoutX="168.0" layoutY="273.0" stroke="#64ccc5" strokeType="OUTSIDE" strokeWidth="5.0" text="WAITING ROOM">
          <font>
-            <Font name="System Bold" size="72.0" />
+            <Font name="DejaVu Sans" size="72.0" />
          </font>
       </Text>
       <Text fx:id="nicknameTextField" fill="#04364a" layoutX="365.0" layoutY="364.0" strokeType="OUTSIDE" strokeWidth="0.0" text="nickname">
          <font>
-            <Font size="40.0" />
+            <Font name="DejaVu Sans" size="40.0" />
          </font>
       </Text>
    </children>
 </AnchorPane>
+

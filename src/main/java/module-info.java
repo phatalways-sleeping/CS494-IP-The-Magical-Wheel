@@ -39,4 +39,8 @@ module com.example.the_magic_wheel {
     opens com.example.the_magic_wheel.sockets.Server.defense to javafx.fxml;
 
     exports com.example.the_magic_wheel.sockets.Server.defense;
+
+    opens com.example.the_magic_wheel.severScenesManager.controllers to javafx.fxml;
+
+    exports com.example.the_magic_wheel.severScenesManager.controllers;
 }

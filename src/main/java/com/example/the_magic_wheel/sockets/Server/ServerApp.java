@@ -20,7 +20,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.Iterator;
-
+import java.util.concurrent.CountDownLatch;
 import java.nio.channels.SocketChannel;;
 
 public class ServerApp extends Application implements GameMediator {
@@ -40,6 +40,8 @@ public class ServerApp extends Application implements GameMediator {
     // The server will iteratively checking the response queue and sending the
     // responses to the clients
     // if it finds any responses
+    static boolean isEndGame = false;
+    static int maxConnections;
     private final Server server;
 
     // GameController is the component that manages the game state
@@ -49,7 +51,7 @@ public class ServerApp extends Application implements GameMediator {
     // The ServerApp may call methods on the GameController to update the game state
     // when it is notified
     // with a request from Server
-    private final GameController gameController;
+    private GameController gameController;
 
     // DatabaseController is the component that manages the database of keywords and
     // hints
@@ -57,6 +59,7 @@ public class ServerApp extends Application implements GameMediator {
     // It usually is called by the GameController to get the keywords and hints
     private final DatabaseController databaseController;
     private ServerScenesManager serverScenesManager;
+
 
     public ServerApp() {
         final Server server = Server.spawn(new ServerConfiguration(8080,
@@ -70,16 +73,33 @@ public class ServerApp extends Application implements GameMediator {
     public void setMaxconnection(int maxConnections)
     {
         this.gameController.setMaxConnections(maxConnections);
+        ServerApp.maxConnections = maxConnections;
     }
-
+    public ServerScenesManager getServerScenesManager() {
+        return serverScenesManager;
+    }
+    public static boolean isEndGame() {
+        return isEndGame;
+    }
+    public static void setPlayAgain(boolean isEndGame) {
+        ServerApp.isEndGame = isEndGame;
+    }
+    public void playAgain()
+    {
+        gameController = new GameController((GameMediator) this);
+        gameController.setMaxConnections(ServerApp.maxConnections);
+    }
     @Override
     public Response process(Request request, SocketChannel channel) {
         // Syncronize the process method since this.process() is called by the multiple
         // threads spanwned by the ExecutionManager
         synchronized (this) {
+            // test, need to delete this line later :     
+            //isEndGame = true;
+
             System.out.println("Mediator: Processing request " + request.toString());
             Response response = null;
-            if (!guard((Event) request)) {
+            if (guard((Event) request) == true) {
                 return response;
             }
             response =  gameController.process(request);
@@ -93,6 +113,8 @@ public class ServerApp extends Application implements GameMediator {
                 response.setDestination(null);
             }
 
+            if (response instanceof GameEndResponse)
+                isEndGame = true;
                 
             // if (request instanceof RegisterRequest) {
             //     final String source = request.getSource();
@@ -140,6 +162,7 @@ public class ServerApp extends Application implements GameMediator {
     // request
     // 3. ...
     private boolean guard(Event event) {
+        return isEndGame;
         // 1. If the game has not started, the server should not process the guess
 
         // 2. If the game has started, the server should not process the register
@@ -152,17 +175,17 @@ public class ServerApp extends Application implements GameMediator {
         // should not process the guess
 
         // 5. Ignore duplicate requests from the same client to avoid DOS attack
-
-        return true;
     }
 
     @Override
     public void start(@SuppressWarnings("exports") Stage stage) throws Exception {
         // Start the server
-        //serverScenesManager = new ServerScenesManager(stage, this);
+
         final Thread serverThread = new Thread(server);
         serverThread.setDaemon(true);
-        serverThread.start();
+
+        serverScenesManager = new ServerScenesManager(stage,this, serverThread);
+        //serverThread.start();
 
         // Scene scene = new Scene(new Group(), 300, 250);
         // stage.setTitle("Simple Window");

@@ -55,7 +55,7 @@
                         <Font name="DejaVu Sans Mono Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Button id="btn_start_server" alignment="CENTER" mnemonicParsing="false" prefHeight="65.0" prefWidth="367.0" style="-fx-background-radius: 20; -fx-background-color: DAFFFB;" text="Start" textAlignment="CENTER">
+                  <Button id="btn_start_server" fx:id="getStartedButton" alignment="CENTER" mnemonicParsing="false" onAction="#switchToMaximumPlayer" prefHeight="65.0" prefWidth="367.0" style="-fx-background-radius: 20; -fx-background-color: DAFFFB;" text="Start" textAlignment="CENTER">
                      <font>
                         <Font name="DejaVu Sans Mono Bold" size="28.0" />
                      </font>

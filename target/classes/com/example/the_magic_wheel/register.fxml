@@ -45,19 +45,19 @@
    <children>
       <Label alignment="CENTER" layoutX="195.0" layoutY="102.0" prefHeight="29.0" prefWidth="510.0" text="The Magical Wheel" textAlignment="CENTER" textFill="WHITE">
          <font>
-            <Font name="DejaVu Sans Mono Bold" size="48.0" />
+            <Font name="DejaVu Sans" size="48.0" />
          </font>
       </Label>
       <VBox alignment="TOP_CENTER" layoutX="122.0" layoutY="216.0" style="-fx-padding: 10; -fx-spacing: 25;">
          <children>
             <Label alignment="CENTER" prefHeight="30.0" prefWidth="286.0" text="What's your name?" textAlignment="CENTER" textFill="WHITE">
                <font>
-                  <Font name="DejaVu Sans Mono Bold" size="24.0" />
+                  <Font name="DejaVu Sans" size="24.0" />
                </font>
             </Label>
             <TextField fx:id="nameTextField" alignment="CENTER" prefHeight="61.0" prefWidth="637.0" promptText="YourOnlyHero..." style="-fx-padding: 10; -fx-background-radius: 40;">
                <font>
-                  <Font name="DejaVu Sans Mono Bold" size="18.0" />
+                  <Font name="DejaVu Sans" size="18.0" />
                </font>
             </TextField>
             <HBox id="hbox_for_err_msg" fx:id="errorMsgHBox" alignment="CENTER" spacing="30.0" />
@@ -65,12 +65,12 @@
                <children>
                   <Button id="btn_cancel_register" alignment="CENTER" mnemonicParsing="false" onAction="#switchToGreet" prefHeight="40.0" prefWidth="180.0" style="-fx-background-radius: 20; -fx-background-color: white;" text="Cancel" textAlignment="CENTER">
                      <font>
-                        <Font name="DejaVu Sans Mono Bold" size="14.0" />
+                        <Font name="DejaVu Sans" size="14.0" />
                      </font>
                   </Button>
                   <Button id="btn_join_game" alignment="CENTER" mnemonicParsing="false" onAction="#sendRegisterRequest" prefHeight="40.0" prefWidth="180.0" style="-fx-background-radius: 20; -fx-background-color: DAFFFB;" text="Join" textAlignment="CENTER">
                      <font>
-                        <Font name="DejaVu Sans Mono Bold" size="14.0" />
+                        <Font name="DejaVu Sans" size="14.0" />
                      </font>
                   </Button>
                </children>

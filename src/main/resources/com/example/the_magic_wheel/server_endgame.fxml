@@ -59,12 +59,12 @@
                   </Label>
                   <HBox alignment="CENTER" spacing="30.0">
                      <children>
-                        <Button id="btn_close_game" alignment="CENTER" mnemonicParsing="false" prefHeight="65.0" prefWidth="250.0" style="-fx-background-radius: 20; -fx-background-color: White;" text="Close" textAlignment="CENTER">
+                        <Button id="btn_close_game" alignment="CENTER" mnemonicParsing="false" onAction="#closeServer" prefHeight="65.0" prefWidth="250.0" style="-fx-background-radius: 20; -fx-background-color: White;" text="Close" textAlignment="CENTER">
                            <font>
                               <Font name="DejaVu Sans Mono Bold" size="24.0" />
                            </font>
                         </Button>
-                        <Button id="btn_play_again" alignment="CENTER" mnemonicParsing="false" prefHeight="65.0" prefWidth="250.0" style="-fx-background-radius: 20; -fx-background-color: DAFFFB;" text="Play again" textAlignment="CENTER">
+                        <Button id="btn_play_again" alignment="CENTER" mnemonicParsing="false" onAction="#playAgain" prefHeight="65.0" prefWidth="250.0" style="-fx-background-radius: 20; -fx-background-color: DAFFFB;" text="Play again" textAlignment="CENTER">
                            <font>
                               <Font name="DejaVu Sans Mono Bold" size="24.0" />
                            </font>
