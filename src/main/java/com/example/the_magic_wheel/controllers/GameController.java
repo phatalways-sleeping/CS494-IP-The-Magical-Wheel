@@ -271,6 +271,7 @@ public class GameController extends Controller {
         updateNotification(response.getExplanation());
 
         if (isDisqualified) {
+            handleNotGuessing();
             return;
         }
 
