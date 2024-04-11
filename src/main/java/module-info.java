@@ -4,17 +4,31 @@ module com.example.the_magic_wheel {
     requires javafx.graphics;
     requires javafx.base;
 
+    // PROJECT
+
     opens com.example.the_magic_wheel to javafx.fxml;
 
     exports com.example.the_magic_wheel;
 
-    opens com.example.the_magic_wheel.controllers to javafx.fxml;
+    // CLIENT
 
-    exports com.example.the_magic_wheel.controllers;
+    opens com.example.the_magic_wheel.client.controllers to javafx.fxml;
 
-    opens com.example.the_magic_wheel.protocols to javafx.fxml;
+    exports com.example.the_magic_wheel.client.controllers;
 
-    exports com.example.the_magic_wheel.protocols;
+    opens com.example.the_magic_wheel.client.sockets to javafx.fxml;
+
+    exports com.example.the_magic_wheel.client.sockets;
+
+    opens com.example.the_magic_wheel.client.views to javafx.fxml;
+
+    exports com.example.the_magic_wheel.client.views;
+
+    // PROTOCOLS
+
+    opens com.example.the_magic_wheel.protocols.interfaces to javafx.fxml;
+
+    exports com.example.the_magic_wheel.protocols.interfaces;
 
     opens com.example.the_magic_wheel.protocols.request to javafx.fxml;
 
@@ -24,23 +38,29 @@ module com.example.the_magic_wheel {
 
     exports com.example.the_magic_wheel.protocols.response;
 
-    opens com.example.the_magic_wheel.sockets to javafx.fxml;
+    // SERVER
 
-    exports com.example.the_magic_wheel.sockets;
+    opens com.example.the_magic_wheel.server.views to javafx.fxml;
 
-    opens com.example.the_magic_wheel.sockets.Server to javafx.fxml;
+    exports com.example.the_magic_wheel.server.views;
 
-    exports com.example.the_magic_wheel.sockets.Server;
+    opens com.example.the_magic_wheel.server.controllers to javafx.fxml;
 
-    opens com.example.the_magic_wheel.sockets.Server.manager to javafx.fxml;
+    exports com.example.the_magic_wheel.server.controllers;
 
-    exports com.example.the_magic_wheel.sockets.Server.manager;
+    opens com.example.the_magic_wheel.server.sockets to javafx.fxml;
 
-    opens com.example.the_magic_wheel.sockets.Server.defense to javafx.fxml;
+    exports com.example.the_magic_wheel.server.sockets;
 
-    exports com.example.the_magic_wheel.sockets.Server.defense;
+    opens com.example.the_magic_wheel.server.sockets.defense to javafx.fxml;
 
-    opens com.example.the_magic_wheel.severScenesManager.controllers to javafx.fxml;
+    exports com.example.the_magic_wheel.server.sockets.defense;
 
-    exports com.example.the_magic_wheel.severScenesManager.controllers;
+    opens com.example.the_magic_wheel.server.sockets.manager to javafx.fxml;
+
+    exports com.example.the_magic_wheel.server.sockets.manager;
+
+    opens com.example.the_magic_wheel.server.utils to javafx.fxml;
+
+    exports com.example.the_magic_wheel.server.utils;
 }

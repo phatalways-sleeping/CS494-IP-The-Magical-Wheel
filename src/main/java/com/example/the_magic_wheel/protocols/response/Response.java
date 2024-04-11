@@ -1,6 +1,6 @@
 package com.example.the_magic_wheel.protocols.response;
 
-import com.example.the_magic_wheel.protocols.Event;
+import com.example.the_magic_wheel.protocols.interfaces.Event;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
