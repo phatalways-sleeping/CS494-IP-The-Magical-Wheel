@@ -8,6 +8,7 @@ public class ResultNotificationResponse extends Response {
     private final boolean successful;
     // 0. Guess character
     // 1. Guess the whole word
+    // 2. Time out
     private final short code;
     private final String explanation;
     private final String nextPlayer;
@@ -61,6 +62,16 @@ public class ResultNotificationResponse extends Response {
         final String explanation = new StringBuilder("You guessed the whole word incorrectly.")
                 .toString();
         return new ResultNotificationResponse(username, score, false, (short) 1, explanation, nextPlayer, nextTurn,
+                requestedAt, currentKeyword);
+    }
+    public static ResultNotificationResponse timeout(String username, int score,
+            String nextPlayer,
+            short nextTurn,
+            String requestedAt, String currentKeyword) {
+             //   System.err.println("in Result notification response.java : username: " + username + " score: " + score + " nextPlayer: " + nextPlayer + " nextTurn: " + nextTurn + " requestedAt: " + requestedAt + " currentKeyword: " + currentKeyword + " guessChar: " + guessChar );
+        final String explanation = new StringBuilder("Player ").append(username).append(" has timed out.")
+                .toString();
+        return new ResultNotificationResponse(username, score, false, (short) 2, explanation, nextPlayer, nextTurn,
                 requestedAt, currentKeyword);
     }
 

@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 
 import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
+import java.io.IOException;
 import java.nio.channels.SocketChannel;;
 
 public class ServerApp extends Application implements GameMediator {
@@ -58,7 +59,6 @@ public class ServerApp extends Application implements GameMediator {
     private final DatabaseController databaseController;
     private ServerScenesManager serverScenesManager;
 
-
     public ServerApp() {
         final Server server = Server.spawn(new ServerConfiguration(8080,
                 "localhost"));
@@ -72,22 +72,26 @@ public class ServerApp extends Application implements GameMediator {
         this.gameController.setMaxConnections(maxConnections);
         ServerApp.maxConnections = maxConnections;
     }
+
     public ServerScenesManager getServerScenesManager() {
         return serverScenesManager;
     }
+
     public static boolean isEndGame() {
         return isEndGame;
     }
+
     public static void setPlayAgain(boolean isEndGame) {
         ServerApp.isEndGame = isEndGame;
     }
-    public void playAgain()
-    {
+
+    public void playAgain() {
         gameController = new GameController((GameMediator) this);
         gameController.setMaxConnections(ServerApp.maxConnections);
     }
+
     @Override
-    public Response process(Request request, SocketChannel channel) {
+    public Response process(Request request, SocketChannel channel) throws IOException {
         // Syncronize the process method since this.process() is called by the multiple
         // threads spanwned by the ExecutionManager
         synchronized (this) {
@@ -96,49 +100,27 @@ public class ServerApp extends Application implements GameMediator {
             if (guard((Event) request) == true) {
                 return response;
             }
+            if (request instanceof CloseConnectionRequest) {
+                server.getClients().remove(request.getSource());
+                channel.close();
+                System.out.println(
+                        "Mediator: Client " + request.getSource() + " has been removed from the list of clients");
+            }
             response = gameController.process(request);
-             response.setSource(request.getDestination());
-             response.setDestination(request.getSource()); 
-             if (request instanceof RegisterRequest
-                     && (response instanceof RegisterSuccessResponse || response instanceof GameStartResponse))
-            //     // Add new client to the list of clients
-                 server.getClients().put(request.getSource(), channel);
-             if (response instanceof GameStartResponse || response instanceof GameEndResponse || response instanceof ResultNotificationResponse) {
-                 response.setDestination(null);
-             }
-
+            response.setSource(request.getDestination());
+            response.setDestination(request.getSource());
+            if (request instanceof RegisterRequest
+                    && (response instanceof RegisterSuccessResponse || response instanceof GameStartResponse))
+                // // Add new client to the list of clients
+                server.getClients().put(request.getSource(), channel);
+            if (response instanceof GameStartResponse || response instanceof GameEndResponse
+                    || response instanceof ResultNotificationResponse) {
+                response.setDestination(null);
+            }
             if (response instanceof GameEndResponse)
                 isEndGame = true;
-
-            // if(response instanceof GameStartResponse)
-            // {
-            //     System.err.println("Game Start!");
-            // }
-            // if (response instanceof GameEndResponse)
-            // {
-            //     System.err.println("Game End!");
-            // }
-            // if (response instanceof RegisterSuccessResponse)
-            // {
-            //     System.err.println("Register Success!");
-            // }
-            // if (response instanceof RegisterFailureResponse)
-            // {
-            //     System.err.println("Register Failure!");
-            // }
-            //  if (response instanceof ResultNotificationResponse)
-            //  {
-            //     ResultNotificationResponse resultNotificationResponse = (ResultNotificationResponse) response;
-            //      System.err.println("Result Notification!");
-            //      System.err.println("The result is: " + resultNotificationResponse.getResult());
-            //      System.err.println("The result is: " + resultNotificationResponse.getHint());
-            //     System.err.println();
-            //      System.err.println("Result Notification!");
-            //  }
-            
-
-
-             return response;
+            System.out.println("Mediator: Returning response " + response.getClass());
+            return response;
         }
     }
 
@@ -172,7 +154,7 @@ public class ServerApp extends Application implements GameMediator {
         final Thread serverThread = new Thread(server);
         serverThread.setDaemon(true);
 
-        serverScenesManager = new ServerScenesManager(stage,this, serverThread);
+        serverScenesManager = new ServerScenesManager(stage, this, serverThread);
     }
 
     @Override

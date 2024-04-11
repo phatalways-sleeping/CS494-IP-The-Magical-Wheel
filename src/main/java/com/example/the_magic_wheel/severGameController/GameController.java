@@ -98,7 +98,10 @@ public class GameController extends Component {
                 }
                 return getKeyWordUnsucessful(guessRequest, guessRequest.getUsername());
             }
-
+            if(checkTimeout(guessRequest))
+            {
+                return getTimeout(guessRequest, guessRequest.getUsername());
+            }
             if (isGuessCharactorSucessful(guessRequest)) {
                 if (currentKeyword.toString().equals(keyword.getKeyword())) {
                     return getKeyWordSucessful(guessRequest, guessRequest.getUsername());
@@ -130,6 +133,21 @@ public class GameController extends Component {
             }
         }
         return getGameEndResponse(request, "Some players close connection");
+    }
+
+    private ResultNotificationResponse getTimeout(GuessRequest request, String currentUser) {
+        currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
+        return ResultNotificationResponse.timeout(currentUser, scores.get(currentUser),
+                playerList.get(currentPlayerIndex), (short) turn, request.getRequestedAt(),
+                currentKeyword.toString());
+
+    }
+
+    private boolean checkTimeout(GuessRequest guessRequest) {
+        if ( (guessRequest.getGuessChar() == null || guessRequest.getGuessChar() == "") && (guessRequest.getGuessWord() == null || guessRequest.getGuessWord() == "") ){
+            return true;
+        }
+        return false;
     }
 
     private void increaseTurnAndGuessCount(GuessRequest guessRequest) {
