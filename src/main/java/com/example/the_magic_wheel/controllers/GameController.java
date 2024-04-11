@@ -275,7 +275,7 @@ public class GameController extends Controller {
     }
 
     private boolean validateGuessKeyword(String guess) {
-        return guess != null && guess.matches("[a-zA-Z]+");
+        return guess != null && guess.matches("[a-zA-Z]*");
     }
     
     private void setErrorLabel(Label label, String message) {
