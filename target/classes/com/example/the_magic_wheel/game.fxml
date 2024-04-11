@@ -22,19 +22,19 @@
                </font>
             </Text>
             <Region prefHeight="200.0" prefWidth="200.0" />
-            <Text fx:id="hintText" fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="This is a hint for the keyword" style="-fx-font-family: 'DejaVu Sans';">
+            <Text fx:id="hintText" fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: 'DejaVu Sans';" text="This is a hint for the keyword">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
             <Region prefHeight="200.0" prefWidth="200.0" />
-            <Text fx:id="keywordText" fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="* * * * * *" style="-fx-font-family: 'DejaVu Sans';">
+            <Text fx:id="keywordText" fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: 'DejaVu Sans';" text="* * * * * *">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
             <Region prefHeight="200.0" prefWidth="200.0" />
-            <Text fx:id="notificationTextField" fill="#64ccc5" strokeType="OUTSIDE" strokeWidth="0.0" text="Notification" textAlignment="CENTER" style="-fx-font-family: 'DejaVu Sans';">
+            <Text fx:id="notificationTextField" fill="#64ccc5" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: 'DejaVu Sans';" textAlignment="CENTER">
                <font>
                   <Font size="16.0" />
                </font>
@@ -42,7 +42,7 @@
             <Region prefHeight="200.0" prefWidth="200.0" />
             <HBox alignment="BASELINE_CENTER" prefHeight="25.0" prefWidth="464.0" styleClass="space">
                <children>
-                  <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="Guess" style="-fx-font-family: 'DejaVu Sans';">
+                  <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: 'DejaVu Sans';" text="Guess">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -63,7 +63,7 @@
             <Region minHeight="20.0" prefHeight="20.0" prefWidth="200.0" />
             <HBox alignment="BASELINE_CENTER" prefHeight="25.0" prefWidth="464.0" styleClass="space">
                <children>
-                  <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="Keyword" style="-fx-font-family: 'DejaVu Sans';">
+                  <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: 'DejaVu Sans';" text="Keyword">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -88,20 +88,30 @@
       </VBox>
    </center>
    <right>
-      <HBox prefHeight="470.0" prefWidth="116.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="476.0" prefWidth="139.0" BorderPane.alignment="CENTER">
          <children>
-            <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="Turn: ">
+            <Label fx:id="countdownLabel" prefHeight="20.0" text="TImer" textFill="#dafffb">
                <font>
                   <Font size="14.0" />
                </font>
-            </Text>
-            <Text fx:id="turnText" fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="3">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Text>
+            </Label>
+            <Region prefHeight="27.0" prefWidth="200.0" />
+            <HBox prefHeight="88.0" prefWidth="169.0" VBox.vgrow="SOMETIMES">
+               <children>
+                  <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="Turn: ">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="turnText" fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="3">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
    </right>
    <top>
       <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: 'DejaVu Sans';" text="The Magical Wheel" wrappingWidth="369.57421875" BorderPane.alignment="CENTER">
