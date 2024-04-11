@@ -19,7 +19,7 @@ public class ServerEndGameController extends ServerController{
 
      @FXML
     public void playAgain(ActionEvent event) {
-        serverApp.getServerScenesManager().switchScene(Configuration.SERVER_GAME_RUNNING_FXML);
+        serverApp.getServerScenesManager().switchScene(Configuration.SERVER_MAXIMUM_PLAYER_FXML);
         serverApp.setPlayAgain(false);
         serverApp.playAgain();
      }

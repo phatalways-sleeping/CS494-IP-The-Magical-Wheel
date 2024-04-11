@@ -49,7 +49,11 @@ public class ServerMaximumPlayerController extends ServerController{
         if (maximumPlayerInNumber != -1) {
             serverApp.getServerScenesManager().switchScene(Configuration.SERVER_GAME_RUNNING_FXML);
             serverApp.setMaxconnection(maximumPlayerInNumber);
-            serverApp.getServerScenesManager().startServer();
+            if (ServerApp.gameIsStarted() == false)
+                {
+                    serverApp.getServerScenesManager().startServer();
+                    ServerApp.setGameStart();
+                }
             Thread checkEndGameThread = new Thread(() -> {
                 while(true) {
                     if (ServerApp.isEndGame()) {
@@ -90,16 +94,20 @@ public class ServerMaximumPlayerController extends ServerController{
 
     private int getMaximumPlayer(String maximumPlayer) {
         if (maximumPlayer == null || maximumPlayer.isEmpty()) {
-            createErrMsgNode("maximumPlayer cannot be empty!");
+            createErrMsgNode("The number of players cannot be empty!");
             return -1;
         }
         int maximumPlayerInNumber = 0;
         for (int i = 0; i < maximumPlayer.length(); i++) {
             if (!Character.isDigit(maximumPlayer.charAt(i))) {
-                createErrMsgNode("maximumPlayer must be a number!");
+                createErrMsgNode("The number of players must be a number!");
                 return -1;
             }
             maximumPlayerInNumber = maximumPlayerInNumber * 10 + (maximumPlayer.charAt(i) - '0');
+        }
+        if (maximumPlayerInNumber < 2 || maximumPlayerInNumber > 10) {
+            createErrMsgNode("The number of players must be between 2 and 10!");
+            return -1;
         }
        return maximumPlayerInNumber;
     }

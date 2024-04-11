@@ -40,6 +40,7 @@ public class ServerApp extends Application implements GameMediator {
     // responses to the clients
     // if it finds any responses
     static boolean isEndGame = false;
+    static boolean gameIsStarted = false;
     static int maxConnections;
     private final Server server;
 
@@ -83,6 +84,12 @@ public class ServerApp extends Application implements GameMediator {
 
     public static void setPlayAgain(boolean isEndGame) {
         ServerApp.isEndGame = isEndGame;
+    }
+    public static boolean gameIsStarted() {
+        return gameIsStarted;
+    }
+    public static void setGameStart() {
+        ServerApp.gameIsStarted = true;
     }
 
     public void playAgain() {
