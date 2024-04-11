@@ -107,6 +107,10 @@ public class ServerApp extends Application implements GameMediator {
                         "Mediator: Client " + request.getSource() + " has been removed from the list of clients");
             }
             response = gameController.process(request);
+            if (response == null)
+            {
+                return response;
+            }
             response.setSource(request.getDestination());
             response.setDestination(request.getSource());
             if (request instanceof RegisterRequest

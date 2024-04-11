@@ -23,6 +23,7 @@ public class GameController extends Component {
     private List<String> disqualifiedList;
     private Map<String, Integer> scores;
     private Map<String, Integer> guessCountMap;
+    private Map <String, String> mapIPToUsername;
     private int currentPlayerIndex;
     private int turn;
     private GameMediator mediator;
@@ -43,14 +44,24 @@ public class GameController extends Component {
         this.scores = new HashMap<>();
         this.guessCountMap = new HashMap<>();
         this.isEndGame = false;
+        this.mapIPToUsername = new HashMap<>();
     }
 
-    public String addPlayer(String username) {
+    public String addPlayer(String username, RegisterRequest registerRequest) {
         if (isEndGame == true)
         {
             return "game is ended";
         }
         while (playerList.size() > maxConnections) {
+            String userName = playerList.get(playerList.size() - 1);
+            if (scores.containsKey(userName))
+                scores.remove(username);
+            if (disqualifiedList.contains(userName))
+                disqualifiedList.remove(userName);
+            if (guessCountMap.containsKey(userName))
+                guessCountMap.remove(userName);
+            // if (mapIPToUsername.containsKey(userName))
+            //     mapIPToUsername.remove(userName); to do : remove the key from mapIPToUsername (may be never happer  :))) )
             playerList.remove(playerList.size() - 1);
         }
         if (playerList.size() == maxConnections) {
@@ -62,6 +73,7 @@ public class GameController extends Component {
         }
         playerList.add(username);
         scores.put(username, 0);
+        mapIPToUsername.put(registerRequest.getSource(), username);
         if (playerList.size() == maxConnections)
             currentPlayerIndex = 0;
         return "register success";
@@ -123,7 +135,7 @@ public class GameController extends Component {
 
         else if (request instanceof RegisterRequest) {
             RegisterRequest registerRequest = (RegisterRequest) request;
-            String responeString = addPlayer(registerRequest.getUsername());
+            String responeString = addPlayer(registerRequest.getUsername(), registerRequest);
             if (responeString == "register success") {
                 if (playerList.size() == maxConnections && currentPlayerIndex == 0) {
                     return getGameStartResponse(registerRequest);
@@ -137,18 +149,24 @@ public class GameController extends Component {
         // from here: CloseConnectionRequest
         CloseConnectionRequest closeConnectionRequest = (CloseConnectionRequest) request;
         if (currentPlayerIndex == -1) {
-            if (playerList.contains(closeConnectionRequest.getUsername())) {
-                playerList.remove(closeConnectionRequest.getUsername());
+            // print all players list
+            
+            String closedConnectionPlayer = mapIPToUsername.get(closeConnectionRequest.getSource());
+            System.err.println("player that close connection: " + closedConnectionPlayer);
+
+            if (playerList.contains( closedConnectionPlayer)) {
+                playerList.remove(closedConnectionPlayer);
             }
-            if (scores.containsKey(closeConnectionRequest.getUsername())) {
-                scores.remove(closeConnectionRequest.getUsername());
+            if (scores.containsKey(closedConnectionPlayer)) {
+                scores.remove(closedConnectionPlayer);
             }
-            if (disqualifiedList.contains(closeConnectionRequest.getUsername())) {
-                disqualifiedList.remove(closeConnectionRequest.getUsername());
+            if (disqualifiedList.contains(closedConnectionPlayer)) {
+                disqualifiedList.remove(closedConnectionPlayer);
             }
-            if (guessCountMap.containsKey(closeConnectionRequest.getUsername())) {
-                guessCountMap.remove(closeConnectionRequest.getUsername());
+            if (guessCountMap.containsKey(closedConnectionPlayer)) {
+                guessCountMap.remove(closedConnectionPlayer);
             }
+            
             return null;
         }
         return getGameEndResponse(request, "Some players close connection");
