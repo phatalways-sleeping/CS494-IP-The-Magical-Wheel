@@ -5,14 +5,12 @@ import java.io.IOException;
 
 import com.example.the_magic_wheel.Configuration;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 
 public class ServerMaximumPlayerController extends ServerController{
     public ServerMaximumPlayerController(ServerApp app) {

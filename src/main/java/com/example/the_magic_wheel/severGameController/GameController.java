@@ -50,7 +50,7 @@ public class GameController extends Component {
     public String addPlayer(String username, RegisterRequest registerRequest) {
         if (isEndGame == true)
         {
-            return "game is ended";
+            return "Game is ended, waiting for admin to start a new game";
         }
         while (playerList.size() > maxConnections) {
             String userName = playerList.get(playerList.size() - 1);
@@ -66,17 +66,17 @@ public class GameController extends Component {
         }
         if (playerList.size() == maxConnections) {
             currentPlayerIndex = 0;
-            return "room is full";
+            return "Room is full";
         }
         if (scores.containsKey(username)) {
-            return "username already exists!";
+            return "Username already exists!";
         }
         playerList.add(username);
         scores.put(username, 0);
         mapIPToUsername.put(registerRequest.getSource(), username);
         if (playerList.size() == maxConnections)
             currentPlayerIndex = 0;
-        return "register success";
+        return "Register success";
     }
 
     // deep copy for the hash map before clear all state
@@ -97,7 +97,7 @@ public class GameController extends Component {
         if (request instanceof GuessRequest) {
             if (isEndGame)
             {
-                return getGameEndResponse(request, "Game is ended");
+                return getGameEndResponse(request, "Game is ended, waiting for admin to start a new game");
             }
             GuessRequest guessRequest = (GuessRequest) request;
             increaseTurnAndGuessCount(guessRequest);
@@ -136,7 +136,7 @@ public class GameController extends Component {
         else if (request instanceof RegisterRequest) {
             RegisterRequest registerRequest = (RegisterRequest) request;
             String responeString = addPlayer(registerRequest.getUsername(), registerRequest);
-            if (responeString == "register success") {
+            if (responeString == "Register success") {
                 if (playerList.size() == maxConnections && currentPlayerIndex == 0) {
                     return getGameStartResponse(registerRequest);
                 }
@@ -152,7 +152,7 @@ public class GameController extends Component {
             // print all players list
             
             String closedConnectionPlayer = mapIPToUsername.get(closeConnectionRequest.getSource());
-            System.err.println("player that close connection: " + closedConnectionPlayer);
+            System.err.println("Player that close connection: " + closedConnectionPlayer);
 
             if (playerList.contains( closedConnectionPlayer)) {
                 playerList.remove(closedConnectionPlayer);
@@ -244,7 +244,7 @@ public class GameController extends Component {
                 currentKeyword.replace(idx, idx+1, Character.toString(character));
             }
         }
-        System.err.println("in game controller,isGuessCharactorSucessful,  current keyword is " + currentKeyword.toString());
+        System.err.println("In game controller,isGuessCharactorSucessful,  current keyword is " + currentKeyword.toString());
         return isCorrect;
     }
 

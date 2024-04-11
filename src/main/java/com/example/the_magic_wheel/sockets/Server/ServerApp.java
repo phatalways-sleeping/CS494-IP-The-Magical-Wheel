@@ -8,17 +8,14 @@ import com.example.the_magic_wheel.protocols.request.Request;
 import com.example.the_magic_wheel.protocols.response.Response;
 import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
 import com.example.the_magic_wheel.protocols.request.CloseConnectionRequest;
-import com.example.the_magic_wheel.protocols.request.GuessRequest;
 import com.example.the_magic_wheel.protocols.request.RegisterRequest;
 import com.example.the_magic_wheel.protocols.response.GameEndResponse;
 import com.example.the_magic_wheel.protocols.response.GameStartResponse;
-import com.example.the_magic_wheel.protocols.response.RegisterFailureResponse;
 import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.util.Iterator;
-import java.util.concurrent.CountDownLatch;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;;
 

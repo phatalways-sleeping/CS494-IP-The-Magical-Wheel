@@ -3,7 +3,6 @@ package com.example.the_magic_wheel.severScenesManager.controllers;
 import com.example.the_magic_wheel.sockets.Server.ServerApp;
 import com.example.the_magic_wheel.Configuration;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 
 
