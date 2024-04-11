@@ -113,6 +113,7 @@ public class GameController extends Controller {
 
     
     public void initializeGame(String hint, int wordLength, Map<Integer, String> players) {
+
         countdownLabel.setText("30");
     
         hintText.setText(hint);
@@ -217,7 +218,6 @@ public class GameController extends Controller {
     @FXML
     private void submitAnswer(ActionEvent event) throws IOException {
 
-
         String guessChar = guessTextField.getText();
         String guessKeyword = keywordTextField.getText();
         
@@ -314,13 +314,11 @@ public class GameController extends Controller {
                     countdownLabel.setText(String.valueOf(num));
                     // countdownLabel.setVisible(true);
                 });
-        
+                // System.out.println("guessingTimer thread: " + String.valueOf(num));
                 if (num == 0) {
-                    setDisableSubmitButton();
                     guessingTimer.cancel();
-                    countdownLabel.setVisible(false);
+                    // handleNotGuessing();
                     app.getClient().sendRequest(new GuessRequest(nickname, null, null));
-                       
                 }
             }
         }, 1000, 1000);
