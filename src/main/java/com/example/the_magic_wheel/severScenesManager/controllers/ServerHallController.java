@@ -9,13 +9,14 @@ public class ServerHallController extends ServerController{
     public ServerHallController(ServerApp app) {
         super(app);
     }
+    @SuppressWarnings("exports")
     @FXML
     public Button getStartedButton;
-    
+
     @FXML
-    public void switchToMaximumPlayer(ActionEvent event) {
+    public void switchToMaximumPlayer(@SuppressWarnings("exports") ActionEvent event) {
         serverApp.getServerScenesManager().switchScene(Configuration.SERVER_MAXIMUM_PLAYER_FXML);
      }
-    
+
 
 }

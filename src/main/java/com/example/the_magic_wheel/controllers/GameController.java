@@ -1,37 +1,25 @@
 package com.example.the_magic_wheel.controllers;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.example.the_magic_wheel.ClientApp;
-import com.example.the_magic_wheel.Client;
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.GuessRequest;
-import com.example.the_magic_wheel.protocols.request.RegisterRequest;
 import com.example.the_magic_wheel.protocols.response.GameEndResponse;
 import com.example.the_magic_wheel.protocols.response.GameStartResponse;
-import com.example.the_magic_wheel.protocols.response.RegisterFailureResponse;
-import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import com.example.the_magic_wheel.protocols.response.Response;
 import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -51,19 +39,19 @@ public class GameController extends Controller {
     public static final Character FREE_CHARACTER = '_';
 
     private Map<String, Integer> playerScores;
-    
+
     private boolean isPlaying = false;
 
     private boolean isDisqualified = false;
 
     private String nickname;
-    private int numberOfPlayers;
+    // private int numberOfPlayers;
 
     private Timer guessingTimer;
 
     @FXML
     private Label errorGuessLabel;
-    
+
 
     @FXML
     private Label errorKeywordLabel;
@@ -111,11 +99,11 @@ public class GameController extends Controller {
         }
     }
 
-    
+
     public void initializeGame(String hint, int wordLength, Map<Integer, String> players) {
 
         countdownLabel.setText("30");
-    
+
         hintText.setText(hint);
         // reasonText.setStyle("-fx-font-family: 'DejaVu Sans';");
         hintTextFlow.getChildren().clear();
@@ -141,7 +129,7 @@ public class GameController extends Controller {
         else {
             handleGuessing();
         }
-    }      
+    }
 
     @SuppressWarnings("exports")
     public HBox createLeaderboardItem(String username, String score) {
@@ -220,10 +208,10 @@ public class GameController extends Controller {
 
         String guessChar = guessTextField.getText();
         String guessKeyword = keywordTextField.getText();
-        
+
         boolean isValidGuessChar = validateGuessChar(guessChar);
         boolean isValidGuessKeyword = validateGuessKeyword(guessKeyword);
-        
+
         if (isValidGuessChar && isValidGuessKeyword) {
             guessingTimer.cancel();
             app.getClient().sendRequest(new GuessRequest(nickname, guessChar.toLowerCase(), guessKeyword.toLowerCase()));
@@ -251,7 +239,7 @@ public class GameController extends Controller {
             System.out.println("GameController: duplicate GameStartResponse");
             return;
         }
-        
+
         isPlaying = true;
 
         String hint = response.getHints();
@@ -292,7 +280,7 @@ public class GameController extends Controller {
             handleNotGuessing();
         }
     }
-    
+
     private void handleNotGuessing() {
         setDisableSubmitButton();
         countdownLabel.setVisible(false);
@@ -303,7 +291,7 @@ public class GameController extends Controller {
         countdownLabel.setVisible(true);
 
         countdownLabel.setText("30");
-        
+
         guessingTimer = new Timer();
 
         guessingTimer.scheduleAtFixedRate(new TimerTask() {
@@ -311,7 +299,7 @@ public class GameController extends Controller {
             public void run() {
                 String numStr = countdownLabel.getText();
                 int num = Integer.parseInt(numStr) - 1;
-        
+
                 Platform.runLater(() -> {
                     countdownLabel.setText(String.valueOf(num));
                     // countdownLabel.setVisible(true);
@@ -339,7 +327,7 @@ public class GameController extends Controller {
     private boolean validateGuessKeyword(String guess) {
         return guess != null && guess.matches("[a-zA-Z]*");
     }
-    
+
     private void setErrorLabel(Label label, String message) {
         label.setText(message);
         label.setStyle("-fx-text-fill: red; -fx-font-family: 'DejaVu Sans';");
@@ -357,7 +345,7 @@ public class GameController extends Controller {
                 Platform.runLater(() -> clearErrorLabel(errorGuessLabel));
             }
         });
-    
+
         keywordTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 Platform.runLater(() -> clearErrorLabel(errorKeywordLabel));

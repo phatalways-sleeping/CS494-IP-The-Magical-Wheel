@@ -5,14 +5,12 @@ import java.io.IOException;
 
 import com.example.the_magic_wheel.Configuration;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 
 public class ServerMaximumPlayerController extends ServerController{
     public ServerMaximumPlayerController(ServerApp app) {
@@ -42,7 +40,7 @@ public class ServerMaximumPlayerController extends ServerController{
         serverApp.getServerScenesManager().switchScene(Configuration.SERVER_HALL_FXML);
     }
 
-    @FXML 
+    @FXML
     private void startSever() throws IOException {
         String maximumPlayer = nameTextField.getText();
         int maximumPlayerInNumber = getMaximumPlayer(maximumPlayer);
@@ -111,7 +109,7 @@ public class ServerMaximumPlayerController extends ServerController{
         }
        return maximumPlayerInNumber;
     }
-    
+
 
 
 }

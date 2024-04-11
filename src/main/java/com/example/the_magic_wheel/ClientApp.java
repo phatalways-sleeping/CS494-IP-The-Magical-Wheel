@@ -2,30 +2,22 @@ package com.example.the_magic_wheel;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.example.the_magic_wheel.controllers.Controller;
-import com.example.the_magic_wheel.controllers.GameController;
 import com.example.the_magic_wheel.protocols.request.Request;
-import com.example.the_magic_wheel.protocols.response.GameEndResponse;
-import com.example.the_magic_wheel.protocols.response.GameStartResponse;
-import com.example.the_magic_wheel.protocols.response.RegisterFailureResponse;
-import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import com.example.the_magic_wheel.protocols.response.Response;
-import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
 
 /**
  * JavaFX App
  */
 public class ClientApp extends Application {
+    public static void main(String[] args) {
+        launch();
+    }
 
     private ScenesManager scenesManager;
     private Client client;
@@ -58,10 +50,6 @@ public class ClientApp extends Application {
         responseListenerThread.start();
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
-
     private void listenForResponses() {
         try {
             while (isClientRunning) {
@@ -72,7 +60,7 @@ public class ClientApp extends Application {
                     });
                     Thread.sleep(100);
                 }
-                
+
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

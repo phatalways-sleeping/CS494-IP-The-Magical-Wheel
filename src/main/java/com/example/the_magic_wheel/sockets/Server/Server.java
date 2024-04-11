@@ -237,11 +237,11 @@ public class Server extends Component implements Runnable {
         for (int i = 0; i < data.size(); i++) {
             bytes[i] = data.get(i);
         }
-        return (Request) Request.fromBytes(bytes);
+        return Request.fromBytes(bytes);
     }
 
     private SocketChannel tryToSpawnNewConnection(Selector selector, SelectionKey key)
-            throws IllegalConnectionException, IOException, ClosedChannelException {
+            throws IOException, ClosedChannelException {
         ServerSocketChannel serverSocket = (ServerSocketChannel) key.channel();
         SocketChannel socketChannel = serverSocket.accept();
         socketChannel.configureBlocking(false);

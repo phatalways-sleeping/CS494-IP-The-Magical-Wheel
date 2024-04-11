@@ -3,16 +3,12 @@ package com.example.the_magic_wheel;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.example.the_magic_wheel.sockets.Server.Component;
 import com.example.the_magic_wheel.sockets.Server.ServerApp;
 import com.example.the_magic_wheel.severScenesManager.controllers.ServerController;
 import com.example.the_magic_wheel.severScenesManager.controllers.ServerEndGameController;
 import com.example.the_magic_wheel.severScenesManager.controllers.ServerGameIsRunningController;
 import com.example.the_magic_wheel.severScenesManager.controllers.ServerHallController;
 import com.example.the_magic_wheel.severScenesManager.controllers.ServerMaximumPlayerController;
-import com.example.the_magic_wheel.controllers.Controller;
-import com.example.the_magic_wheel.controllers.GreetController;
- 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,8 +23,8 @@ public class ServerScenesManager  {
     private HashMap<String, ServerController> controllersMap = new HashMap<>();
     private Thread serverThread;
 
-    public ServerScenesManager(Stage stage, ServerApp app, Thread serverThread ) throws IOException {
-        this.app = app;        
+    public ServerScenesManager(@SuppressWarnings("exports") Stage stage, ServerApp app, Thread serverThread ) throws IOException {
+        this.app = app;
         this.serverThread = serverThread;
         addNewScene(Configuration.SERVER_HALL_FXML, new ServerHallController(app));
         addNewScene(Configuration.SERVER_MAXIMUM_PLAYER_FXML, new ServerMaximumPlayerController(app));
@@ -42,7 +38,7 @@ public class ServerScenesManager  {
         stage.setScene(scene);
         stage.show();
     }
-   
+
     public void startServer() {
         serverThread.start();
     }

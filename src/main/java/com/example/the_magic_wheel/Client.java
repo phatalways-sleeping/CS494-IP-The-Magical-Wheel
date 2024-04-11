@@ -10,17 +10,13 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.CloseConnectionRequest;
 import com.example.the_magic_wheel.protocols.request.Request;
 import com.example.the_magic_wheel.protocols.response.Response;
-
-import javafx.application.Platform;
 
 public class Client implements Runnable {
     private final String host;

@@ -3,7 +3,6 @@ package com.example.the_magic_wheel.severScenesManager.controllers;
 import com.example.the_magic_wheel.sockets.Server.ServerApp;
 import com.example.the_magic_wheel.Configuration;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 
 
@@ -13,14 +12,14 @@ public class ServerEndGameController extends ServerController{
     }
 
     @FXML
-    public void closeServer(ActionEvent event) {
+    public void closeServer(@SuppressWarnings("exports") ActionEvent event) {
         System. exit(0);
      }
 
      @FXML
-    public void playAgain(ActionEvent event) {
+    public void playAgain(@SuppressWarnings("exports") ActionEvent event) {
         serverApp.getServerScenesManager().switchScene(Configuration.SERVER_MAXIMUM_PLAYER_FXML);
-        serverApp.setPlayAgain(false);
+        ServerApp.setPlayAgain(false);
         serverApp.playAgain();
      }
 }
