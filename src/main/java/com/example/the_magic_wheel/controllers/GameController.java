@@ -236,6 +236,8 @@ public class GameController extends Controller {
             }
         }
 
+        guessTextField.clear();
+        keywordTextField.clear();
     }
 
     private void handleGameEndResponse(GameEndResponse response) {
@@ -275,17 +277,15 @@ public class GameController extends Controller {
             return;
         }
 
-        // Client is the person guessing forward turn
         if (nickname.equals(response.getUsername())) {
             if (!response.isSuccessful()) { // the guess is incorrect
-                handleNotGuessing();
                 if (response.guessWord()) {
                     isDisqualified = true;
                 }
-            } else { // the guess is correct -> continue guessing
-                handleGuessing();
             }
-        } else if (nickname.equals(response.getNextPlayer())) {
+        }
+
+        if (nickname.equals(response.getNextPlayer())) {
             // handle submit
             handleGuessing();
         } else {
@@ -333,7 +333,7 @@ public class GameController extends Controller {
 
 
     private boolean validateGuessChar(String guess) {
-        return guess != null && !guess.isEmpty() && guess.length() == 1 && guess.matches("[a-zA-Z]");
+        return guess != null && guess.length() == 1 && guess.matches("[a-zA-Z]");
     }
 
     private boolean validateGuessKeyword(String guess) {
