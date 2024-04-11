@@ -40,6 +40,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 public class GameController extends Controller {
 
@@ -94,6 +95,9 @@ public class GameController extends Controller {
     @FXML
     private Label countdownLabel;
 
+    @FXML
+    private TextFlow hintTextFlow;
+
     @Override
     public void handleResponse(Response response) {
         if (response instanceof GameEndResponse) {
@@ -110,7 +114,12 @@ public class GameController extends Controller {
     
     public void initializeGame(String hint, int wordLength, Map<Integer, String> players) {
         countdownLabel.setText("30");
+    
         hintText.setText(hint);
+        // reasonText.setStyle("-fx-font-family: 'DejaVu Sans';");
+        hintTextFlow.getChildren().clear();
+        hintTextFlow.getChildren().addAll(hintText);
+
         keywordText.setText(" * ".repeat(wordLength));
         updateTurn((short) 1);
 
@@ -271,6 +280,8 @@ public class GameController extends Controller {
                 if (response.guessWord()) {
                     isDisqualified = true;
                 }
+            } else { // the guess is correct -> continue guessing
+                handleGuessing();
             }
         } else if (nickname.equals(response.getNextPlayer())) {
             // handle submit
