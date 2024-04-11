@@ -217,7 +217,7 @@ public class GameController extends Controller {
         
         if (isValidGuessChar && isValidGuessKeyword) {
             guessingTimer.cancel();
-            app.getClient().sendRequest(new GuessRequest(nickname, guessChar, guessKeyword));
+            app.getClient().sendRequest(new GuessRequest(nickname, guessChar.toLowerCase(), guessKeyword.toLowerCase()));
         } else {
             if (!isValidGuessChar) {
                 setErrorLabel(errorGuessLabel, "Invalid input! Guess should be a single alphabetic character");
