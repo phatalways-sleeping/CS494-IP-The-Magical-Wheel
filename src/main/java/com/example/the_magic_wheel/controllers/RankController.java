@@ -1,7 +1,10 @@
 package com.example.the_magic_wheel.controllers;
 
 import java.io.IOException;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.example.the_magic_wheel.ClientApp;
 import com.example.the_magic_wheel.Client;
@@ -67,17 +70,16 @@ public class RankController extends Controller {
     }
 
     private void initializeRanking(Map<String, Integer> scores) {
-
         rankingVBox.getChildren().clear();
-
+    
         // Sort the scores map by value in descending order
-        // Map<String, Integer> sortedScores = scores.entrySet().stream()
-        //         .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-        //         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        Map<String, Integer> sortedScores = scores.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     
         // Iterate over the sorted scores map to create ranking items
         int rank = 1;
-        for (Map.Entry<String, Integer> entry : scores.entrySet()) {
+        for (Map.Entry<String, Integer> entry : sortedScores.entrySet()) {
             String nickname = entry.getKey();
             int score = entry.getValue();
     
@@ -89,6 +91,7 @@ public class RankController extends Controller {
         // Set the width of the VBox
         rankingVBox.setPrefWidth(300);
     }
+    
 
     private HBox createItemRanking(int rank, String nickname, int score) {
         HBox itemHBox = new HBox(10);
