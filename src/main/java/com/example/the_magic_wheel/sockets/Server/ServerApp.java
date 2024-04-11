@@ -104,9 +104,9 @@ public class ServerApp extends Application implements GameMediator {
         synchronized (this) {
             System.out.println("Mediator: Processing request " + request.toString());
             Response response = null;
-            if (guard((Event) request) == true) {
-                return response;
-            }
+            // if (guard((Event) request) == true) {
+            //     return response;
+            // }
             if (request instanceof CloseConnectionRequest) {
                 server.getClients().remove(request.getSource());
                 channel.close();
