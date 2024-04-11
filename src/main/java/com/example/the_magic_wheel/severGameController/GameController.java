@@ -1,5 +1,6 @@
 package com.example.the_magic_wheel.severGameController;
 
+import com.example.the_magic_wheel.protocols.request.CloseConnectionRequest;
 import com.example.the_magic_wheel.protocols.request.GuessRequest;
 import com.example.the_magic_wheel.protocols.request.RegisterRequest;
 import com.example.the_magic_wheel.protocols.request.Request;
@@ -131,6 +132,24 @@ public class GameController extends Component {
             } else {
                 return getRegisterFailureResponse(registerRequest, responeString);
             }
+        }
+
+        // from here: CloseConnectionRequest
+        CloseConnectionRequest closeConnectionRequest = (CloseConnectionRequest) request;
+        if (currentPlayerIndex == -1) {
+            if (playerList.contains(closeConnectionRequest.getUsername())) {
+                playerList.remove(closeConnectionRequest.getUsername());
+            }
+            if (scores.containsKey(closeConnectionRequest.getUsername())) {
+                scores.remove(closeConnectionRequest.getUsername());
+            }
+            if (disqualifiedList.contains(closeConnectionRequest.getUsername())) {
+                disqualifiedList.remove(closeConnectionRequest.getUsername());
+            }
+            if (guessCountMap.containsKey(closeConnectionRequest.getUsername())) {
+                guessCountMap.remove(closeConnectionRequest.getUsername());
+            }
+            return null;
         }
         return getGameEndResponse(request, "Some players close connection");
     }
