@@ -181,8 +181,8 @@ public class ServerApp extends Application implements GameMediator {
         return databaseController.getKeyWordString();
     }
 
-    @Override
-    public void clearAllConnections() throws IOException {
-        server.clearAllConnections();
-    }
+    // @Override
+    // public void clearAllConnections() throws IOException {
+    //     server.clearAllConnections();
+    // }
 }

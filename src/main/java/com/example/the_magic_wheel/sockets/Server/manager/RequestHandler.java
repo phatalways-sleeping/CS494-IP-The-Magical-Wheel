@@ -87,9 +87,9 @@ public class RequestHandler implements Handler {
         } else if (response.getDestination().equals(this.channel.getRemoteAddress().toString())) {
             this.channel.write(ByteBuffer.wrap(response.toBytes()));
         }
-        if (response instanceof GameEndResponse) {
-            this.mediator.clearAllConnections();
-        }
+        // if (response instanceof GameEndResponse) {
+        //     this.mediator.clearAllConnections();
+        // }
     }
 
     @Override

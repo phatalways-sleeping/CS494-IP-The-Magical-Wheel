@@ -14,7 +14,7 @@ public interface GameMediator {
 
     public Iterator<SocketChannel> getClients();
 
-    public void clearAllConnections() throws IOException;
+    //public void clearAllConnections() throws IOException;
 
     public Response notifyConnectionLost(SocketChannel channel) throws Exception;
   // mediator call the getKeyWordString function from DatabaseController, then
