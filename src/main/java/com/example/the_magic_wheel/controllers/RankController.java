@@ -49,6 +49,7 @@ public class RankController extends Controller {
     @FXML
     void closeGame(ActionEvent event) {
         app.getClient().sendRequest(new CloseConnectionRequest(null));
+        app.getScenesManager().exitGame();
     }
 
     @FXML
