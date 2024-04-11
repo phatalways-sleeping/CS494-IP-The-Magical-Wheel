@@ -207,6 +207,8 @@ public class GameController extends Controller {
 
     @FXML
     private void submitAnswer(ActionEvent event) throws IOException {
+
+
         String guessChar = guessTextField.getText();
         String guessKeyword = keywordTextField.getText();
         
@@ -214,6 +216,7 @@ public class GameController extends Controller {
         boolean isValidGuessKeyword = validateGuessKeyword(guessKeyword);
         
         if (isValidGuessChar && isValidGuessKeyword) {
+            guessingTimer.cancel();
             app.getClient().sendRequest(new GuessRequest(nickname, guessChar, guessKeyword));
         } else {
             if (!isValidGuessChar) {
@@ -268,8 +271,6 @@ public class GameController extends Controller {
                 if (response.guessWord()) {
                     isDisqualified = true;
                 }
-            } else { // the guess is correct
-                handleGuessing();
             }
         } else if (nickname.equals(response.getNextPlayer())) {
             // handle submit
@@ -281,7 +282,6 @@ public class GameController extends Controller {
     
     private void handleNotGuessing() {
         setDisableSubmitButton();
-        guessingTimer.cancel();
         countdownLabel.setVisible(false);
     }
 
