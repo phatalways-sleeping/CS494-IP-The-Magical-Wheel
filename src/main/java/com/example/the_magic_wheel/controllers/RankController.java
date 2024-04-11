@@ -54,8 +54,8 @@ public class RankController extends Controller {
 
     @FXML
     void playAgain(ActionEvent event) throws IOException {
-        app.getScenesManager().switchScene(Configuration.CLIENT_REGISTER_FXML);
         app.getScenesManager().resetController();
+        app.getScenesManager().switchScene(Configuration.CLIENT_REGISTER_FXML);
     }
 
     @Override
