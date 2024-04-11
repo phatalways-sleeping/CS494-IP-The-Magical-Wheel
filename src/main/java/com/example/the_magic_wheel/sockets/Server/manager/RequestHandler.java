@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.Request;
+import com.example.the_magic_wheel.protocols.response.GameEndResponse;
 import com.example.the_magic_wheel.protocols.response.Response;
 import com.example.the_magic_wheel.sockets.Server.GameMediator;
 
@@ -82,8 +83,12 @@ public class RequestHandler implements Handler {
                     client.write(ByteBuffer.wrap(response.toBytes()));
                 }
             }
+
         } else if (response.getDestination().equals(this.channel.getRemoteAddress().toString())) {
             this.channel.write(ByteBuffer.wrap(response.toBytes()));
+        }
+        if (response instanceof GameEndResponse) {
+            this.mediator.clearAllConnections();
         }
     }
 

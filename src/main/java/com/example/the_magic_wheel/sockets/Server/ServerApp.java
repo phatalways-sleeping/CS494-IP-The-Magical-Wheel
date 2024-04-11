@@ -176,4 +176,9 @@ public class ServerApp extends Application implements GameMediator {
     public String getKeyWordString() {
         return databaseController.getKeyWordString();
     }
+
+    @Override
+    public void clearAllConnections() throws IOException {
+        server.clearAllConnections();
+    }
 }
