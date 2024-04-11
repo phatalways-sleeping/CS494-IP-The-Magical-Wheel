@@ -231,8 +231,12 @@ public class GameController extends Component {
     }
 
     private boolean isGuessCharactorSucessful(GuessRequest guessRequest) {
-        char character = guessRequest.getGuessChar().charAt(0);
+
         boolean isCorrect = false;
+        if (guessRequest.getGuessChar().length() == 0) {
+            return isCorrect;
+        }
+        char character = guessRequest.getGuessChar().charAt(0);
 
         for (int idx = 0; idx < keyword.getKeyword().length(); idx++) {
             if (keyword.getKeyword().charAt(idx) == character && currentKeyword.toString().charAt(idx) == '*'){
