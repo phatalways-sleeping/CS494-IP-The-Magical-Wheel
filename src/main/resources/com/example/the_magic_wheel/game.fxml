@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #04364A;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <center>
@@ -22,11 +23,15 @@
                </font>
             </Text>
             <Region prefHeight="200.0" prefWidth="200.0" />
-            <Text fx:id="hintText" fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: 'DejaVu Sans';" text="This is a hint for the keyword">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Text>
+            <TextFlow fx:id="hintTextFlow" minHeight="-Infinity" prefHeight="100.0" prefWidth="509.0" textAlignment="CENTER">
+               <children>
+                  <Text fx:id="hintText" fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: 'DejaVu Sans';" text="This is a hint for the keyword" wrappingWidth="228.8056640625">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Text>
+               </children>
+            </TextFlow>
             <Region prefHeight="200.0" prefWidth="200.0" />
             <Text fx:id="keywordText" fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: 'DejaVu Sans';" text="* * * * * *">
                <font>
@@ -95,8 +100,8 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Region prefHeight="27.0" prefWidth="200.0" />
-            <HBox prefHeight="88.0" prefWidth="169.0" VBox.vgrow="SOMETIMES">
+            <Region prefHeight="13.0" prefWidth="139.0" />
+            <HBox prefHeight="88.0" prefWidth="139.0" VBox.vgrow="SOMETIMES">
                <children>
                   <Text fill="#dafffb" strokeType="OUTSIDE" strokeWidth="0.0" text="Turn: ">
                      <font>
