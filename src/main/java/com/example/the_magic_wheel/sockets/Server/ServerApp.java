@@ -91,9 +91,6 @@ public class ServerApp extends Application implements GameMediator {
         // Syncronize the process method since this.process() is called by the multiple
         // threads spanwned by the ExecutionManager
         synchronized (this) {
-            // test, need to delete this line later :     
-            //isEndGame = true;
-
             System.out.println("Mediator: Processing request " + request.toString());
             Response response = null;
             if (guard((Event) request) == true) {
@@ -106,69 +103,33 @@ public class ServerApp extends Application implements GameMediator {
                      && (response instanceof RegisterSuccessResponse || response instanceof GameStartResponse))
             //     // Add new client to the list of clients
                  server.getClients().put(request.getSource(), channel);
-             if (response instanceof GameStartResponse || response instanceof GameEndResponse) {
+             if (response instanceof GameStartResponse || response instanceof GameEndResponse || response instanceof ResultNotificationResponse) {
                  response.setDestination(null);
              }
 
             if (response instanceof GameEndResponse)
                 isEndGame = true;
 
-            //System.err.println("Game start!!!!!!!!!!!!!!!" + response.getClass().toString());
-            // if (request instanceof RegisterRequest) {
-            //     final String source = request.getSource();
-            //     final String destination = request.getDestination();
-            //     final RegisterRequest registerRequest = (RegisterRequest) request;
-            //     final String username = registerRequest.getUsername();
-
-            //     // Register the player by interacting with the game controller
-
-            //     // Suppose the game controller returns the response
-            //     response = new RegisterSuccessResponse(username, 1, registerRequest.getRequestedAt());
-            //     response.setSource(destination);
-            //     response.setDestination(source); // Send the response back to the client, not broadcast
-
-            //     // Add new client to the list of clients
-            //     server.getClients().put(source, channel);
-            // } else if (request instanceof CloseConnectionRequest) {
-            //     guard((Event) request);
-            //     // final String source = request.getSource();
-            //     // final String destination = request.getDestination();
-
-            //     // Close the connection by interacting with the server
-
-            //     // No response is needed for the CloseConnectionRequest
-            // } else { // GuessRequest
-            //     final String destination = request.getDestination();
-            //     final GuessRequest guessRequest = (GuessRequest) request;
-
-            //     // Interact with the game controller to process the guess request
-
-            //     // Suppose the game controller returns the response
-            //     response = ResultNotificationResponse.successfulGuessChar(guessRequest.getUsername(), 1,
-            //             (short) 1, guessRequest.getRequestedAt());
-
-            //     response.setSource(destination);
+            // if(response instanceof GameStartResponse)
+            // {
+            //     System.err.println("Game Start!");
             // }
-            if(response instanceof GameStartResponse)
-            {
-                System.err.println("Game Start!");
-            }
-            if (response instanceof GameEndResponse)
-            {
-                System.err.println("Game End!");
-            }
-            if (response instanceof RegisterSuccessResponse)
-            {
-                System.err.println("Register Success!");
-            }
-            if (response instanceof RegisterFailureResponse)
-            {
-                System.err.println("Register Failure!");
-            }
-            if (response instanceof ResultNotificationResponse)
-            {
-                System.err.println("Result Notification!");
-            }
+            // if (response instanceof GameEndResponse)
+            // {
+            //     System.err.println("Game End!");
+            // }
+            // if (response instanceof RegisterSuccessResponse)
+            // {
+            //     System.err.println("Register Success!");
+            // }
+            // if (response instanceof RegisterFailureResponse)
+            // {
+            //     System.err.println("Register Failure!");
+            // }
+            // if (response instanceof ResultNotificationResponse)
+            // {
+            //     System.err.println("Result Notification!");
+            // }
             
 
 
@@ -207,12 +168,6 @@ public class ServerApp extends Application implements GameMediator {
         serverThread.setDaemon(true);
 
         serverScenesManager = new ServerScenesManager(stage,this, serverThread);
-        //serverThread.start();
-
-        // Scene scene = new Scene(new Group(), 300, 250);
-        // stage.setTitle("Simple Window");
-        // stage.setScene(scene);
-        // stage.show();
     }
 
     @Override

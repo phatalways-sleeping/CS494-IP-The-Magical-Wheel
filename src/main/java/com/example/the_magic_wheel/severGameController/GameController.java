@@ -88,7 +88,7 @@ public class GameController extends Component {
             }
             GuessRequest guessRequest = (GuessRequest) request;
             increaseTurnAndGuessCount(guessRequest);
-            if (turn > 2 && guessRequest.getGuessWord() != null && guessRequest.getGuessWord().length() > 0) {
+            if (turn > 3 && guessRequest.getGuessWord() != null && guessRequest.getGuessWord().length() > 0) {
                 if (guessRequest.getGuessWord().equals(keyword.getKeyword())) {
                     return getKeyWordSucessful(guessRequest, guessRequest.getUsername());
                 }
