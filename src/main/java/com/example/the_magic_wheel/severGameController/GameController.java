@@ -180,11 +180,12 @@ public class GameController extends Component {
         boolean isCorrect = false;
 
         for (int idx = 0; idx < keyword.getKeyword().length(); idx++) {
-            if (keyword.getKeyword().charAt(idx) == character) {
+            if (keyword.getKeyword().charAt(idx) == character && currentKeyword.toString().charAt(idx) == '*'){
                 isCorrect = true;
                 currentKeyword.replace(idx, idx, Character.toString(character));
             }
         }
+        System.err.println("in game controller,isGuessCharactorSucessful,  current keyword is " + currentKeyword.toString());
         return isCorrect;
     }
 

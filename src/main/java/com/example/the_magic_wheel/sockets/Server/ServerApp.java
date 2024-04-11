@@ -126,10 +126,15 @@ public class ServerApp extends Application implements GameMediator {
             // {
             //     System.err.println("Register Failure!");
             // }
-            // if (response instanceof ResultNotificationResponse)
-            // {
-            //     System.err.println("Result Notification!");
-            // }
+            //  if (response instanceof ResultNotificationResponse)
+            //  {
+            //     ResultNotificationResponse resultNotificationResponse = (ResultNotificationResponse) response;
+            //      System.err.println("Result Notification!");
+            //      System.err.println("The result is: " + resultNotificationResponse.getResult());
+            //      System.err.println("The result is: " + resultNotificationResponse.getHint());
+            //     System.err.println();
+            //      System.err.println("Result Notification!");
+            //  }
             
 
 

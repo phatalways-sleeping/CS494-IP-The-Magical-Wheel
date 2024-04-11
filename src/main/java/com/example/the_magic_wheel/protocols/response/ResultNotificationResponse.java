@@ -48,9 +48,10 @@ public class ResultNotificationResponse extends Response {
             String nextPlayer,
             short nextTurn,
             String requestedAt, String currentKeyword) {
+             //   System.err.println("in Result notification response.java : username: " + username + " score: " + score + " nextPlayer: " + nextPlayer + " nextTurn: " + nextTurn + " requestedAt: " + requestedAt + " currentKeyword: " + currentKeyword + " guessChar: " + guessChar );
         final String explanation = new StringBuilder("Character `").append(guessChar).append("` is not in the keyword.")
                 .toString();
-        return new ResultNotificationResponse(username, score, false, (short) 0, explanation, username, nextTurn,
+        return new ResultNotificationResponse(username, score, false, (short) 0, explanation, nextPlayer, nextTurn,
                 requestedAt, currentKeyword);
     }
 
@@ -59,7 +60,7 @@ public class ResultNotificationResponse extends Response {
             String requestedAt, String currentKeyword) {
         final String explanation = new StringBuilder("You guessed the whole word incorrectly.")
                 .toString();
-        return new ResultNotificationResponse(username, score, false, (short) 1, explanation, username, nextTurn,
+        return new ResultNotificationResponse(username, score, false, (short) 1, explanation, nextPlayer, nextTurn,
                 requestedAt, currentKeyword);
     }
 
