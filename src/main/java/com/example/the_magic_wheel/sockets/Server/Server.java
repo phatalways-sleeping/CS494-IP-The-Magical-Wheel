@@ -162,6 +162,22 @@ public class Server extends Component implements Runnable {
         return selector;
     }
 
+    public void clearAllConnections() throws IOException {
+        synchronized (clients) {
+            for (SocketChannel client : clients.values()) {
+                try {
+                    client.close();
+                } catch (IOException e) {
+                    System.err.println("Server: Failed to close the connection with " + client.getRemoteAddress());
+                }
+            }
+            clients.clear();
+            System.out.println("Server: All connections have been closed");
+            blackList.clear();
+            System.out.println("Server: Blacklist has been cleared");
+        }
+    }
+
     // The idea is to recover from the connection failure
     // such as:
     // - The client disconnects unexpectedly from the server during the game
