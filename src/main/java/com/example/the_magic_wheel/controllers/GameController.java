@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -56,6 +58,8 @@ public class GameController extends Controller {
     private String nickname;
     private int numberOfPlayers;
 
+    private Timer guessingTimer;
+
     @FXML
     private Label errorGuessLabel;
     
@@ -87,6 +91,9 @@ public class GameController extends Controller {
     @FXML
     private Text turnText;
 
+    @FXML
+    private Label countdownLabel;
+
     @Override
     public void handleResponse(Response response) {
         if (response instanceof GameEndResponse) {
@@ -102,7 +109,7 @@ public class GameController extends Controller {
 
     
     public void initializeGame(String hint, int wordLength, Map<Integer, String> players) {
-
+        countdownLabel.setText("30");
         hintText.setText(hint);
         keywordText.setText(" * ".repeat(wordLength));
         updateTurn((short) 1);
@@ -115,15 +122,14 @@ public class GameController extends Controller {
             playerScores.put(username, 0);
         }
 
-        leaderBoardVBox.getChildren().clear();
         setLeaderboard();
 
         // Check if client is the first person to make guess
         if (!nickname.equals(players.get(0))) {
-            setDisableSubmitButton();
+            handleNotGuessing();
         }
         else {
-            setEnableSubmitButton();
+            handleGuessing();
         }
     }      
 
@@ -240,8 +246,12 @@ public class GameController extends Controller {
 
         initializeGame(hint, wordLength, players);
     }
-   
+
     private void handleResultNotificationResponse(ResultNotificationResponse response) {
+        // System.out.println("\nGameController: handleResultNotificationResponse is invoked");
+        // System.out.println("username: "+response.getUsername());
+        // System.out.println("next player: "+response.getNextPlayer());
+
         updateLeaderboard(response.getUsername(), response.getUpdatedScore());
         updateTurn(response.getTurn());
         updateKeyword(response.getCurrentKeyword());
@@ -253,17 +263,58 @@ public class GameController extends Controller {
 
         // Client is the person guessing forward turn
         if (nickname.equals(response.getUsername())) {
-            if (response.guessWord() && !response.isSuccessful()) {
-                isDisqualified = true;
-                setDisableSubmitButton();
+            if (!response.isSuccessful()) { // the guess is incorrect
+                handleNotGuessing();
+                if (response.guessWord()) {
+                    isDisqualified = true;
+                }
+            } else { // the guess is correct
+                handleGuessing();
             }
         } else if (nickname.equals(response.getNextPlayer())) {
-            setEnableSubmitButton();
+            // handle submit
+            handleGuessing();
         } else {
-            setDisableSubmitButton();
+            handleNotGuessing();                  
         }
     }
     
+    private void handleNotGuessing() {
+        setDisableSubmitButton();
+        guessingTimer.cancel();
+        countdownLabel.setVisible(false);
+    }
+
+    private void handleGuessing() {
+        setEnableSubmitButton();
+        countdownLabel.setVisible(true);
+
+        countdownLabel.setText("30");
+        
+        guessingTimer = new Timer();
+
+        guessingTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                String numStr = countdownLabel.getText();
+                int num = Integer.parseInt(numStr) - 1;
+        
+                Platform.runLater(() -> {
+                    countdownLabel.setText(String.valueOf(num));
+                    // countdownLabel.setVisible(true);
+                });
+        
+                if (num == 0) {
+                    setDisableSubmitButton();
+                    guessingTimer.cancel();
+                    countdownLabel.setVisible(false);
+                    app.getClient().sendRequest(new GuessRequest(nickname, null, null));
+                       
+                }
+            }
+        }, 1000, 1000);
+    }
+
     private void updateKeyword(String currentKeyword) {
         String spacedKeyword = currentKeyword.replaceAll("", "  ");
         keywordText.setText(spacedKeyword);
