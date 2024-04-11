@@ -261,6 +261,7 @@ public class GameController extends Controller {
 
     private void handleResultNotificationResponse(ResultNotificationResponse response) {
         // System.out.println("\nGameController: handleResultNotificationResponse is invoked");
+        // System.out.println("client nickname: "+nickname);
         // System.out.println("username: "+response.getUsername());
         // System.out.println("next player: "+response.getNextPlayer());
 
@@ -287,7 +288,7 @@ public class GameController extends Controller {
             // handle submit
             handleGuessing();
         } else {
-            handleNotGuessing();                  
+            handleNotGuessing();
         }
     }
     
@@ -318,7 +319,7 @@ public class GameController extends Controller {
                 if (num == 0) {
                     guessingTimer.cancel();
                     // handleNotGuessing();
-                    app.getClient().sendRequest(new GuessRequest(nickname, null, null));
+                    app.getClient().sendRequest(new GuessRequest(nickname, "", ""));
                 }
             }
         }, 1000, 1000);
