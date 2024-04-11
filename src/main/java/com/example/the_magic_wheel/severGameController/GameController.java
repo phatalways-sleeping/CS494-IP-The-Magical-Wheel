@@ -198,7 +198,7 @@ public class GameController extends Component {
 
     private boolean canNotGuessWord() {
         for (int i = 0; i < playerList.size(); i++) {
-            if (guessCountMap.get(playerList.get(i)) < 3) {
+            if (guessCountMap.containsKey(playerList.get(i)) == false ||   guessCountMap.get(playerList.get(i)) < 3) {
                 return false;
             }
         }
@@ -237,7 +237,7 @@ public class GameController extends Component {
         for (int idx = 0; idx < keyword.getKeyword().length(); idx++) {
             if (keyword.getKeyword().charAt(idx) == character && currentKeyword.toString().charAt(idx) == '*'){
                 isCorrect = true;
-                currentKeyword.replace(idx, idx, Character.toString(character));
+                currentKeyword.replace(idx, idx+1, Character.toString(character));
             }
         }
         System.err.println("in game controller,isGuessCharactorSucessful,  current keyword is " + currentKeyword.toString());

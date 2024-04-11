@@ -3,8 +3,6 @@ package com.example.the_magic_wheel.sockets.Server;
 import java.util.Iterator;
 import java.nio.channels.SocketChannel;
 
-import java.io.IOException;
-
 import com.example.the_magic_wheel.protocols.request.Request;
 
 import com.example.the_magic_wheel.protocols.response.Response;
