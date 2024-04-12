@@ -1,14 +1,14 @@
 package com.example.the_magic_wheel.server.sockets.manager;
 
+import com.example.the_magic_wheel.server.sockets.defense.Defender;
+import com.example.the_magic_wheel.server.sockets.defense.DoSAttackException;
+import com.example.the_magic_wheel.server.sockets.defense.DoSDefender;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-
-import com.example.the_magic_wheel.server.sockets.defense.Defender;
-import com.example.the_magic_wheel.server.sockets.defense.DoSAttackException;
-import com.example.the_magic_wheel.server.sockets.defense.DoSDefender;
 
 
 public class ServerExecutor implements ExecutionManager {

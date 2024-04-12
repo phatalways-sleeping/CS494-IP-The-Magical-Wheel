@@ -1,11 +1,12 @@
 package com.example.the_magic_wheel.protocols.request;
 
-import java.util.Date;
 import com.example.the_magic_wheel.protocols.interfaces.Event;
+
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
-import java.io.IOException;
+import java.util.Date;
 
 public abstract class Request extends Event {
     public static Request fromBytes(byte[] bytes) throws IOException, ClassNotFoundException {

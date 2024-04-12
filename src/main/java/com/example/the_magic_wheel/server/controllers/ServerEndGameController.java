@@ -2,9 +2,8 @@ package com.example.the_magic_wheel.server.controllers;
 
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.server.views.App;
-
-import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 
 
 public class ServerEndGameController extends ServerController{

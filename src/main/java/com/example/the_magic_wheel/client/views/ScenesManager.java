@@ -1,16 +1,7 @@
 package com.example.the_magic_wheel.client.views;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import com.example.the_magic_wheel.Configuration;
-import com.example.the_magic_wheel.client.controllers.Controller;
-import com.example.the_magic_wheel.client.controllers.GameController;
-import com.example.the_magic_wheel.client.controllers.GreetController;
-import com.example.the_magic_wheel.client.controllers.HallController;
-import com.example.the_magic_wheel.client.controllers.RankController;
-import com.example.the_magic_wheel.client.controllers.RegisterController;
-
+import com.example.the_magic_wheel.client.controllers.*;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +9,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 public class ScenesManager {
 
@@ -38,8 +32,11 @@ public class ScenesManager {
         scene = new Scene(scenesMap.get(Configuration.CLIENT_GREET_FXML), Configuration.WIDTH, Configuration.HEIGHT);
         currentFxml = Configuration.CLIENT_GREET_FXML;
 
-        stage.setTitle("Magical Wheel");
+        stage.setTitle("The Magical Wheel");
         stage.setScene(scene);
+
+        stage.setResizable(false);
+
         stage.show();
     }
 

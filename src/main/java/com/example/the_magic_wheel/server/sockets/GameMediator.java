@@ -1,11 +1,10 @@
 package com.example.the_magic_wheel.server.sockets;
 
-import java.util.Iterator;
-import java.nio.channels.SocketChannel;
-
 import com.example.the_magic_wheel.protocols.request.Request;
-
 import com.example.the_magic_wheel.protocols.response.Response;
+
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
 
 public interface GameMediator {
     public Response process(Request request, SocketChannel channel) throws Exception;

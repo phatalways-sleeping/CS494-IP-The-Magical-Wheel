@@ -1,20 +1,15 @@
 package com.example.the_magic_wheel.server.views;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import com.example.the_magic_wheel.Configuration;
-import com.example.the_magic_wheel.server.controllers.ServerController;
-import com.example.the_magic_wheel.server.controllers.ServerEndGameController;
-import com.example.the_magic_wheel.server.controllers.ServerGameIsRunningController;
-import com.example.the_magic_wheel.server.controllers.ServerHallController;
-import com.example.the_magic_wheel.server.controllers.ServerMaximumPlayerController;
-
+import com.example.the_magic_wheel.server.controllers.*;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 public class ServerScenesManager  {
     private App app;
@@ -35,8 +30,11 @@ public class ServerScenesManager  {
         scene = new Scene(scenesMap.get( Configuration.SERVER_HALL_FXML), Configuration.WIDTH, Configuration.HEIGHT);
         currentFxml =  Configuration.SERVER_HALL_FXML;
 
-        stage.setTitle("Magical Wheel Server");
+        stage.setTitle("The Magical Wheel Server");
         stage.setScene(scene);
+
+        stage.setResizable(false);
+
         stage.show();
     }
 

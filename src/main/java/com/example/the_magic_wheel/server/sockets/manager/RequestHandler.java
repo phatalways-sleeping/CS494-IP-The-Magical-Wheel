@@ -1,14 +1,14 @@
 package com.example.the_magic_wheel.server.sockets.manager;
 
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
-import java.util.Objects;
-import java.util.Iterator;
-
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.protocols.request.Request;
 import com.example.the_magic_wheel.protocols.response.Response;
 import com.example.the_magic_wheel.server.sockets.GameMediator;
+
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+import java.util.Objects;
 
 public class RequestHandler implements Handler {
     // The request to be handled

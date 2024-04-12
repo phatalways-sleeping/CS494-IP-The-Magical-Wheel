@@ -4,7 +4,6 @@ import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.client.views.App;
 import com.example.the_magic_wheel.protocols.response.GameStartResponse;
 import com.example.the_magic_wheel.protocols.response.Response;
-
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;

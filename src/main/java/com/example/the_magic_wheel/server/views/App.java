@@ -1,24 +1,22 @@
 package com.example.the_magic_wheel.server.views;
 
+import com.example.the_magic_wheel.protocols.request.CloseConnectionRequest;
+import com.example.the_magic_wheel.protocols.request.RegisterRequest;
 import com.example.the_magic_wheel.protocols.request.Request;
-import com.example.the_magic_wheel.protocols.response.Response;
-import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
+import com.example.the_magic_wheel.protocols.response.*;
 import com.example.the_magic_wheel.server.sockets.GameMediator;
 import com.example.the_magic_wheel.server.sockets.Server;
 import com.example.the_magic_wheel.server.sockets.ServerConfiguration;
 import com.example.the_magic_wheel.server.utils.DatabaseController;
 import com.example.the_magic_wheel.server.utils.GameController;
-import com.example.the_magic_wheel.protocols.request.CloseConnectionRequest;
-import com.example.the_magic_wheel.protocols.request.RegisterRequest;
-import com.example.the_magic_wheel.protocols.response.GameEndResponse;
-import com.example.the_magic_wheel.protocols.response.GameStartResponse;
-import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.util.Iterator;
 import java.io.IOException;
-import java.nio.channels.SocketChannel;;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+
+;
 
 public class App extends Application implements GameMediator {
     public static void main(String[] args) {

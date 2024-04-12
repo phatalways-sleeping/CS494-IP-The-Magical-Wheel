@@ -1,14 +1,13 @@
 package com.example.the_magic_wheel.client.controllers;
 
-import java.io.IOException;
-
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.client.views.App;
 import com.example.the_magic_wheel.protocols.response.Response;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+
+import java.io.IOException;
 
 public class GreetController extends Controller{
 

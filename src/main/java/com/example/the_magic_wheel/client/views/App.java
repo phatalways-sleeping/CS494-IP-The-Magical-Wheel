@@ -1,5 +1,8 @@
 package com.example.the_magic_wheel.client.views;
 
+import com.example.the_magic_wheel.client.sockets.Client;
+import com.example.the_magic_wheel.protocols.request.Request;
+import com.example.the_magic_wheel.protocols.response.Response;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -7,10 +10,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import com.example.the_magic_wheel.client.sockets.Client;
-import com.example.the_magic_wheel.protocols.request.Request;
-import com.example.the_magic_wheel.protocols.response.Response;
 
 /**
  * JavaFX App

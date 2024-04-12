@@ -1,14 +1,5 @@
 package com.example.the_magic_wheel.client.controllers;
 
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.stream.Collectors;
-
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.client.views.App;
 import com.example.the_magic_wheel.protocols.request.GuessRequest;
@@ -16,7 +7,6 @@ import com.example.the_magic_wheel.protocols.response.GameEndResponse;
 import com.example.the_magic_wheel.protocols.response.GameStartResponse;
 import com.example.the_magic_wheel.protocols.response.Response;
 import com.example.the_magic_wheel.protocols.response.ResultNotificationResponse;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,6 +19,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class GameController extends Controller {
 

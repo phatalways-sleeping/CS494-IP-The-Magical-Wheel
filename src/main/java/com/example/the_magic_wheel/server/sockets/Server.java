@@ -1,32 +1,20 @@
 package com.example.the_magic_wheel.server.sockets;
 
+import com.example.the_magic_wheel.Configuration;
+import com.example.the_magic_wheel.protocols.request.Request;
+import com.example.the_magic_wheel.protocols.response.Response;
+import com.example.the_magic_wheel.server.sockets.defense.DoSAttackException;
+import com.example.the_magic_wheel.server.sockets.manager.ExecutionManager;
+import com.example.the_magic_wheel.server.sockets.manager.RequestHandler;
+import com.example.the_magic_wheel.server.sockets.manager.ServerExecutor;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
-import java.util.Set;
-import java.util.HashSet;
-
-import com.example.the_magic_wheel.Configuration;
-import com.example.the_magic_wheel.protocols.request.Request;
-import com.example.the_magic_wheel.protocols.response.Response;
-import com.example.the_magic_wheel.server.sockets.defense.DoSAttackException;
-
-import com.example.the_magic_wheel.server.sockets.manager.ExecutionManager;
-import com.example.the_magic_wheel.server.sockets.manager.RequestHandler;
-import com.example.the_magic_wheel.server.sockets.manager.ServerExecutor;
+import java.nio.channels.*;
+import java.util.*;
 
 public class Server extends Component implements Runnable {
     private final ServerConfiguration configuration;

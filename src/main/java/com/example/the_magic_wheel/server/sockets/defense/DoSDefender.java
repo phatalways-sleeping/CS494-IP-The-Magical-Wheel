@@ -1,8 +1,8 @@
 package com.example.the_magic_wheel.server.sockets.defense;
 
-import java.util.Objects;
-
 import com.example.the_magic_wheel.server.sockets.manager.RequestInformation;
+
+import java.util.Objects;
 
 
 public class DoSDefender extends Defender {

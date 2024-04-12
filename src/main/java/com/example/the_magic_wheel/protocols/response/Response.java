@@ -1,10 +1,11 @@
 package com.example.the_magic_wheel.protocols.response;
 
 import com.example.the_magic_wheel.protocols.interfaces.Event;
+
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
-import java.io.IOException;
 
 public abstract class Response extends Event {
     protected final String respondedAt;

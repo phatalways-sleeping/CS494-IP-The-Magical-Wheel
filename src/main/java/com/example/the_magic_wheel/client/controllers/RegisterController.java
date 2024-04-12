@@ -1,7 +1,5 @@
 package com.example.the_magic_wheel.client.controllers;
 
-import java.io.IOException;
-
 import com.example.the_magic_wheel.Configuration;
 import com.example.the_magic_wheel.client.views.App;
 import com.example.the_magic_wheel.protocols.request.RegisterRequest;
@@ -9,7 +7,6 @@ import com.example.the_magic_wheel.protocols.response.GameStartResponse;
 import com.example.the_magic_wheel.protocols.response.RegisterFailureResponse;
 import com.example.the_magic_wheel.protocols.response.RegisterSuccessResponse;
 import com.example.the_magic_wheel.protocols.response.Response;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,6 +14,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+
+import java.io.IOException;
 
 public class RegisterController extends Controller {
 
