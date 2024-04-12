@@ -184,7 +184,7 @@ public class GameController extends Component {
     }
 
     private boolean checkTimeout(GuessRequest guessRequest) {
-        if ( (guessRequest.getGuessChar() == null || guessRequest.getGuessChar() == "") && (guessRequest.getGuessWord() == null || guessRequest.getGuessWord() == "") ){
+        if ( (guessRequest.getGuessChar() == null || guessRequest.getGuessChar().isEmpty()) && (guessRequest.getGuessWord() == null || guessRequest.getGuessWord().isEmpty()) ){
             return true;
         }
         return false;
