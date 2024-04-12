@@ -136,9 +136,9 @@ public class GameController extends Controller {
         HBox itemHBox = new HBox(10);
         itemHBox.setStyle("-fx-padding: 5px 0;");
         Label label1 = new Label(username);
-        label1.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 14;");
+        label1.setStyle("-fx-text-fill: #04364A; -fx-font-size: 14;");
         Label label2 = new Label(score);
-        label2.setStyle("-fx-text-fill: #dafffb; -fx-font-size: 14;");
+        label2.setStyle("-fx-text-fill: #04364A; -fx-font-size: 14;");
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         // Add labels to the itemHBox
@@ -149,7 +149,7 @@ public class GameController extends Controller {
 
     private void setLeaderboard() {
         leaderBoardVBox.getChildren().clear();
-        leaderBoardVBox.setStyle("-fx-padding: 0 10px;");
+        leaderBoardVBox.setStyle("-fx-padding: 15px; -fx-background-color: #DAFFFB; -fx-background-radius: 40");
 
         // Iterate over the entries of the playerScores map
         for (Map.Entry<String, Integer> entry : playerScores.entrySet()) {
