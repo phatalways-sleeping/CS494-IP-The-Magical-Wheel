@@ -26,10 +26,10 @@ public class GameController extends Component {
     private Map <String, String> mapIPToUsername;
     private int currentPlayerIndex;
     private int turn;
+    private int maxConnections;
     private GameMediator mediator;
     private Keyword keyword;
     private StringBuffer currentKeyword;
-    private int maxConnections;
     private boolean isEndGame;
     // currentPlayerIndex != -1 => game is running
     // else waiting for enough players to join
@@ -148,11 +148,10 @@ public class GameController extends Component {
 
         // from here: CloseConnectionRequest
         CloseConnectionRequest closeConnectionRequest = (CloseConnectionRequest) request;
-        if (currentPlayerIndex == -1) {
-            // print all players list
+        String closedConnectionPlayer = mapIPToUsername.get(closeConnectionRequest.getSource());
+        System.err.println("Player that close connection: " + closedConnectionPlayer);
 
-            String closedConnectionPlayer = mapIPToUsername.get(closeConnectionRequest.getSource());
-            System.err.println("Player that close connection: " + closedConnectionPlayer);
+        if (currentPlayerIndex == -1) {
 
             if (playerList.contains( closedConnectionPlayer)) {
                 playerList.remove(closedConnectionPlayer);
@@ -167,6 +166,10 @@ public class GameController extends Component {
                 guessCountMap.remove(closedConnectionPlayer);
             }
 
+            return null;
+        }
+        if (playerList.contains(closedConnectionPlayer) == false)
+        {
             return null;
         }
         return getGameEndResponse(request, "Some players close connection");
